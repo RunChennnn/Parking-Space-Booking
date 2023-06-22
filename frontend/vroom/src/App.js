@@ -1,7 +1,9 @@
-import logo from './logo.svg';
 import './App.css';
 import React from 'react'
 import makeRequest from './utilities/makeRequest';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
 
@@ -17,14 +19,19 @@ function App() {
   })
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          {"hi"}
-        </p>
-      </header>
-    </div>
+    <>
+      <p>
+        Hello world (can remove this text)
+      </p>
+      <BrowserRouter>
+        <Routes>
+          <Route path="" element={<Navigate to="/login" />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          {/* Add more Routes as needed */}
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
