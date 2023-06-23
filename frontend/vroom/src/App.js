@@ -1,4 +1,3 @@
-import './App.css';
 import React from 'react'
 import makeRequest from './utilities/makeRequest';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
