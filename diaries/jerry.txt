@@ -1,8 +1,11 @@
 Week 1:
+<<<<<<< HEAD
         What I have done:
         ->
         ->
         ->
+=======
+>>>>>>> 9b8daf0 (diary update)
 
 Week 2:
 
