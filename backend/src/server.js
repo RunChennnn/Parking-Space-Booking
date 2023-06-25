@@ -48,13 +48,30 @@ app.get('/testDB', async (req,res) => {
 });
 
 
-// Actual requests we need to listen for
+/*
+ * Login request: if valid credentials, returns 200 OK as well as 
+ * authentication token and user ID. If invalid, returns 401.
+ */
 app.post('/auth/login', (req, res) => {
     const body = req.body;
     if (body.email === 'example@email.com' && body.password === 'password') { // email and password are correct
         return res.status(200).json({ token: 'dummy', userID: 696969 }); // Return 200 OK, along with an authentication token (str) and user id (int)
     } else {
-        return res.status(401).json({ error: 'invalid username or password' }) // Forbidden if incorrect credentials
+        return res.status(401).json({ error: 'invalid username or password' }) // Forbidden if incorrect credentials (don't change the error text pls)
+    }
+})
+
+/*
+ * Register request: if email doesn't already exist in database, add it 
+ * (and the password) and return 200 OK as well as authentication token 
+ * and user ID. If invalid, returns 400.
+ */
+app.post('/auth/register', (req, res) => {
+    const body = req.body;
+    if (body.email === 'example@email.com') { // email is already in the system
+        return res.status(400).json({ error: 'email already used' }) // Forbidden if incorrect credentials (don't change the error text pls)
+    } else {
+        return res.status(200).json({ token: 'dummy2', userID: 420420 }); // Return 200 OK, along with an authentication token (str) and user id (int)
     }
 })
 
