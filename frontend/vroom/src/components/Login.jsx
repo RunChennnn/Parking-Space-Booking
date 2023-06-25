@@ -1,11 +1,13 @@
 import React from "react"
 import { Alert, Button, Card, TextField, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import makeRequest from '../utilities/makeRequest';
 
 function Login () {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [showError, setShowError] = React.useState(false);
 
   const pageStyle = {
     display: 'grid',
@@ -17,31 +19,52 @@ function Login () {
   const cardStyle = {
     margin: '0',
     padding: '5%',
-    backgroundColor: '#eee',
+    backgroundColor: '#f8f8f8',
     borderColor: '#aaa',
     borderStyle: 'solid',
-    borderWidth: '2px',
+    borderWidth: '1px',
     borderRadius: '10px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     rowGap: '15px'
-  }
+  };
 
   const buttonStyle = {
     margin: '20px 30% 0 30%'
-  }
+  };
 
   const inputStyle = {
     backgroundColor: '#fff',
     margin: '0',
     padding: '0'
-  }
+  };
+
+  const errorStyle = {
+    marginTop: '10px',
+  };
     
   const navigate = useNavigate();
 
-  function pressLogin () {
-    console.log(`Login with ${email}, ${password}`);
+  async function pressLogin () {
+    const request = {
+      email,
+      password
+    };
+    const response = await makeRequest("POST", "auth/login", request);
+    if (response.error) {
+      if (response.error === 'invalid username or password') {
+        setShowError(true)
+        console.log("Invalid username or password");
+      } else {
+        console.log(`Unknown error: ${response.error}`);
+      }
+    } else {
+      // Correct credentials, so log in
+      localStorage.setItem('vroom-token', response.token);
+      localStorage.setItem('vroom-id', response.userID);
+      navigate("/home");
+    }
   }
 
   function pressRegister () {
@@ -63,6 +86,7 @@ function Login () {
         </Typography>
         <Button variant="contained" style={buttonStyle} onClick={pressRegister}>Register</Button>
         </Card>
+        {showError && (<Alert severity="error" style={errorStyle}>Invalid username or password, please try again.</Alert>)}
       </div>
     </>
   )

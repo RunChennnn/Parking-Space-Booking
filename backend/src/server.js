@@ -48,9 +48,19 @@ app.get('/testDB', async (req,res) => {
 });
 
 
+// Actual requests we need to listen for
+app.post('/auth/login', (req, res) => {
+    const body = req.body;
+    if (body.email === 'example@email.com' && body.password === 'password') { // email and password are correct
+        return res.status(200).json({ token: 'dummy', userID: 696969 }); // Return 200 OK, along with an authentication token (str) and user id (int)
+    } else {
+        return res.status(401).json({ error: 'invalid username or password' }) // Forbidden if incorrect credentials
+    }
+})
+
+
 const server = app.listen(port, () => {
     console.log(`Backend is now listening on port ${port}!`);
-    // console.log(`For API docs, navigate to http://localhost:${port}`);
 });
 
 export default server
