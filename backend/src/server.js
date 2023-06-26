@@ -95,11 +95,36 @@ app.delete('/user/:userID/delete', (req, res) => {
     if (userID === 696969) { // If this is a valid user ID
         // TODO remove this user from the database
         return res.status(200);
-    }else {
+    } else {
         return res.status(400).json({ error: 'invalid user ID' });
     }
 })
 
+app.get('/spot/:spotID', (req, res) => {
+    const userID = parseInt(req.params.spotID);
+    if (true) { // If valid spot ID (for backend guys to implement)
+        response = {
+            description: 'a spot',
+            streetNumber: 42,
+            streetName: 'Wallaby Way',
+            suburb: 'Sydney',
+            postcode: 2000,
+            basePrice: 16.5,
+            largestVehicle: '4WD',
+            clearance: 2.3,
+            evCharging: true,
+            disabledAccess: false,
+            demandPricing: true,
+            cardNumber: 1234567898765432,
+            cardName: 'Donald Trump',
+            cardCVV: 972,
+
+        }
+        return res.status(200).json(response);
+    } else {
+        return res.status(400).json({ error: 'invalid user ID' });
+    }
+})
 
 const server = app.listen(port, () => {
     console.log(`Backend is now listening on port ${port}!`);
