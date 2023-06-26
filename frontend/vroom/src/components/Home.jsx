@@ -6,9 +6,7 @@ function Home () {
   return (
     <>
       <NavigationBar />
-      <p>
-        TODO home page
-      </p>
+      Need to implement home page properly, needs search bar and suggestions
     </>
   )
 }

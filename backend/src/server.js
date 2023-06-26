@@ -75,6 +75,25 @@ app.post('/auth/register', (req, res) => {
     }
 })
 
+app.get('/user/:userID', (req, res) => {
+    const userID = parseInt(req.params.userID); // TODO error checking the parseInt, have fun backend guys
+    console.log(`responding to user/${userID}`);
+    if (userID === 696969) { // If this is a valid userID
+        return res.status(200).json({
+            email: 'example@email.com', // email attached to account
+            upcoming: [872365, 1234907], // IDs of any upcoming bookings
+            history: [540764,], // IDs of any historical bookings
+            spots: [3294659, 4894, 1234567890], // IDs of any spots owned by this user
+        })
+    } else {
+        return res.status(400).json({ error: 'invalid user ID' })
+    }
+})
+
+// app.post('/user/update', (req, res) => {
+//     const body = req.body
+// })
+
 
 const server = app.listen(port, () => {
     console.log(`Backend is now listening on port ${port}!`);
