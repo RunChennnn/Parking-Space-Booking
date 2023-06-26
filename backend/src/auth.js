@@ -1,3 +1,6 @@
+//this file will be deleted later
+//code use the one in the components folder
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
@@ -15,6 +18,13 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
+
+
+
+const handleSubmit = e => {
+    if (user.name &&)
+
+
 // Create a new user with an email and password
 createUserWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
@@ -27,6 +37,8 @@ createUserWithEmailAndPassword(auth, email, password)
     const errorMessage = error.message;
     // ..
   });
+
+
 
 // Sign in with email and password
 signInWithEmailAndPassword(auth, email, password)
