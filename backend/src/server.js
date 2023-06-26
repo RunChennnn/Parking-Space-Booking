@@ -5,7 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get } from 'firebase/database';
 
 const port = 3141
-
+const auth = firebase.auth();
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, }));
