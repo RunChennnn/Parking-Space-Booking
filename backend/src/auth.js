@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-// TODO: Replace the following with your app's Firebase project configuration
+// TODO: Replace the following with our app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
   // ...
