@@ -90,9 +90,15 @@ app.get('/user/:userID', (req, res) => {
     }
 })
 
-// app.post('/user/update', (req, res) => {
-//     const body = req.body
-// })
+app.delete('/user/:userID/delete', (req, res) => {
+    const userID = parseInt(req.params.userID);
+    if (userID === 696969) { // If this is a valid user ID
+        // TODO remove this user from the database
+        return res.status(200);
+    }else {
+        return res.status(400).json({ error: 'invalid user ID' });
+    }
+})
 
 
 const server = app.listen(port, () => {
