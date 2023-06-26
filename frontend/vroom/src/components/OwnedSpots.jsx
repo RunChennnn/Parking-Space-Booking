@@ -27,11 +27,16 @@ function OwnedSpots () {
     }
 
     // data tested for ui layout
-    function initData() {
-
+    function initData(key, name, address, averPrice, demandDriven) {
+        return {key, name, address, averPrice, demandDriven}
     }
     const testData = [
-
+        initData(1, 'Tom', '49 Average Way', 26, 'no'),
+        initData(2,'Jerry', '49 Wallabay Way', 29, 'no'),
+        initData(3, 'Pat', 'Kelly Street', 21, 'no'),
+        initData(4, 'Steven', 'Haymarket', 25, 'no'),
+        initData(5, 'Thor', 'UNSW Anaze', 23, 'no'),
+        initData(6, 'wwwww', 'Spiderman', 19, 'no')
     ]
     const rows = testData
 
@@ -53,9 +58,10 @@ function OwnedSpots () {
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow>
+                                <TableCell align="center">Key</TableCell>
                                 <TableCell align="center">Name</TableCell>
                                 <TableCell align="center">Address</TableCell>
-                                <TableCell align="center">Average Price per hour</TableCell>
+                                <TableCell align="center">Average Price per hour($)</TableCell>
                                 <TableCell align="center">Demand-driven pricing</TableCell>
                                 <TableCell align="center">Edit</TableCell>
                             </TableRow>
@@ -63,16 +69,22 @@ function OwnedSpots () {
                         <TableBody>
                             {rows.map((row) => (
                                 <TableRow
-                                    key={row.name}
+                                    key={row.key}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
+                                    <TableCell component="th" scope="row" align="center">
+                                        {row.key}
                                     </TableCell>
-                                    <TableCell align="right">{row.address}</TableCell>
-                                    <TableCell align="right">{row.averagePrice}</TableCell>
-                                    <TableCell align="right">{row.demandDriven}</TableCell>
-                                    <TableCell align="right"><Button variant="contained">Edit</Button></TableCell>
+                                    <TableCell align="center">{row.name}</TableCell>
+                                    <TableCell align="center">{row.address}</TableCell>
+                                    <TableCell align="center">{row.averPrice}</TableCell>
+                                    <TableCell align="center">{row.demandDriven}</TableCell>
+                                    <TableCell align="center">
+                                        <Button variant="contained" style={buttonStyle} align="center"
+                                                onClick={()=> {
+                                                    navigate('/spots/update/{row.key}')
+                                                }}>Edit</Button>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -93,7 +105,7 @@ function OwnedSpots () {
                         </TableFooter>
                     </Table>
                 </TableContainer>
-              <Button variant="contained" style={buttonStyle} onClick={toRegisterSpot}>Register new spot</Button>
+              <Button variant="contained" style={buttonStyle} onClick={toRegisterSpot} >Register new spot</Button>
             </div>
         </>
     )
