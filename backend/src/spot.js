@@ -25,7 +25,7 @@ const createNewSpot = async (data) => {
     
         console.log("New Spot added to database");
         return {
-          status: 200,
+          status: 201,
           id: sid,
           message: "Spot created successfully"
         };
@@ -101,4 +101,35 @@ const deleteSpot = async (spotId) => {
     }
 };
 
-export { createNewSpot, patchSpot, deleteSpot }
+const getSpot = async (spotId) => {
+  try {
+    const spotRef = ref(db, `/Spots/${spotId}`);
+    const snapshot = await get(spotRef);
+
+    if (snapshot.exists()) {
+      const spotData = snapshot.val();
+      console.log(`Spot ${spotId} infomation retrived from the database`, spotData);
+      return {
+        status: 200,
+        message: `Spot retrieved successfully`,
+        id: spotId,
+        data: spotData
+      };
+    } else {
+      console.log(`Spot ${spotId} does not exist`);
+      return {
+        status: 404,
+        message: `Spot ${spotId} not found`
+      };
+    }
+  } catch (error) {
+    console.error("Error getting spot:", error);
+    return {
+      status: 500,
+      message: "Spot retrieval FAILED",
+      error: error.message
+    };
+  }
+};
+
+export { createNewSpot, patchSpot, deleteSpot, getSpot }

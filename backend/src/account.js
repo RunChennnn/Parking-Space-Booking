@@ -23,7 +23,7 @@ const registerNewAccount = async (email, password) => {
         console.log("Account Created: ", userCredential.user.uid);
 
         return ({
-            status: 200,
+            status: 201,
             uid: userCredential.user.uid,
             token: token,
             message: "Account successfully created"

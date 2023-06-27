@@ -5,7 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get, set, push } from 'firebase/database';
 import { getAuth } from "firebase/auth";
 import { registerNewAccount, signInAccount, deleteAccount, signOutAccount } from "./account.js";
-import { createNewSpot, patchSpot, deleteSpot } from "./spot.js";
+import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
 
 const port = 3141
 const app = express();
@@ -78,8 +78,8 @@ app.post('/auth/register', async (req, res) => {
     const { email, password } = req.body;
     const respond = await registerNewAccount(email, password);
     
-    if (respond.status === 200) {
-        return res.status(200).json(respond);
+    if (respond.status === 201) {
+        return res.status(201).json(respond);
     } else if (respond.status === 500) {
         res.status(500).json(respond)
     } else {
@@ -122,8 +122,8 @@ app.post('/spot/new', async (req, res) => {
     const data = req.body;
     const response = await createNewSpot(data);
     
-    if (response.status === 200) {
-        return res.status(200).json(response);
+    if (response.status === 201) {
+        return res.status(201).json(response);
     } else if (response.status === 500) {
         return res.status(500).json(response);
     } else {
@@ -154,6 +154,22 @@ app.delete('/spot/:spotId/delete', async (req, res) => {
     const sid = req.params.spotId
 
     const response = await deleteSpot(sid);
+
+    if (response.status === 200) {
+        return res.status(200).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
+
+//Get spot
+app.get('/spot/:spotId', async (req, res) => {
+    const sid = req.params.spotId
+    const response = await getSpot(sid);
 
     if (response.status === 200) {
         return res.status(200).json(response);
