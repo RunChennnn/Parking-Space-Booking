@@ -2,9 +2,10 @@ import express from "express";
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get } from 'firebase/database';
+import { getDatabase, ref, get, set, push } from 'firebase/database';
 import { getAuth } from "firebase/auth";
 import { registerNewAccount, signInAccount, deleteAccount, signOutAccount } from "./account.js";
+import { createNewSpot, patchSpot, deleteSpot } from "./spot.js";
 
 const port = 3141
 const app = express();
@@ -48,9 +49,21 @@ app.get('/testDB', async (req,res) => {
     return res.status(200).json({respond});
 });
 
-// Not sure if we need this, I just put here for better manipulation of firebase atm
+app.post('/testDB/spots', async (req, res) => {
 
-app.post('/fakeauth/logoff', async (req,res) => {
+    const testDataRef = ref(db, '/testDatabaseCollection/Spots');
+
+    const newSpot = push(testDataRef)
+    const data = req.body;
+    await set(newSpot, data);
+
+    console.log("Data added to the database");
+    res.status(200).json({status: 200,message: "Data added to the database"});
+
+  });
+
+// Not sure if we need this, I just put here for better manipulation of firebase atm
+app.post('/auth/logoff', async (req,res) => {
     try {
         await signOutAccount();
         return res.status(200).json({status: 200,message: "Sign off successfully"});
@@ -61,7 +74,7 @@ app.post('/fakeauth/logoff', async (req,res) => {
 
 
 // Account Registeration
-app.post('/fakeauth/register', async (req, res) => {
+app.post('/auth/register', async (req, res) => {
     const { email, password } = req.body;
     const respond = await registerNewAccount(email, password);
     
@@ -75,7 +88,7 @@ app.post('/fakeauth/register', async (req, res) => {
 });
 
 // Login
-app.post('/fakeauth/login', async (req, res) => {
+app.post('/auth/login', async (req, res) => {
     const { email, password } = req.body;
     const respond = await signInAccount(email, password);
     
@@ -89,8 +102,8 @@ app.post('/fakeauth/login', async (req, res) => {
 });
 
 // Account Deletion
-app.delete('/fakeaccount/delete', async (req, res) => {
-    const { uid } = req.body;
+app.delete('/user/:userId/delete', async (req, res) => {
+    const uid = req.params.userId;
     const respond = await deleteAccount(uid);
     
     if (respond.status === 200) {
@@ -104,9 +117,57 @@ app.delete('/fakeaccount/delete', async (req, res) => {
     }
 });
 
+//Create new spot 
+app.post('/spot/new', async (req, res) => {
+    const data = req.body;
+    const response = await createNewSpot(data);
+    
+    if (response.status === 200) {
+        return res.status(200).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
+
+//Update spot
+app.patch('/spot/:spotId/update', async (req, res) => {
+    const data = req.body;
+    const sid = req.params.spotId
+
+    const response = await patchSpot(sid, data);
+
+    if (response.status === 200) {
+        return res.status(200).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
+
+//Delete spot
+app.delete('/spot/:spotId/delete', async (req, res) => {
+    const sid = req.params.spotId
+
+    const response = await deleteSpot(sid);
+
+    if (response.status === 200) {
+        return res.status(200).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
+
 const server = app.listen(port, () => {
     console.log(`Backend is now listening on port ${port}!`);
-    // console.log(`For API docs, navigate to http://localhost:${port}`);
 });
 
 export default server
