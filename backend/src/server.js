@@ -5,7 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get } from 'firebase/database';
 
 const port = 3141
-const auth = firebase.auth();
+// const auth = firebase.auth();
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, }));
@@ -75,6 +75,20 @@ app.post('/auth/register', (req, res) => {
     }
 })
 
+app.post('/auth/:userID', (req, res) => {
+    const body = req.body;
+    const userID = parseInt(req.params.userID);
+    console.log(body);
+    console.log(userID);
+    if (userID === 696969 && body.password === 'password') { // Correct password for user ID. TODO maybe add authentication with token here too
+        return res.status(200).json({ userID: userID }) // Successful authentication
+    } else if (true) { // User ID doesn't exist
+        return res.status(400).json({ error: 'invalid user ID' });
+    } else {
+        return res.status(400).json({ error: 'incorrect password' });
+    }
+})
+
 app.get('/user/:userID', (req, res) => {
     const userID = parseInt(req.params.userID); // TODO error checking the parseInt, have fun backend guys
     console.log(`responding to user/${userID}`);
@@ -103,7 +117,7 @@ app.post('/user/:userID/update', (req, res) => {
         }
         // Or just loop through keys, up to you guys
 
-        return res.status(200);
+        return res.status(200).json({});
     } else {
         return res.status(400).json({ error: 'invalid user ID' });
     }
@@ -113,7 +127,7 @@ app.delete('/user/:userID/delete', (req, res) => {
     const userID = parseInt(req.params.userID);
     if (userID === 696969) { // If this is a valid user ID
         // TODO remove this user from the database
-        return res.status(200);
+        return res.status(200).json({});
     } else {
         return res.status(400).json({ error: 'invalid user ID' });
     }
