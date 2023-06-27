@@ -4,6 +4,7 @@ import NavigationBar from "./NavigationBar"
 import makeRequest from "../utilities/makeRequest";
 import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import AccountDetailRow from "./AccountDetailRow";
 
 function MyAccount () {
 
@@ -25,6 +26,19 @@ function MyAccount () {
     width: '200px',
   };
 
+  // const detailWrapperStyle = {
+  //   display: 'grid',
+  //   gridTemplateColumns: '20vw 30vw',
+  // };
+
+  // const detailStyleLeft = {
+  //   color: 'blue',
+  // };
+
+  // const detailStyleRight = {
+  //   color: 'red'
+  // };
+
   React.useEffect(() => {
     async function getData () {
       const response = await makeRequest('GET', `user/${params.userID}`, {});
@@ -45,7 +59,8 @@ function MyAccount () {
   return (
     <>  
       <NavigationBar />
-      Email: {email} (TODO make this look better)
+      <div style={{ height: '30px' }}></div>
+      <AccountDetailRow head='Email:' body={email} />
       <div style={buttonRowStyle}>
         <Button variant="contained" style={buttonStyle} onClick={pressUpdateAccount}>Update Account</Button>
         <Button variant="contained" style={buttonStyle} onClick={pressViewHistory}>View History</Button>
