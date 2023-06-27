@@ -90,6 +90,25 @@ app.get('/user/:userID', (req, res) => {
     }
 })
 
+app.post('/user/:userID/update', (req, res) => {
+    const userID = parseInt(req.params.userID); // TODO error checking the parseInt, have fun backend guys
+    const body = req.body;
+    if (userID === 696969) { // If valid user ID
+        // Only make changes if the field exists
+        if (body.email) {
+            // Change email in database
+        }
+        if (body.password) {
+            // Change password in database
+        }
+        // Or just loop through keys, up to you guys
+
+        return res.status(200);
+    } else {
+        return res.status(400).json({ error: 'invalid user ID' });
+    }
+})
+
 app.delete('/user/:userID/delete', (req, res) => {
     const userID = parseInt(req.params.userID);
     if (userID === 696969) { // If this is a valid user ID
