@@ -3,9 +3,10 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get } from 'firebase/database';
+import { getAuth } from "firebase/auth";
+import { registerNewAccount, signInAccount, deleteAccount, signOutAccount } from "./account.js";
 
 const port = 3141
-const auth = firebase.auth();
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, }));
@@ -21,10 +22,10 @@ const firebaseConfig = {
     measurementId: "G-1NXQ4FX22V",
     databaseURL: "https://room-e5563-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
-  
-
 const firebase = initializeApp(firebaseConfig);
 const db = getDatabase(firebase);
+const auth = getAuth(firebase);
+  
 
 app.get('/test', (req, res) => {
     console.log(req.body);
@@ -47,6 +48,61 @@ app.get('/testDB', async (req,res) => {
     return res.status(200).json({respond});
 });
 
+// Not sure if we need this, I just put here for better manipulation of firebase atm
+
+app.post('/fakeauth/logoff', async (req,res) => {
+    try {
+        await signOutAccount();
+        return res.status(200).json({status: 200,message: "Sign off successfully"});
+    } catch (error) {
+        return res.status(500).json({status: 500,error: error});
+    }
+});
+
+
+// Account Registeration
+app.post('/fakeauth/register', async (req, res) => {
+    const { email, password } = req.body;
+    const respond = await registerNewAccount(email, password);
+    
+    if (respond.status === 200) {
+        return res.status(200).json(respond);
+    } else if (respond.status === 500) {
+        res.status(500).json(respond)
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
+
+// Login
+app.post('/fakeauth/login', async (req, res) => {
+    const { email, password } = req.body;
+    const respond = await signInAccount(email, password);
+    
+    if (respond.status === 200) {
+        return res.status(200).json(respond);
+    } else if (respond.status === 500) {
+        return res.status(500).json(respond);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
+
+// Account Deletion
+app.delete('/fakeaccount/delete', async (req, res) => {
+    const { uid } = req.body;
+    const respond = await deleteAccount(uid);
+    
+    if (respond.status === 200) {
+        return res.status(200).json(respond);
+    } else if (respond.status === 500) {
+        return res.status(500).json(respond);
+    } else if (respond.status === 401) {
+        return res.status(401).json(respond);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
 
 const server = app.listen(port, () => {
     console.log(`Backend is now listening on port ${port}!`);

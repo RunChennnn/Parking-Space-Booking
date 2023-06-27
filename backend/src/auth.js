@@ -18,13 +18,6 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
-
-
-
-const handleSubmit = e => {
-    if (user.name &&)
-
-
 // Create a new user with an email and password
 createUserWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
