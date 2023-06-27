@@ -224,38 +224,85 @@ app.post('/auth/:userID', (req, res) => {
 })
 
 app.get('/user/:userID', (req, res) => {
-    const userID = parseInt(req.params.userID); // TODO error checking the parseInt, have fun backend guys
-    console.log(`responding to user/${userID}`);
-    if (true) { // If this is a valid userID
-        return res.status(200).json({
-            email: 'TODO Update the /user/:userID GET request', // email attached to account
-            upcoming: [872365, 1234907], // IDs of any upcoming bookings
-            history: [540764,], // IDs of any historical bookings
-            spots: [3294659, 4894, 1234567890], // IDs of any spots owned by this user
-        })
-    } else {
-        return res.status(400).json({ error: 'invalid user ID' })
-    }
-})
+    const userID = parseInt(req.params.userID);
+    database.ref(`/users/${userID}`).once('value', (snapshot) => {
+        const userData = snapshot.val();
+        if (userData) {
+            const { email, upcoming, history, spots } = userData;
+
+            return res.status(200).json({
+                email: email || 'No email found',
+                upcoming: upcoming || [],
+                history: history || [],
+                spots: spots || [],
+            });
+        } else {
+            return res.status(400).json({ error: 'Invalid user ID' });
+        }
+    });
+});
 
 app.patch('/user/:userID/update', (req, res) => {
-    const userID = parseInt(req.params.userID); // TODO error checking the parseInt, have fun backend guys
+    const userID = parseInt(req.params.userID);
     const body = req.body;
+    
     if (userID === 696969) { // If valid user ID
-        // Only make changes if the field exists
-        if (body.email) {
-            // Change email in database
-        }
-        if (body.password) {
-            // Change password in database
-        }
-        // Or just loop through keys, up to you guys
+        const parametersToUpdate = {};
 
-        return res.status(200).json({});
+        // looooooooooooooooooooop
+        if (body.description) {
+            parametersToUpdate.description = body.description;
+        }
+        if (body.streetNumber) {
+            parametersToUpdate.streetNumber = body.streetNumber;
+        }
+        if (body.streetName) {
+            parametersToUpdate.streetName = body.streetName;
+        }
+        if (body.suburb) {
+            parametersToUpdate.suburb = body.suburb;
+        }
+        if (body.postcode) {
+            parametersToUpdate.postcode = body.postcode;
+        }
+        if (body.basePrice) {
+            parametersToUpdate.basePrice = body.basePrice;
+        }
+        if (body.largestVehicle) {
+            parametersToUpdate.largestVehicle = body.largestVehicle;
+        }
+        if (body.clearance) {
+            parametersToUpdate.clearance = body.clearance;
+        }
+        if (body.evcharging) {
+            parametersToUpdate.evcharging = body.evcharging;
+        }
+        if (body.disabledaccess) {
+            parametersToUpdate.disabledaccess = body.disabledaccess;
+        }
+        if (body.demandpricing) {
+            parametersToUpdate.demandpricing = body.demandpricing;
+        }
+        if (body.cardnumber) {
+            parametersToUpdate.cardnumber = body.cardnumber;
+        }
+        if (body.cardname) {
+            parametersToUpdate.cardname = body.cardname;
+        }
+        if (body.cardcvv) {
+            parametersToUpdate.cardcvv = body.cardcvv;
+        }
+        if (body.owner) {
+            parametersToUpdate.owner = body.owner;
+        }
+        
+        // we need to update the corresponding parameters in the database
+        // return the updated parameters to the frontend
+        return res.status(200).json(parametersToUpdate);
     } else {
-        return res.status(400).json({ error: 'invalid user ID' });
+        return res.status(400).json({ error: 'Invalid user ID' });
     }
-})
+});
 
 app.delete('/user/:userID/delete', (req, res) => {
     const userID = parseInt(req.params.userID);
