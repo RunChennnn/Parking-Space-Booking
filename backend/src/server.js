@@ -101,7 +101,7 @@ app.delete('/user/:userID/delete', (req, res) => {
 })
 
 app.get('/spot/:spotID', (req, res) => {
-    const userID = parseInt(req.params.spotID);
+    const spotID = parseInt(req.params.spotID);
     if (true) { // If valid spot ID (for backend guys to implement)
         response = {
             description: 'a spot',
@@ -118,11 +118,46 @@ app.get('/spot/:spotID', (req, res) => {
             cardNumber: 1234567898765432,
             cardName: 'Donald Trump',
             cardCVV: 972,
-
+            owner: 696969, // ID of owner
         }
         return res.status(200).json(response);
     } else {
         return res.status(400).json({ error: 'invalid user ID' });
+    }
+})
+
+app.post('/spot/new', (req, res) => {
+    const data = req.body; // expect this to have the same format as the return value to GET /spot/:spotID
+    if (true) { // If valid request? Maybe do some checking before trying to add to database
+        // Add to database
+        return res.status(200);
+    } else {
+        return res.status(400).json({ error: 'invalid input' });
+    }
+})
+
+app.post('/spot/:spotID/update', (req, res) => {
+    const data = req.body; // expect this to have the same format as the return value to GET /spot/:spotID
+    const spotID = parseInt(req.params.spotID);
+    if (true) { // If valid request and ID is a currently existing spotID
+        // Update in database
+        return res.status(200);
+    } else {
+        if (true) { // If ID invalid
+            return res.status(400).json({ error: 'invalid spot ID' });
+        } else {
+            return res.status(400).json({ error: 'invalid input' });
+        }
+    }
+})
+
+app.delete('/spot/:spotID/delete', (req, res) => {
+    const spotID = parseInt(req.params.spotID);
+    if (true) { // If valid spot ID
+        // Remove from database
+        return res.status(200);
+    } else {
+        return res.status(400).json({ error: 'invalid spot ID' });
     }
 })
 
