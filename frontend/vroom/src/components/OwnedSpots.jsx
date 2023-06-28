@@ -28,9 +28,11 @@ function OwnedSpots() {
     }
 
     async function loadingSpots() {
-        //const userRes = await makeRequest('GET', `user/${params.userId}`, {})
-        //const spotsId = userRes.spots
-        const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
+        const userId = "qIsSUqZzbBRBTsVd7IIDSkYZDL43"
+        const userRes = await makeRequest('GET', `user/${userId}`, {})
+        console.log(userRes)
+        const spotsId = userRes.spots
+        //const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
         setSpots(spotsId)
     }
 
