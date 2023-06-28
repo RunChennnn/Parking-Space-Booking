@@ -30,10 +30,6 @@ function UpdateSpot () {
         padding: '0'
     };
 
-    const errorStyle = {
-        marginTop: '10px',
-    };
-
 
     const cardStyle = {
         margin: '0',
