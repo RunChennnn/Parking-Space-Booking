@@ -1,5 +1,5 @@
 import React from "react"
-import { useParams } from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import SpotNavigationBar from "./SpotNavigationBar";
 import {Button, Card, TextField} from "@mui/material";
 import makeRequest from "../utilities/makeRequest";
@@ -8,17 +8,21 @@ function UpdateSpot () {
 
     const params = useParams()
 
+    const navigate = useNavigate()
+
     const [description, setDescription] = React.useState('');
     const [streetNumber, setStreetNumber] = React.useState('')
     const [streetName, setStreetName] = React.useState('')
     const [suburb, setSuburb] = React.useState('');
     const [postcode, setPostcode] = React.useState('');
-    const [price, setPrice] = React.useState('');
-    const [largest, setLargest] = React.useState('');
-    const [height, setHeight] = React.useState('');
+    const [basePrice, setBasePrice] = React.useState('');
+    const [largestVehicle, setLargestVehicle] = React.useState('');
+    const [clearance, setClearance] = React.useState('');
     const [cardNumber, setCardNumber] = React.useState('');
     const [cardName, setCardName] = React.useState('');
-    const [CVV, setCVV] = React.useState('');
+    const [cardCVV, setCardCVV] = React.useState('');
+
+    const [showError, setShowError] = React.useState(false);
 
     const buttonStyle = {
         margin: '20px 30% 0 30%'
@@ -45,8 +49,54 @@ function UpdateSpot () {
         rowGap: '15px'
     };
 
-    function confirmUpdate() {
+    React.useEffect(() => {
+        async function loadingSpotInfo() {
+            const res = await makeRequest('GET', `spot/${params.spotID}`, {})
+            const spot = res.data
 
+            setDescription(spot.description)
+            setStreetNumber(spot.streetNumber)
+            setStreetName(spot.streetName)
+            setSuburb(spot.suburb)
+            setPostcode(spot.postcode)
+            setBasePrice(spot.basePrice)
+            setLargestVehicle(spot.largestVehicle)
+            setClearance(spot.clearance)
+            setCardNumber(spot.cardNumber)
+            setCardName(spot.cardName)
+            setCardCVV(spot.cardCVV)
+
+        }
+        loadingSpotInfo()
+        //console.log(res)
+    }, [])
+
+    async function confirmUpdate() {
+        const req = {
+            basePrice: basePrice,
+            cardCVV: cardCVV,
+            cardName: cardName,
+            cardNumber: cardNumber,
+            clearance: clearance,
+            demandPricing: true,
+            description: description,
+            disabledAccess: false,
+            evCharging: true,
+            largestVehicle: largestVehicle,
+            owner: localStorage.getItem('vroom-id'),
+            postcode: postcode,
+            streetName: streetName,
+            streetNumber: streetNumber,
+            suburb: suburb
+        }
+        const res = await makeRequest('PATCH', `spot/${params.spotID}/update`, req)
+        if (res.error) {
+            setShowError(true)
+            console.log('invalid input')
+        }
+        else {
+            navigate(`/spots/${localStorage.getItem('vroom-id')}`)
+        }
     }
 
     return (
@@ -72,22 +122,22 @@ function UpdateSpot () {
                            value={postcode} onChange={(e) => setPostcode(e.target.value)}></TextField>
                 <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)'
                            placeholder='16' style={inputStyle}
-                           value={price} onChange={(e) => setPrice(e.target.value)}/>
+                           value={basePrice} onChange={(e) => setBasePrice(e.target.value)}/>
                 <TextField width='5px' variant='outlined' size='small' label='Largest Vehicle'
                            placeholder='Select option' style={inputStyle}
-                           value={largest} onChange={(e) => setLargest(e.target.value)}></TextField>
+                           value={largestVehicle} onChange={(e) => setLargestVehicle(e.target.value)}></TextField>
                 <TextField width='1px' variant='outlined' size='small' label='Clearance height'
                            placeholder='2.2' style={inputStyle}
-                           value={height} onChange={(e) => setHeight(e.target.value)}></TextField>
+                           value={clearance} onChange={(e) => setClearance(e.target.value)}></TextField>
                 <div>{"Revenue will be paid into the following bank account"}</div>
                 <TextField fullWidth variant='outlined' size='small' label='Card Number'
                            value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
                 <TextField width='5px' variant='outlined' size='small' label='Card Name'
                            value={cardName} onChange={(e) => setCardName(e.target.value)}/>
                 <TextField width='1px' variant='outlined' size='small' label='CVV'
-                           value={CVV} onChange={(e) => setCVV(e.target.value)}></TextField>
+                           value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
             </Card>
-            <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Register</Button>
+            <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
         </>
     )
 }
