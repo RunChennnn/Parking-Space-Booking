@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get, set, push } from 'firebase/database';
 import { getAuth } from "firebase/auth";
-import { registerNewAccount, signInAccount, deleteAccount, signOutAccount } from "./account.js";
+import { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword } from "./account.js";
 import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
 import { getUser, patchUser } from "./user.js"
 
@@ -104,13 +104,21 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
+//authentication usieng passowrd
+
 app.post('/auth/:userID', async (req, res) => {
-    if (true) { // Password is correct
-        return res.status(200).json({ status: 'OK' })
+    const uid = req.params.userID;
+    const { email, password } = req.body;
+    const respond = await authAccountwithPassword(email, password);
+    
+    if (respond.status === 200) {
+        return res.status(200).json(respond);
+    } else if (respond.status === 400) {
+        return res.status(400).json(respond);
     } else {
-        return res.status(500).json({ error: 'incorrect password' })
+        return res.status(400).json({ message: 'Unknown Error' })
     }
-})
+});
 
 // Account Deletion
 app.delete('/user/:userId/delete', async (req, res) => {
