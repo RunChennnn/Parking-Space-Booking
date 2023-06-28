@@ -77,6 +77,12 @@ function Register () {
       if (response.error === 'email already used') {
         setErrorMessage('This email address is already used for an account. Please select a different email address and try again.');
         setShowError(true)
+      } else if (response.error === 'Weak Password') {
+        setErrorMessage('Please choose a longer password and try again. Passwords must contain at least 8 characters, and contain at least 2 of the following: lowercase characters, uppercase characters, numbers.');
+        setShowError(true)
+      } else if (response.error === 'Firebase: Error (auth/invalid-email).') {
+        setErrorMessage('Please choose a valid email address.');
+        setShowError(true)
       } else {
         console.log(`Unknown error: ${response.error}`);
       }

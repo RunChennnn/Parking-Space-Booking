@@ -44,6 +44,7 @@ function Login () {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [showError, setShowError] = React.useState(false);
+  const [errorText, setErrorText] = React.useState('');
     
   const navigate = useNavigate();
 
@@ -54,9 +55,13 @@ function Login () {
     };
     const response = await makeRequest("POST", "auth/login", request);
     if (response.error) {
-      if (response.error === 'invalid username or password') {
+      if (response.error === 'Firebase: Error (auth/wrong-password).') {
         setShowError(true)
-        console.log("Invalid username or password");
+        setErrorText('Invalid username or password, please try again.');
+      } else if (response.error === 'Firebase: Error (auth/missing-password).') {
+        setShowError(true)
+        console.log("Please enter a password");
+        setErrorText('Please enter a password and try again.');
       } else {
         console.log(`Unknown error: ${response.error}`);
       }
@@ -87,7 +92,7 @@ function Login () {
         </Typography>
         <Button variant="contained" style={buttonStyle} onClick={pressRegister}>Register</Button>
         </Card>
-        {showError && (<Alert severity="error" style={errorStyle}>Invalid username or password, please try again.</Alert>)}
+        {showError && (<Alert severity="error" style={errorStyle}>{errorText}</Alert>)}
       </div>
     </>
   )
