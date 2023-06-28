@@ -58,8 +58,19 @@ function UpdateAccount () {
     setShowDeletePopup(true);
   }
 
-  function doUpdate () {
-    console.log('Not implemented yet (not for sprint 1)');
+  async function doUpdate () {
+    let request = {}
+    if (email !== '') {
+      request.email = email;
+    }
+    if (password !== '' && password === confirmPassword) {
+      request.password = password;
+    }
+
+    console.log(request);
+
+    await makeRequest('PATCH', `user/${params.userID}/update`, request);
+    // console.log('Not implemented yet (not for sprint 1)');
     navigate(`/account/${params.userID}`)
   }
 

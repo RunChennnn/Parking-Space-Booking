@@ -74,7 +74,7 @@ const patchUser = async (userId, data) => {
         console.log(`User ${userId} infomation updated in database`);
         return {
             status: 200,
-            message: `User ${spotId} information update successfully`,
+            message: `User ${userId} information update successfully`,
         }
     } catch (error) {
         console.error("Error user not found:", error);

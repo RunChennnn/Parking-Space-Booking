@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get } from 'firebase/database';
-import { getAuth, getIdToken, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, getIdToken, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, EmailAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyApBdX_ouOp0E9Bez09PtHyMa4UL-qDYBo",
@@ -108,6 +108,25 @@ const deleteAccount = async (uid) => {
     }
 }
 
+const authAccountwithPassword = async (email, password) => {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const token = await getIdToken(userCredential.user);
+
+        return {
+            status: 200,
+            message: "Passoword match"
+        }
+    } catch (error) {
+        console.log("Error validating password: ", error.message);
+        return {
+            status: 400,
+            message: "Password not match",
+            error: error.message
+        };
+    }
+}
+
 const signOutAccount = async () => {
     try {
         await signOut(auth);
@@ -118,4 +137,4 @@ const signOutAccount = async () => {
 };
 
 
-export { registerNewAccount, signInAccount, deleteAccount, signOutAccount };
+export { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword };
