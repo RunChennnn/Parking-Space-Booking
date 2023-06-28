@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState} from "react"
 import {useNavigate, useParams} from 'react-router-dom'
 import {
     Table,
@@ -12,16 +12,75 @@ import {
     TablePagination, TableFooter
 } from '@mui/material'
 import Paper from '@mui/material/Paper'
-import SpotNavigationBar from './SpotNavigationBar'
 import makeRequest from "../utilities/makeRequest";
+import SpotNavigationBar from "./SpotNavigationBar";
 
+function OwnedSpots() {
 
-function OwnedSpots () {
+    const [spots, setSpots] = useState([])
 
     const params = useParams()
 
     const navigate = useNavigate()
 
+    const buttonStyle = {
+        margin: '20px 30% 0 30%'
+    }
+
+    async function loadingSpots() {
+        //const userRes = await makeRequest('GET', `user/${params.userId}`, {})
+        //const spotsId = userRes.spots
+        const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
+        setSpots(spotsId)
+    }
+
+    async function loadingSpotInfo(spotId) {
+        const spot = await makeRequest('GET', `spot/${spotId}`, {})
+        console.log(spot)
+        return spot
+    }
+
+    React.useEffect(() => {
+        loadingSpots()
+    }, [])
+
+    function toRegisterSpot() {
+        navigate('/spots/new')
+    }
+
+    /**
+     *  The function to generate table row for each spot
+     * @param spotId
+     * @returns {JSX.Element}
+     */
+    async function generateTableRow(spotId) {
+
+        const spot = await loadingSpotInfo(spotId)
+
+        return (
+            <TableRow
+                key={spot.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+                <TableCell component="th" scope="row" align="center">
+                    {spot.id}
+                </TableCell>
+                <TableCell align="center">{spot.data.streetNumber} {spot.data.streetName} {spot.data.suburb}</TableCell>
+                <TableCell align="center">{spot.data.basePrice}</TableCell>
+                <TableCell align="center">{spot.data.demandPricing}</TableCell>
+                <TableCell align="center">
+                    <Button variant="contained" style={buttonStyle} align="center"
+                            onClick={()=> {
+                                navigate( `/spots/update/${spot.id}`)
+                            }}>Edit</Button>
+                </TableCell>
+            </TableRow>
+        )
+    }
+
+    /**
+     *  the definition of Owned List
+     */
     const [page,setPage] = React.useState(0)
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
@@ -33,61 +92,12 @@ function OwnedSpots () {
         setRowsPerPage(parseInt(event.target.value, 10))
         setPage(0)
     }
-    
-    const buttonStyle = {
-        margin: '20px 30% 0 30%'
-    }
 
-    // data tested for ui layout
-    function initData(key, address, averPrice, demandDriven) {
-        return {key, address, averPrice, demandDriven}
-    }
-    const testData = [
-        initData(1, 'Tom', '49 Average Way', 26, 'no'),
-        initData(2,'Jerry', '49 Wallabay Way', 29, 'no'),
-        initData(3, 'Pat', 'Kelly Street', 21, 'no'),
-        initData(4, 'Steven', 'Haymarket', 25, 'no'),
-        initData(5, 'Thor', 'UNSW Anaze', 23, 'no'),
-        initData(6, 'wwwww', 'Spiderman', 19, 'no'),
-        initData(7, 'walali', 'sgsgsgs', 14, 'no')
-    ]
-
-    // the spots rows shown on the owned table
-    const rows = []
-
-    /**
-     *  the function to load owned spots
-     */
-    async function loadingSpots() {
-        //const response = await makeRequest('GET', `user/${params.userId}`, {})
-       // const spotsId = response.spots
-        const  spotsId = ["-NYv6sDOfDjYYihxKdTB"]
-
-        spotsId.map(async (spot) => {
-            const res = await makeRequest('GET', `spot/${spot}`, {})
-            rows.push(res)
-        })
-    }
-
-    /*React.useEffect(() => {
-        loadingSpots()
-    }, [])*/
-
-    function toRegisterSpot() {
-        //navigate('/spots/new')
-        const spotsId = ["-NYv6sDOfDjYYihxKdTB"]
-        spotsId.map(async (spot) => {
-            const res = await makeRequest('GET', `spot/${spot}`, {})
-            //rows.push(res)
-            console.log(res)
-        })
-    }
-    
     return (
-        <>  
+        <>
             <div>
-              <SpotNavigationBar />
-              <Typography align="center" variant="h4">Owned Spots</Typography>
+                <SpotNavigationBar />
+                <Typography align="center" variant="h4">Owned Spots</Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                         <TableHead>
@@ -100,32 +110,16 @@ function OwnedSpots () {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <TableRow
-                                    key={row.key}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row" align="center">
-                                        {row.key}
-                                    </TableCell>
-                                    <TableCell align="center">{row.address}</TableCell>
-                                    <TableCell align="center">{row.averPrice}</TableCell>
-                                    <TableCell align="center">{row.demandDriven}</TableCell>
-                                    <TableCell align="center">
-                                        <Button variant="contained" style={buttonStyle} align="center"
-                                                onClick={()=> {
-                                                    navigate( `/spots/update/${row.key}`)
-                                                }}>Edit</Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {spots.map((spot)=> {
+                                generateTableRow(spot)
+                            })}
                         </TableBody>
                         <TableFooter>
                             <TableRow>
                                 <TablePagination
                                     rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                     colSpan={3}
-                                    count={rows.length}
+                                    count={spots.length}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     SelectProps={{
@@ -141,10 +135,10 @@ function OwnedSpots () {
                         </TableFooter>
                     </Table>
                 </TableContainer>
-              <Button variant="contained" style={buttonStyle} onClick={toRegisterSpot} >Register new spot</Button>
+                <Button variant="contained" style={buttonStyle} onClick={toRegisterSpot} >Register new spot</Button>
             </div>
         </>
     )
-}
 
-export default OwnedSpots
+}
+export default OwnedSpots;
