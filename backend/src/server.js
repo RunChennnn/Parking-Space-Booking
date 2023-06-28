@@ -104,6 +104,14 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
+app.post('/auth/:userID', async (req, res) => {
+    if (true) { // Password is correct
+        return res.status(200).json({ status: 'OK' })
+    } else {
+        return res.status(500).json({ error: 'incorrect password' })
+    }
+})
+
 // Account Deletion
 app.delete('/user/:userId/delete', async (req, res) => {
     const uid = req.params.userId;
