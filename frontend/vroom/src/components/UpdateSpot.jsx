@@ -22,6 +22,8 @@ function UpdateSpot () {
     const [cardName, setCardName] = React.useState('');
     const [cardCVV, setCardCVV] = React.useState('');
 
+    const [showError, setShowError] = React.useState(false);
+
     const buttonStyle = {
         margin: '20px 30% 0 30%'
     }
@@ -47,25 +49,54 @@ function UpdateSpot () {
         rowGap: '15px'
     };
 
+    React.useEffect(() => {
+        async function loadingSpotInfo() {
+            const res = await makeRequest('GET', `spot/${params.spotID}`, {})
+            const spot = res.data
+
+            setDescription(spot.description)
+            setStreetNumber(spot.streetNumber)
+            setStreetName(spot.streetName)
+            setSuburb(spot.suburb)
+            setPostcode(spot.postcode)
+            setBasePrice(spot.basePrice)
+            setLargestVehicle(spot.largestVehicle)
+            setClearance(spot.clearance)
+            setCardNumber(spot.cardNumber)
+            setCardName(spot.cardName)
+            setCardCVV(spot.cardCVV)
+
+        }
+        loadingSpotInfo()
+        //console.log(res)
+    }, [])
+
     async function confirmUpdate() {
         const req = {
-            basePrice,
-            cardCVV,
-            cardName,
-            cardNumber,
-            clearance,
+            basePrice: basePrice,
+            cardCVV: cardCVV,
+            cardName: cardName,
+            cardNumber: cardNumber,
+            clearance: clearance,
             demandPricing: true,
-            description,
+            description: description,
             disabledAccess: false,
             evCharging: true,
-            largestVehicle,
-            owner: params.userId,
-            postcode,
-            streetName,
-            streetNumber,
-            suburb
+            largestVehicle: largestVehicle,
+            owner: localStorage.getItem('vroom-id'),
+            postcode: postcode,
+            streetName: streetName,
+            streetNumber: streetNumber,
+            suburb: suburb
         }
-        const res = await makeRequest('PATCH', `/spots/${params.spotId}/update`, req)
+        const res = await makeRequest('PATCH', `spot/${params.spotID}/update`, req)
+        if (res.error) {
+            setShowError(true)
+            console.log('invalid input')
+        }
+        else {
+            navigate(`/spots/${localStorage.getItem('vroom-id')}`)
+        }
     }
 
     return (
@@ -106,7 +137,7 @@ function UpdateSpot () {
                 <TextField width='1px' variant='outlined' size='small' label='CVV'
                            value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
             </Card>
-            <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Register</Button>
+            <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
         </>
     )
 }

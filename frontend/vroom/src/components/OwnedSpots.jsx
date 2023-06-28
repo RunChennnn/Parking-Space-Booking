@@ -28,9 +28,9 @@ function OwnedSpots() {
     }
 
     async function loadingSpots() {
-        //const userRes = await makeRequest('GET', `user/${params.userId}`, {})
-        //const spotsId = userRes.spots
-        const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
+        const userRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
+        const spotsId = userRes.spots
+        //const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
         setSpots(spotsId)
     }
 
@@ -60,10 +60,10 @@ function OwnedSpots() {
         return (
             <TableRow
                 key={spot.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                sx={{ '&:last-child td, &:last-child `qth': { border: 0 } }}
             >
                 <TableCell component="th" scope="row" align="center">
-                    {spot.id}
+                    {spot.data.description}
                 </TableCell>
                 <TableCell align="center">{spot.data.streetNumber} {spot.data.streetName} {spot.data.suburb}</TableCell>
                 <TableCell align="center">{spot.data.basePrice}</TableCell>
@@ -102,7 +102,7 @@ function OwnedSpots() {
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow>
-                                <TableCell align="center">Key</TableCell>
+                                <TableCell align="center">Description</TableCell>
                                 <TableCell align="center">Address</TableCell>
                                 <TableCell align="center">Average Price per hour($)</TableCell>
                                 <TableCell align="center">Demand-driven pricing</TableCell>

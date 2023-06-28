@@ -6,7 +6,7 @@ import {Button, Card, TextField} from "@mui/material";
 
 function NewSpot () {
 
-    const params = useParams()
+    //const params = useParams()
 
     const navigate = useNavigate()
 
@@ -55,29 +55,29 @@ function NewSpot () {
 
     async function confirmRegister() {
         const req = {
-            basePrice,
-            cardCVV,
-            cardName,
-            cardNumber,
-            clearance,
+            basePrice: basePrice,
+            cardCVV: cardCVV,
+            cardName: cardName,
+            cardNumber: cardNumber,
+            clearance: clearance,
             demandPricing: true,
-            description,
+            description: description,
             disabledAccess: false,
             evCharging: true,
-            largestVehicle,
-            owner: params.userId,
-            postcode,
-            streetName,
-            streetNumber,
-            suburb
+            largestVehicle: largestVehicle,
+            owner: localStorage.getItem('vroom-id'),
+            postcode: postcode,
+            streetName: streetName,
+            streetNumber: streetNumber,
+            suburb: suburb
         }
         const res = await makeRequest('POST', 'spot/new', req)
-        if (res.error === 'invalid input') {
+        if (res.error) {
             setShowError(true)
             console.log('invalid input')
         }
         else {
-            navigate(`spots/${params.userId}`)
+            navigate(`/spots/${localStorage.getItem('vroom-id')}`)
         }
     }
     
