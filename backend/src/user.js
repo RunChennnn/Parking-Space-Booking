@@ -67,18 +67,32 @@ const getUser = async (userId) => {
     }
 };
 
+
+const checkPasswordNaive = (pwdstr) => {
+    const hasUppercase = /[A-Z]/.test(pwdstr) ? 1:0;
+    const hasLowercase = /[a-z]/.test(pwdstr) ? 1:0;
+    const hasNumbers = /\d/.test(pwdstr) ? 1:0;
+
+    const hasCount = hasUppercase + hasLowercase + hasNumbers;
+    return (pwdstr.length >=8 && hasCount >= 2);
+}
+
 const patchUser = async (userId, data) => {
     try {
         // note admin.auth().getUser() is not the getUser we defined earlier!
         const userRecord = await admin.auth().getUser(userId);
 
-        if (data.hasOwnProperty("email")) {
-            const newEmail = data.email;
-            admin.auth().updateUser(userId, { email: newEmail});
-        }
         if (data.hasOwnProperty("password")) {
             const newPassword = data.password;
-            admin.auth().updateUser(userId, { password: newPassword});
+            if (!checkPasswordNaive(newPassword)) {
+                throw new Error('Weak Passord');
+            } else {
+            await admin.auth().updateUser(userId, { password: newPassword});
+            }
+        }
+        if (data.hasOwnProperty("email")) {
+            const newEmail = data.email;
+            await admin.auth().updateUser(userId, { email: newEmail});
         }
 
         
