@@ -16,18 +16,36 @@ const firebase = initializeApp(firebaseConfig);
 const db = getDatabase(firebase);
 const auth = getAuth(firebase);
 
+const checkPasswordNaive = (pwdstr) => {
+    const hasUppercase = /[A-Z]/.test(pwdstr) ? 1:0;
+    const hasLowercase = /[a-z]/.test(pwdstr) ? 1:0;
+    const hasNumbers = /\d/.test(pwdstr) ? 1:0;
+
+    const hasCount = hasUppercase + hasLowercase + hasNumbers;
+    return (pwdstr.length >=8 && hasCount >= 2);
+}
+
 const registerNewAccount = async (email, password) => {
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const token = await getIdToken(userCredential.user);
-        console.log("Account Created: ", userCredential.user.uid);
-
-        return ({
-            status: 201,
-            userID: userCredential.user.uid,
-            token: token,
-            message: "Account successfully created"
-        });
+        if (!checkPasswordNaive(password)) {
+            console.log("Error creating account, weak password")
+            return ({
+                status: 400,
+                message: "Account creation FAILED",
+                error: "Weak Password"
+            })
+        } else {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const token = await getIdToken(userCredential.user);
+            console.log("Account Created: ", userCredential.user.uid);
+    
+            return ({
+                status: 201,
+                userID: userCredential.user.uid,
+                token: token,
+                message: "Account successfully created"
+            });
+        }
     } catch (error) {
         console.log("Error creating account: ", error.message);
 
