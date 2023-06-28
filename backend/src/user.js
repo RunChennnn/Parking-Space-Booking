@@ -71,10 +71,16 @@ const patchUser = async (userId, data) => {
     try {
         // note admin.auth().getUser() is not the getUser we defined earlier!
         const userRecord = await admin.auth().getUser(userId);
-        const newEmail = data.email;
-        const newPassword = data.password;
-        admin.auth().updateUser(userId, { email: newEmail});
-        admin.auth().updateUser(userId, { password: newPassword});
+
+        if (data.hasOwnProperty("email")) {
+            const newEmail = data.email;
+            admin.auth().updateUser(userId, { email: newEmail});
+        }
+        if (data.hasOwnProperty("password")) {
+            const newPassword = data.password;
+            admin.auth().updateUser(userId, { password: newPassword});
+        }
+
         
         console.log(`User ${userId} infomation updated in database`);
         return {
