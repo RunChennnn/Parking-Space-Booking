@@ -20,7 +20,8 @@ function AuthPopup (props) {
   };
 
   async function onConfirm () {
-    const response = await makeRequest('POST', `auth/${localStorage.getItem('vroom-id')}`, { password: password });
+    const preresponse = await makeRequest('GET', `user/${params.userID}`, {});
+    const response = await makeRequest('POST', `auth/${localStorage.getItem('vroom-id')}`, { email: preresponse.email, password: password });
     if (!response.error) {
       props.onConfirm();
     } else {
