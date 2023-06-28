@@ -18,6 +18,7 @@ import SpotNavigationBar from "./SpotNavigationBar";
 function OwnedSpots() {
 
     const [spots, setSpots] = useState([])
+    const [spotList, setSpotList] = useState([]);
 
     const params = useParams()
 
@@ -25,13 +26,6 @@ function OwnedSpots() {
 
     const buttonStyle = {
         margin: '20px 30% 0 30%'
-    }
-
-    async function loadingSpots() {
-        const userRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
-        const spotsId = userRes.spots
-        //const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
-        setSpots(spotsId)
     }
 
     async function loadingSpotInfo(spotId) {
@@ -56,8 +50,9 @@ function OwnedSpots() {
     async function generateTableRow(spotId) {
 
         const spot = await loadingSpotInfo(spotId)
+        spot.data.demandPricing = `${spot.data.demandPricing}`
 
-        return (
+        const ret = (
             <TableRow
                 key={spot.id}
                 sx={{ '&:last-child td, &:last-child `qth': { border: 0 } }}
@@ -76,6 +71,21 @@ function OwnedSpots() {
                 </TableCell>
             </TableRow>
         )
+        return ret;
+
+    }
+
+    async function loadingSpots() {
+        const userRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
+        const spotsId = userRes.spots
+        //const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
+        setSpots(spotsId)
+
+        const newSpotList = await Promise.all(spotsId.map(async (spot) => {
+            return await generateTableRow(spot);
+        }))
+        console.log(newSpotList);
+        setSpotList([...newSpotList]);
     }
 
     /**
@@ -110,9 +120,7 @@ function OwnedSpots() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {spots.map((spot)=> {
-                                generateTableRow(spot)
-                            })}
+                            {spotList}
                         </TableBody>
                         <TableFooter>
                             <TableRow>
