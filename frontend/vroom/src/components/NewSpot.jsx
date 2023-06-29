@@ -1,5 +1,5 @@
 import React from "react"
-import SpotNavigationBar from "./SpotNavigationBar";
+import NavigationBar from "./NavigationBar";
 import {useNavigate, useParams} from "react-router-dom";
 import makeRequest from "../utilities/makeRequest";
 import {Button, Card, TextField} from "@mui/material";
@@ -84,7 +84,7 @@ function NewSpot () {
     return (
         <>
             <Card style={cardStyle}>
-                <SpotNavigationBar />
+                <NavigationBar />
                 <div>{"New Spot"}</div>
                 <TextField fullWidth variant='outlined' size='small' label='Description'
                            placeholder='Description' style={inputStyle}

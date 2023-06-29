@@ -18,6 +18,7 @@ function NavigationBar () {
     borderBottomColor: '#aaa',
     borderBottomStyle: 'solid',
     borderBottomWidth: '2px',
+    zIndex: 100,
   };
 
   const spacerStyle = {

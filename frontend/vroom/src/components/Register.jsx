@@ -74,7 +74,7 @@ function Register () {
     };
     const response = await makeRequest("POST", "auth/register", request);
     if (response.error) {
-      if (response.error === 'email already used') {
+      if (response.error === 'Firebase: Error (auth/email-already-in-use).') {
         setErrorMessage('This email address is already used for an account. Please select a different email address and try again.');
         setShowError(true)
       } else if (response.error === 'Weak Password') {
