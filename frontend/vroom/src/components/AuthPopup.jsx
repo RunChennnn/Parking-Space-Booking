@@ -45,12 +45,12 @@ function AuthPopup (props) {
           <DialogContentText>
             Please input your password below to confirm your request.
           </DialogContentText>
-          <TextField style={textFieldStyle} size='small' type='password' label='Current Password' autoComplete="off" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <TextField id='auth-password-input' style={textFieldStyle} size='small' type='password' label='Current Password' autoComplete="off" value={password} onChange={(e) => setPassword(e.target.value)} />
         </DialogContent>
         {showError && (<Alert severity="error" style={errorStyle}>Incorrect password, please try again.</Alert>)}
         <DialogActions>
-          <Button variant="outlined" onClick={onBack}>Back</Button>
-          <Button variant="contained" onClick={onConfirm}>Confirm</Button>
+          <Button id='auth-back-button' variant="outlined" onClick={onBack}>Back</Button>
+          <Button id='auth-confirm-button' variant="contained" onClick={onConfirm}>Confirm</Button>
         </DialogActions>
         
       </Dialog>

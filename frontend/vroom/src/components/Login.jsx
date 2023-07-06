@@ -60,7 +60,6 @@ function Login () {
         setErrorText('Invalid username or password, please try again.');
       } else if (response.error === 'Firebase: Error (auth/missing-password).') {
         setShowError(true)
-        console.log("Please enter a password");
         setErrorText('Please enter a password and try again.');
       } else {
         console.log(`Unknown error: ${response.error}`);

@@ -1,11 +1,5 @@
-// const email = 'cypress.tests@email.com';
-// const password = 'Cypress1';
-// const other_email = 'tests.cypress@gmail.com';
-// const fake_email = 'fake';
-// const wrong_password = 'SecurePassword123456789';
-// const bad_passwords = ['password', 'C0i', 'IYBIHJEBSVKIB', '79264592763']
 
-describe('Register', () => {
+function registerTest () {
   it('Fail due to used email', () => {
     cy.visit('http://localhost:3000');
     cy.get('#register-button').click();
@@ -75,4 +69,33 @@ describe('Register', () => {
 
     cy.contains('Please ensure passwords match and try again.');
   })
-})
+
+  it('Successful registration and deletion', () => {
+    cy.visit('http://localhost:3000');
+    cy.get('#register-button').click();
+
+    // Register
+    const password = 'Cypress1';
+    cy.get('#email-input').type('test.cypress@actual.com');
+    cy.get('#password-input').type(password);
+    cy.get('#confirm-password-input').type(password);
+    cy.get('#register-button').click();
+
+    // Delete account
+    cy.get('#nav-my-account-button').click();
+    cy.get('#update-account-button').click();
+    cy.get('#delete-account-button').click();
+    cy.get('#auth-password-input').type(password);
+    cy.get('#auth-confirm-button').click();
+
+    // Check back at login page
+    cy.contains('Don\'t have an account?', { timeout: 20000});
+
+    // NOTE: if this fails, you might need to manually delete the 
+    // account registered above.
+  })
+}
+
+describe('Register', registerTest)
+
+export default registerTest

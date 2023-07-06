@@ -91,8 +91,8 @@ function UpdateAccount () {
         <TextField variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='Confirm New Password' type='password' style={inputStyle} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></TextField>
       </div>
       <div style={buttonRowStyle}>
-        <Button variant="contained" style={buttonStyle} onClick={pressUpdate}>Update</Button>
-        <Button variant="contained" color='error' style={buttonStyle} onClick={pressDeleteAccount}>Delete Account</Button>
+        <Button id='do-update-button' variant="contained" style={buttonStyle} onClick={pressUpdate}>Update</Button>
+        <Button id='delete-account-button' variant="contained" color='error' style={buttonStyle} onClick={pressDeleteAccount}>Delete Account</Button>
       </div>
       <AuthPopup show={showUpdatePopup} onConfirm={doUpdate} onBack={() => setShowUpdatePopup(false)} />
       <AuthPopup show={showDeletePopup} onConfirm={doDelete} onBack={() => setShowDeletePopup(false)} />
