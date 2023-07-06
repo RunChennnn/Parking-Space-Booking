@@ -82,15 +82,15 @@ function Login () {
 
       <div style={pageStyle}>
         <Card style={cardStyle}>
-          <TextField variant='outlined' size='small' label='Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
-          <TextField variant='outlined' size='small' type='password' label='Password' style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)}></TextField>
-          <Button variant="contained" style={buttonStyle} onClick={pressLogin}>Login</Button>
+          <TextField id='email-input' variant='outlined' size='small' label='Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
+          <TextField id='password-input' variant='outlined' size='small' type='password' label='Password' style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)}></TextField>
+          <Button id='login-button' variant="contained" style={buttonStyle} onClick={pressLogin}>Login</Button>
         </Card>
         <Card style={cardStyle}>
         <Typography align='center' variant='h5'>
           Don't have an account?
         </Typography>
-        <Button variant="contained" style={buttonStyle} onClick={pressRegister}>Register</Button>
+        <Button id='register-button' variant="contained" style={buttonStyle} onClick={pressRegister}>Register</Button>
         </Card>
         {showError && (<Alert severity="error" style={errorStyle}>{errorText}</Alert>)}
       </div>

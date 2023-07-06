@@ -10,19 +10,14 @@ import UpdateAccount from './components/UpdateAccount';
 import OwnedSpots from './components/OwnedSpots';
 import NewSpot from './components/NewSpot';
 import UpdateSpot from './components/UpdateSpot';
+import UpcomingBooking from './components/UpcomingBooking';
+import SpotUseRenter from './components/SpotUseRenter';
+import SpotUseOwner from './components/SpotUseOwner';
+import SpotSearch from './components/SpotSearch';
+import SpotDetails from './components/SpotDetails';
+import RentSpot from './components/RentSpot';
 
 function App() {
-
-  async function test () {
-    console.log("starting");
-    const result = await makeRequest("GET", "test", {});
-    console.log(result)
-    console.log("ending");
-  }
-
-  React.useState(() => {
-    test();
-  })
 
   return (
     <>
@@ -37,6 +32,12 @@ function App() {
           <Route path="spots/:userID" element={<OwnedSpots />} />
           <Route path="spots/new" element={<NewSpot />} />
           <Route path="spots/update/:spotID" element={<UpdateSpot />} />
+          <Route path="booking/upcoming/:bookingID" element={<UpcomingBooking />} />
+          <Route path="booking/review/:bookingID" element={<SpotUseRenter />} />
+          <Route path="booking/view/:bookingID" element={<SpotUseOwner />} />
+          <Route path="search" element={<SpotSearch />} />
+          <Route path="spot/:spotID" element={<SpotDetails />} />
+          <Route path="spot/:spotID/rent" element={<RentSpot />} />
           {/* Add more Routes as needed */}
           <Route path = "*" element={<>Page not found</>} /> {/* Catch all */}
         </Routes>
