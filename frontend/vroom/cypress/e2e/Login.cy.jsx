@@ -1,4 +1,4 @@
-function loginTest () {
+describe('Login', () => {
   it('Fail due to incorrect email', () => {
     cy.visit('http://localhost:3000');
 
@@ -42,8 +42,8 @@ function loginTest () {
     // Check existence of home page
     cy.url().should('contain', '/home');
   })
-}
+})
 
-describe('Login', loginTest)
+// describe('Login', loginTest)
 
-export default loginTest
+// export default loginTest

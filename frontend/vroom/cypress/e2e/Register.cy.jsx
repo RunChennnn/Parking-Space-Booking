@@ -1,5 +1,5 @@
 
-function registerTest () {
+describe('Register', () => {
   it('Fail due to used email', () => {
     cy.visit('http://localhost:3000');
     cy.get('#register-button').click();
@@ -94,8 +94,8 @@ function registerTest () {
     // NOTE: if this fails, you might need to manually delete the 
     // account registered above.
   })
-}
+})
 
-describe('Register', registerTest)
+// describe('Register', registerTest)
 
-export default registerTest
+// export default registerTest

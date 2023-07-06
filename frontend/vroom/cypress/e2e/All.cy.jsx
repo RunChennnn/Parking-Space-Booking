@@ -1,3 +1,4 @@
-// Importing a test here will run it
-import registerTest from "./Register.cy";
-import loginTest from "./Login.cy";
+// Importing a test file here will run it
+import './Register.cy';
+import './Login.cy';
+import './UpdateAccount.cy'
