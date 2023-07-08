@@ -61,7 +61,7 @@ app.post('/testDB/spots', async (req, res) => {
     console.log("Data added to the database");
     res.status(200).json({status: 200,message: "Data added to the database"});
 
-  });
+});
 
 // Not sure if we need this, I just put here for better manipulation of firebase atm
 app.post('/auth/logoff', async (req,res) => {
@@ -237,6 +237,172 @@ app.patch('/user/:userID/update', async (req, res) => {
         return res.status(400).json({ message: 'Unknown Error' })
     }
 });
+
+// 
+app.post('/recommend/:userID', async (req, res) => { // TODO
+    
+    const num = req.body.num;
+    const alreadyReceived = req.body.alreadyReceived;
+    // Return num IDs of recommended spots for this user, that aren't 
+    // included in alreadyReceived
+
+    const arr = [];
+    for (let i = 0; i < num; i++) {
+        arr.push(`dummySpot${i + 1}`);
+    };
+    const response = {
+        ids: arr,
+    };
+    return res.status(200).json(response);
+});
+
+app.post('/search', async (req, res) => { // TODO
+    const requestBodyLooksLikeThis = {
+        search: 'Sydney', // Just generic text, could be address or username
+        minPrice: undefined, // int
+        maxPrice: undefined, // int
+        minDistance: undefined, // int
+        maxDistance: undefined, // int
+        minRating: undefined, // int
+        vehicleType: undefined, // string, we need to figure out what the options are
+        minClearance: undefined, // int
+        evCharging: undefined, // bool
+        disabledAccess: undefined, // book
+        num: 20, // number of IDs to return
+        alreadyReceived: [], // list of IDs already received, so don't return these, look for others
+    }
+    // Most for filters, if a filter isn't set then there won't be a 
+    // field. So a request could JUST have a 'search' field
+
+    const arr = [];
+    for (let i = 0; i < req.body.num; i++) {
+        arr.push(`dummySpot${i + 1}`);
+    };
+    const response = {
+        ids: arr,
+    };
+    return res.status(200).json(response);
+})
+
+app.post('/book/:spotID/price', async (req, res) => { // TODO
+    const requestBodyLooksLikeThis = {
+        spotID: 30,
+        startTime: 1688794787, // unix timestamp
+        endTime: 1688795245, // unix timestamp
+    }
+    // We'll make sure that the timestamps passed from the frontend will
+    // be on the hour
+
+    const response = {
+        price: 35.5 // float/double/whatever
+    }
+    if (true) { // If spot is available for this whole time
+        return res.status(200).json(response);
+    } else {
+        return res.status(500).json({ error: 'spot not available' }); // don't change this error code without telling us
+    }
+})
+
+app.post('/book/:spotID/confirm', async (req, res) => { // TODO
+    const requestBodyLooksLikeThis = {
+        spotID: req.params.spotID,
+        startTime: 1688794787, // unix timestamp
+        endTime: 1688795245, // unix timestamp
+        cardNumber: '9234567898765432', // needs to be string to avoid integer overflow
+        cardName: 'Joe Biden',
+        cardCvv: 420,
+    }
+
+    if (true) { // If spot is available for this whole time
+        return res.status(200).json({ status: 'OK' }); // Don't care what this says
+    } else if (true) { // Spot became not available
+        return res.status(500).json({ error: 'spot not available' }); // don't change this error code without telling us
+    } else {
+        return res.status(500).json({ error: 'other error' });
+    }
+})
+
+app.get('/booking/:bookingID', async (req, res) => { // TODO
+    const bookingID = req.params.bookingID;
+    const requestBodyLooksLikeThis = {
+        spotID: req.params.spotID,
+        startTime: 1688794787, // unix timestamp
+        endTime: 1688795245, // unix timestamp
+        cardNumber: '9234567898765432', // needs to be string to avoid integer overflow
+        cardName: 'Joe Biden',
+        cardCvv: 420,
+    }
+
+    const response = {
+        spotID: 28374592, // whatever ID format you usually use
+        startTime: 1688794787, // unix timestamp
+        endTime: 1688795245, // unix timestamp
+        price: 34.8,
+        refundAvailable: 0.5, // 0 for not available, 1 for 100%, 0.5 for 50%
+        // include rating: and review: if those are available too
+    }
+
+    if (true) { // valid request
+        return res.status(200).json(response);
+    } else {
+        return res.status(500).json({ error: 'invalid booking ID' }); // or other error, let us know
+    }
+})
+
+app.post('/booking/:bookingID/review', async (req, res) => { // TODO
+    const bookingID = req.params.bookingID;
+
+    const requestBodyLooksLikeThis = {
+        rating: 4, // star rating 1, 2, 3, 4, or 5
+        review: 'great' // text review
+    }
+
+    if (true) { // valid request
+        return res.status(200).json({ status: 'OK '}); // don't care what this says
+    } else {
+        return res.status(500).json({ error: 'invalid spot ID' });
+    }
+})
+
+app.delete('/booking/:bookingID/cancel', async (req, res) => { // TODO
+    const bookingID = req.params.bookingID;
+
+    if (true) { // valid request
+        return res.status(200).json({ status: 'OK '}); // don't care what this says
+    } else {
+        return res.status(500).json({ error: 'invalid spot ID' });
+    }
+})
+
+app.get('/upcoming/:userID', (req, res) => { // TODO
+    const userID = req.params.userID;
+
+    const response = {
+        asOwner: [3245, 45674], // list of IDs for bookings where this person is the owner, earliest to latest (can be empty)
+        asRenter: [96, 12753475983], // list of IDs for bookings where this person is the renter, earliest to latest (can be empty)
+    }
+
+    if (true) { // valid request
+        return res.status(200).json(response); // don't care what this says
+    } else {
+        return res.status(500).json({ error: 'invalid user ID' });
+    }
+})
+
+app.get('/booking/:userID', (req, res) => { // TODO
+    const userID = req.params.userID;
+
+    const response = {
+        asOwner: [3245, 45674], // list of IDs for bookings where this person is the owner, earliest to latest (can be empty)
+        asRenter: [96, 12753475983], // list of IDs for bookings where this person is the renter, earliest to latest (can be empty)
+    }
+
+    if (true) { // valid request
+        return res.status(200).json(response); // don't care what this says
+    } else {
+        return res.status(500).json({ error: 'invalid user ID' });
+    }
+})
 
 const server = app.listen(port, () => {
     console.log(`Backend is now listening on port ${port}!`);
