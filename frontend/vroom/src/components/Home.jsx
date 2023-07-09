@@ -3,11 +3,13 @@ import NavigationBar from "./NavigationBar"
 import { Button, TextField, Typography } from "@mui/material";
 import makeRequest from "../utilities/makeRequest";
 import SearchStub from "./SearchStub";
+import { useNavigate } from "react-router-dom";
 
 function Home () {
 
-  const [search, setSearch] = React.useState('')
-  const [recommended, setRecommended] = React.useState('')
+  const [search, setSearch] = React.useState('');
+  const [recommended, setRecommended] = React.useState('');
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     async function getData () {
@@ -38,12 +40,16 @@ function Home () {
     margin: '30px calc(50% - 75px)',
     width: '150px',
   };
+
+  function doSearch () {
+    navigate(`/search?search=${search}`);
+  }
     
   return (
     <>
       <NavigationBar />
       <TextField id='search-input' variant='outlined' placeholder="Find a spot..." style={inputStyle} value={search} onChange={(e) => setSearch(e.target.value)} />
-      <Button id='search-button' variant='contained' style={buttonStyle}>Search</Button>
+      <Button id='search-button' variant='contained' style={buttonStyle} onClick={doSearch}>Search</Button>
       <Typography align='center' variant='h2'>Recommended for you</Typography>
       {recommended}
     </>

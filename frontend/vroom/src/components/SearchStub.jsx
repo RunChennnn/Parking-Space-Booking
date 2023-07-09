@@ -14,19 +14,19 @@ function SearchStub (props) {
     borderRadius: '10px',
     display: 'grid',
     gridTemplateColumns: 'calc(100% - 150px) 150px',
-  }
+  };
 
   const buttonStyle = {
     margin: 'auto',
     width: '100px',
     height: '36.5px',
-  }
+  };
     
   return (
     <Card key={props.spotID} style={cardStyle}>
       <div>
         <Typography variant='h6'>Address: (address for ID {props.spotID})</Typography>
-        <Typography>Average price per hour: (price for ID {props.spotID})</Typography>
+        <Typography>Regular price per hour: (price for ID {props.spotID})</Typography>
       </div>
       <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle}>View</Button>
       

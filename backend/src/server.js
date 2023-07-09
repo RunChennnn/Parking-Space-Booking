@@ -259,13 +259,12 @@ app.post('/recommend/:userID', async (req, res) => { // TODO
 app.post('/search', async (req, res) => { // TODO
     const requestBodyLooksLikeThis = {
         search: 'Sydney', // Just generic text, could be address or username
-        minPrice: undefined, // int
         maxPrice: undefined, // int
         minDistance: undefined, // int
         maxDistance: undefined, // int
         minRating: undefined, // int
         vehicleType: undefined, // string, we need to figure out what the options are
-        minClearance: undefined, // int
+        minClearance: undefined, // float (to 0.1)
         evCharging: undefined, // bool
         disabledAccess: undefined, // book
         num: 20, // number of IDs to return
