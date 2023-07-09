@@ -87,6 +87,7 @@ function SpotSearch () {
     if (search.length > 0) { paramString += `search=${search}&` }
     if (vehicleType !== 'Select') { paramString += `vehicleType=${vehicleType}&` }
     paramString += `evCharging=${ev}&`
+    paramString += `disabledAccess=${disabledAccess}&`
     if (clearance !== 0) { paramString += `minClearance=${clearance}&` }
     if (price !== 100) { paramString += `maxPrice=${price}&` }
     navigate(`/search?${paramString}`);
