@@ -7,6 +7,7 @@ import { getAuth } from "firebase/auth";
 import { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword } from "./account.js";
 import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
 import { getUser, patchUser } from "./user.js"
+import { recommendSpot, searchSpot } from "./search.js"
 
 const port = 3141
 const app = express();
@@ -238,7 +239,12 @@ app.patch('/user/:userID/update', async (req, res) => {
     }
 });
 
-// 
+/*
+    Sprint II related,
+    Starts here
+*/
+
+/*
 app.post('/recommend/:userID', async (req, res) => { // TODO
     
     const num = req.body.num;
@@ -282,6 +288,39 @@ app.post('/search', async (req, res) => { // TODO
     };
     return res.status(200).json(response);
 })
+*/
+
+//Recommend unreceived spot
+//It gives first num spots at the moment, will implement the real recommendation later
+app.post('/recommend/:userID', async (req, res) => {
+    const uid = req.params.userID
+    const num = req.body.num;
+    const alreadyReceived = req.body.alreadyReceived;
+    const respond = await recommendSpot(uid, num, alreadyReceived);
+    
+    if (respond.status === 200) {
+        return res.status(200).json(respond);
+    } else if (respond.status === 400) {
+        return res.status(404).json(respond);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
+
+//Search spots
+////It gives first num spots at the moment, will implement the real search later
+app.post('/search', async (req, res) => {
+    const { num, alreadyReceived, ...conditions} = req.body;
+    const respond = await searchSpot(num, alreadyReceived,conditions);
+    
+    if (respond.status === 200) {
+        return res.status(200).json(respond);
+    } else if (respond.status === 400) {
+        return res.status(404).json(respond);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
 
 app.post('/book/:spotID/price', async (req, res) => { // TODO
     const requestBodyLooksLikeThis = {
