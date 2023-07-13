@@ -2,8 +2,11 @@ import React from "react"
 import NavigationBar from "./NavigationBar"
 import { useParams } from "react-router-dom"
 
-function SpotUseOwner () {
+import {useNavigate} from "react-router-dom";
 
+function SpotUseOwner() {
+
+  const navigate = useNavigate()
   const params = useParams();
     
   return (
