@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import makeRequest from "../utilities/makeRequest";
-import SpotNavigationBar from "./SpotNavigationBar";
+import NavigationBar from "./NavigationBar";
 
 function OwnedSpots() {
 
@@ -108,7 +108,7 @@ function OwnedSpots() {
     return (
         <>
             <div>
-                <SpotNavigationBar />
+                <NavigationBar />
                 <Typography align="center" variant="h4">Owned Spots</Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">

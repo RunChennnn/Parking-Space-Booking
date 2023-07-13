@@ -1,6 +1,6 @@
 import React from "react"
 import {useNavigate, useParams} from 'react-router-dom'
-import SpotNavigationBar from "./SpotNavigationBar";
+import NavigationBar from "./NavigationBar";
 import {Button, Card, TextField} from "@mui/material";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import makeRequest from "../utilities/makeRequest";
@@ -136,9 +136,8 @@ function UpdateSpot () {
 
     return (
         <>
-            <SpotNavigationBar />
+            <NavigationBar />
             <Card style={cardStyle}>
-                <SpotNavigationBar />
                 <div>{"Update Spot"}</div>
                 <TextField fullWidth variant='outlined' size='small' label='Description'
                            placeholder='Description' style={inputStyle}

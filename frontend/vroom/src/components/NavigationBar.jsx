@@ -18,6 +18,7 @@ function NavigationBar () {
     borderBottomColor: '#aaa',
     borderBottomStyle: 'solid',
     borderBottomWidth: '2px',
+    zIndex: 100,
   };
 
   const spacerStyle = {
@@ -56,10 +57,10 @@ function NavigationBar () {
     <>
       <div style={spacerStyle}></div>
       <div style={barStyle}>
-        <Button variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
-        <Button variant="contained" style={buttonStyle} onClick={pressManageParkingSpots}>Manage Parking Spots</Button>
-        <Button variant="contained" style={buttonStyle} onClick={pressMyAccount}>My Account</Button>
-        <Button variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
+        <Button id='nav-home-button' variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
+        <Button id='nav-manage-spots-button' variant="contained" style={buttonStyle} onClick={pressManageParkingSpots}>Manage Parking Spots</Button>
+        <Button id='nav-my-account-button' variant="contained" style={buttonStyle} onClick={pressMyAccount}>My Account</Button>
+        <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
       </div>
     </>
   )

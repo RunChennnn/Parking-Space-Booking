@@ -62,8 +62,8 @@ function MyAccount () {
       <div style={{ height: '30px' }}></div>
       <AccountDetailRow head='Email:' body={email} />
       <div style={buttonRowStyle}>
-        <Button variant="contained" style={buttonStyle} onClick={pressUpdateAccount}>Update Account</Button>
-        <Button variant="contained" style={buttonStyle} onClick={pressViewHistory}>View History</Button>
+        <Button id='update-account-button' variant="contained" style={buttonStyle} onClick={pressUpdateAccount}>Update Account</Button>
+        <Button id='view-history-button' variant="contained" style={buttonStyle} onClick={pressViewHistory}>View History</Button>
       </div>
       <Typography variant='h3' align='center'>Upcoming Bookings</Typography>
       TODO render bookings as individual components

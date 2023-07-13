@@ -74,11 +74,11 @@ function Register () {
     };
     const response = await makeRequest("POST", "auth/register", request);
     if (response.error) {
-      if (response.error === 'email already used') {
+      if (response.error === 'Firebase: Error (auth/email-already-in-use).') {
         setErrorMessage('This email address is already used for an account. Please select a different email address and try again.');
         setShowError(true)
       } else if (response.error === 'Weak Password') {
-        setErrorMessage('Please choose a longer password and try again. Passwords must contain at least 8 characters, and contain at least 2 of the following: lowercase characters, uppercase characters, numbers.');
+        setErrorMessage('Please choose a different password and try again. Passwords must contain at least 8 characters, and contain at least 2 of the following: lowercase characters, uppercase characters, numbers.');
         setShowError(true)
       } else if (response.error === 'Firebase: Error (auth/invalid-email).') {
         setErrorMessage('Please choose a valid email address.');
@@ -103,16 +103,16 @@ function Register () {
 
       <div style={pageStyle}>
         <Card style={cardStyle}>
-          <TextField variant='outlined' size='small' label='Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
-          <TextField variant='outlined' size='small' type='password' label='Password' style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)}></TextField>
-          <TextField variant='outlined' size='small' type='password' label='Confirm Password' style={inputStyle} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></TextField>
-          <Button variant="contained" style={buttonStyle} onClick={pressRegister}>Register</Button>
+          <TextField id='email-input' variant='outlined' size='small' label='Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
+          <TextField id='password-input' variant='outlined' size='small' type='password' label='Password' style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)}></TextField>
+          <TextField id='confirm-password-input' variant='outlined' size='small' type='password' label='Confirm Password' style={inputStyle} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></TextField>
+          <Button id='register-button' variant="contained" style={buttonStyle} onClick={pressRegister}>Register</Button>
         </Card>
         <Card style={cardStyle}>
         <Typography align='center' variant='h5'>
           Already have an account?
         </Typography>
-        <Button variant="contained" style={buttonStyle} onClick={pressLogin}>Login</Button>
+        <Button id='login-button' variant="contained" style={buttonStyle} onClick={pressLogin}>Login</Button>
         </Card>
         {showError && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
       </div>

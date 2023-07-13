@@ -86,13 +86,13 @@ function UpdateAccount () {
         Fill in any fields you'd like to change. If you leave any blank, they'll remain unchanged. You'll be prompted for your old password to make any changes.
       </Typography>
       <div style={formStyle}>
-        <TextField variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='New Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
-        <TextField variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='New Password' type='password' style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)}></TextField>
-        <TextField variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='Confirm New Password' type='password' style={inputStyle} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></TextField>
+        <TextField id='email-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='New Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
+        <TextField id='password-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='New Password' type='password' style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)}></TextField>
+        <TextField id='confirm-password-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='Confirm New Password' type='password' style={inputStyle} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></TextField>
       </div>
       <div style={buttonRowStyle}>
-        <Button variant="contained" style={buttonStyle} onClick={pressUpdate}>Update</Button>
-        <Button variant="contained" color='error' style={buttonStyle} onClick={pressDeleteAccount}>Delete Account</Button>
+        <Button id='update-account-button' variant="contained" style={buttonStyle} onClick={pressUpdate}>Update</Button>
+        <Button id='delete-account-button' variant="contained" color='error' style={buttonStyle} onClick={pressDeleteAccount}>Delete Account</Button>
       </div>
       <AuthPopup show={showUpdatePopup} onConfirm={doUpdate} onBack={() => setShowUpdatePopup(false)} />
       <AuthPopup show={showDeletePopup} onConfirm={doDelete} onBack={() => setShowDeletePopup(false)} />

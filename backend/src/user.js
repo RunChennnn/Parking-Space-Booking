@@ -85,7 +85,7 @@ const patchUser = async (userId, data) => {
         if (data.hasOwnProperty("password")) {
             const newPassword = data.password;
             if (!checkPasswordNaive(newPassword)) {
-                throw new Error('Weak Passord');
+                throw new Error('Error: Weak Passord');
             } else {
             await admin.auth().updateUser(userId, { password: newPassword});
             }
