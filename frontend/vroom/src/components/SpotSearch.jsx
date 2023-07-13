@@ -67,7 +67,7 @@ function SpotSearch () {
   }
 
   // Handle vehicle type filter
-  const [vehicleType, setVehicleType] = React.useState('Select')
+  const [vehicleType, setVehicleType] = React.useState(urlParams.get('vehicleType') ? urlParams.get('vehicleType') : 'Select')
   const [anchorVT, setAnchorVT] = React.useState(null);
   const vehicleTypeOptions = ['Select', 'Motorbike', 'Sedan', '4WD', 'Van', 'Truck'];
   function vehicleTypeClick (e) {
@@ -89,13 +89,13 @@ function SpotSearch () {
   }
 
   // Handle EV charging filter
-  const [ev, setEv] = React.useState(false);
+  const [ev, setEv] = React.useState(urlParams.get('evCharging') ? urlParams.get('evCharging') === 'true' : false);
 
   // Handle disabled access
-  const [disabledAccess, setDisabledAccess] = React.useState(false);
+  const [disabledAccess, setDisabledAccess] = React.useState(urlParams.get('disabledAccess') ? urlParams.get('disabledAccess') === 'true' : false);
 
   // Handle clearance slider
-  const [clearance, setClearance] = React.useState(0);
+  const [clearance, setClearance] = React.useState(urlParams.get('minClearance') ? parseInt(urlParams.get('minClearance')) : 0);
   const clearanceSliderStyle = {
     width: '400px',
     marginLeft: '50px',
@@ -103,7 +103,7 @@ function SpotSearch () {
   }
 
   // Handle price slider
-  const [price, setPrice] = React.useState(100);
+  const [price, setPrice] = React.useState(urlParams.get('maxPrice') ? parseInt(urlParams.get('maxPrice')) : 100);
   const priceSliderStyle = {
     width: '400px',
     marginLeft: '50px',
