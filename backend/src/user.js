@@ -67,6 +67,49 @@ const getUser = async (userId) => {
     }
 };
 
+const users = new Object();
+const getUserBasic = async (userId) => {
+    try {
+        if (users[userId]) {
+            return users[userId]
+        }
+
+        // note admin.auth().getUser() is a different thing!
+        const userRecord = await admin.auth().getUser(userId)
+        const email = userRecord.email
+
+
+        const data = {
+            status: 200,
+            message: "User information retrieval successfully",
+            email: email,
+        };
+        users[userId] = data;
+
+        console.log(`User ${userId} infomation retrived from the database`);
+        return {
+            status: 200,
+            message: "User information retrieval successfully",
+            email: email,
+        }
+    } catch (error) {
+        console.error("Error getting user profile:", error);
+        if (error.code === 'auth/user-not-found') {
+            return {
+                status: 404,
+                message: "User NOT FOUND",
+                error: error.message
+            }
+        } else {
+            return {
+                status: 500,
+                message: "User profile retrieval FAILED",
+                error: error.message
+            };
+        }
+    }
+};
+
 
 const checkPasswordNaive = (pwdstr) => {
     const hasUppercase = /[A-Z]/.test(pwdstr) ? 1:0;
@@ -80,7 +123,7 @@ const checkPasswordNaive = (pwdstr) => {
 const patchUser = async (userId, data) => {
     try {
         // note admin.auth().getUser() is not the getUser we defined earlier!
-        const userRecord = await admin.auth().getUser(userId);
+        // const userRecord = await admin.auth().getUser(userId);
 
         if (data.hasOwnProperty("password")) {
             const newPassword = data.password;
@@ -97,6 +140,8 @@ const patchUser = async (userId, data) => {
 
         
         console.log(`User ${userId} infomation updated in database`);
+        delete users[userId]
+        getUserBasic(userId);
         return {
             status: 200,
             message: `User ${userId} information update successfully`,
@@ -120,4 +165,4 @@ const patchUser = async (userId, data) => {
 };
 
 
-export { getUser, patchUser };
+export { getUser, getUserBasic, patchUser };

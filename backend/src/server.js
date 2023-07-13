@@ -6,7 +6,7 @@ import { getDatabase, ref, get, set, push } from 'firebase/database';
 import { getAuth } from "firebase/auth";
 import { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword } from "./account.js";
 import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
-import { getUser, patchUser } from "./user.js"
+import { getUser, getUserBasic, patchUser } from "./user.js"
 import { recommendSpot, searchSpot } from "./search.js"
 
 const port = 3141
@@ -206,6 +206,21 @@ app.get('/spot/:spotId', async (req, res) => {
 app.get('/user/:userID', async (req, res) => {
     const sid = req.params.userID
     const response = await getUser(sid);
+
+    if (response.status === 200) {
+        return res.status(200).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    } else {
+        return res.status(400).json({ message: 'Unknown Error' })
+    }
+});
+
+app.get('/user/:userID/basic', async (req, res) => {
+    const sid = req.params.userID
+    const response = await getUserBasic(sid);
 
     if (response.status === 200) {
         return res.status(200).json(response);

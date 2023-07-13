@@ -41,7 +41,7 @@ function MyAccount () {
 
   React.useEffect(() => {
     async function getData () {
-      const response = await makeRequest('GET', `user/${params.userID}`, {});
+      const response = await makeRequest('GET', `user/${params.userID}/basic`, {});
       setEmail(response.email);
     }
     getData();
