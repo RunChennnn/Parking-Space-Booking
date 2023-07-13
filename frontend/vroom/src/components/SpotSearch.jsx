@@ -2,11 +2,47 @@ import React from "react"
 import NavigationBar from "./NavigationBar"
 import { Button, Menu, MenuItem, Slider, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import makeRequest from "../utilities/makeRequest";
+import SearchStub from "./SearchStub";
 
 function SpotSearch () {
   const urlParams = new URLSearchParams(window.location.search);
   const [search, setSearch] = React.useState(urlParams.get('search'));
+  const [recommended, setRecommended] = React.useState([])
   const navigate = useNavigate();
+
+  function getParamString () {
+    let paramString = '';
+    if (search.length > 0) { paramString += `search=${search}&` }
+    if (vehicleType !== 'Select') { paramString += `vehicleType=${vehicleType}&` }
+    paramString += `evCharging=${ev}&`
+    paramString += `disabledAccess=${disabledAccess}&`
+    if (clearance !== 0) { paramString += `minClearance=${clearance}&` }
+    if (price !== 100) { paramString += `maxPrice=${price}&` }
+    return paramString.slice(0, -1);
+  }
+
+  React.useEffect(() => {
+    async function getData () {
+      const request = {
+        num: 5,
+        alreadyReceived: [],
+      };
+      const response = await makeRequest("POST", `recommend/${localStorage.getItem('vroom-id')}`, request);
+
+      const tmp = []
+
+      for (const id of response.ids) {
+        const prop = await makeRequest('GET', `spot/${id}`, {});
+        prop.data.id = id;
+        prop.data.doView = () => navigate(`/spot/${id}`);
+        tmp.push(SearchStub(prop.data));
+        setRecommended(tmp);
+      }
+    }
+
+    getData();
+  }, [])
 
   const inputStyle = {
     backgroundColor: '#fff',
@@ -83,13 +119,7 @@ function SpotSearch () {
   
   // Handle text search
   function doSearch () {
-    let paramString = '';
-    if (search.length > 0) { paramString += `search=${search}&` }
-    if (vehicleType !== 'Select') { paramString += `vehicleType=${vehicleType}&` }
-    paramString += `evCharging=${ev}&`
-    paramString += `disabledAccess=${disabledAccess}&`
-    if (clearance !== 0) { paramString += `minClearance=${clearance}&` }
-    if (price !== 100) { paramString += `maxPrice=${price}&` }
+    const paramString = getParamString()
     navigate(`/search?${paramString}`);
   }
 
@@ -116,7 +146,7 @@ function SpotSearch () {
         <Slider style={clearanceSliderStyle} min={0} max={6} step={0.1} value={clearance} valueLabelDisplay='auto' valueLabelFormat={(value) => `${value}m`} onChange={(e) => setClearance(e.target.value)}></Slider>
       </div>
       <Button id='search-button' variant='contained' style={buttonStyle} onClick={doSearch}>Search</Button>
-      
+      {recommended}
     </>
   )
 }

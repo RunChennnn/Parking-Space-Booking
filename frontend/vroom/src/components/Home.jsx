@@ -8,22 +8,27 @@ import { useNavigate } from "react-router-dom";
 function Home () {
 
   const [search, setSearch] = React.useState('');
-  const [recommended, setRecommended] = React.useState('');
+  const [recommended, setRecommended] = React.useState([]);
   const navigate = useNavigate();
 
   React.useEffect(() => {
     async function getData () {
       const request = {
-        num: 31,
+        num: 5,
         alreadyReceived: [],
       };
       const response = await makeRequest("POST", `recommend/${localStorage.getItem('vroom-id')}`, request);
 
       const tmp = []
+
+      // app.get('/spot/:spotId'
       for (const id of response.ids) {
-        tmp.push(SearchStub({ spotID: id }));
+        const prop = await makeRequest('GET', `spot/${id}`, {});
+        prop.data.id = id;
+        prop.data.doView = () => navigate(`/spot/${id}`);
+        tmp.push(SearchStub(prop.data));
+        setRecommended(tmp);
       }
-      setRecommended(tmp);
     }
 
     getData();
