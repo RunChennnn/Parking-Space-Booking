@@ -2,7 +2,10 @@ import React from "react"
 import {useNavigate, useParams} from 'react-router-dom'
 import NavigationBar from "./NavigationBar";
 import {Button, Card, TextField} from "@mui/material";
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import makeRequest from "../utilities/makeRequest";
+
+
 
 function UpdateSpot () {
 
@@ -24,8 +27,10 @@ function UpdateSpot () {
 
     const [showError, setShowError] = React.useState(false);
 
+    const [open, setOpen] = React.useState(false);
+
     const buttonStyle = {
-        margin: '20px 30% 0 30%'
+        margin: '20px 30px 20px 30px'
     }
 
     const inputStyle = {
@@ -48,6 +53,22 @@ function UpdateSpot () {
         justifyContent: 'space-evenly',
         rowGap: '15px'
     };
+
+    const container = {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+    }
+
+    const handleClickOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
 
     React.useEffect(() => {
         async function loadingSpotInfo() {
@@ -99,6 +120,20 @@ function UpdateSpot () {
         }
     }
 
+    async function confirmDelete() {
+        const res = await makeRequest('DELETE', `spot/${params.spotID}/delete`)
+        if(res.error) {
+            alert("fail to delete")
+            handleClose()
+        }
+        else {
+            handleClose()
+            navigate(`/spots/${localStorage.getItem('vroom-id')}`)
+        }
+
+    }
+
+
     return (
         <>
             <NavigationBar />
@@ -136,7 +171,27 @@ function UpdateSpot () {
                 <TextField width='1px' variant='outlined' size='small' label='CVV'
                            value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
             </Card>
-            <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
+            <div style={container}>
+                 <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
+                 <Button variant="contained" style={buttonStyle} onClick={handleClickOpen}>Delete</Button>
+            </div>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Delete Spot confirmation"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Make sure you confirm to remove this parking spot
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                    <Button onClick={confirmDelete} color="primary" autoFocus>Confirm</Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 }
