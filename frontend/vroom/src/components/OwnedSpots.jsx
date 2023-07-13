@@ -29,6 +29,11 @@ function OwnedSpots() {
         width: '200px'
     }
 
+    const editBtnStyle = {
+        margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
+        width: '100px'
+    }
+
 
     async function loadingSpotInfo(spotId) {
         const spot = await makeRequest('GET', `spot/${spotId}`, {})
@@ -66,7 +71,7 @@ function OwnedSpots() {
                 <TableCell align="center">{spot.data.basePrice}</TableCell>
                 <TableCell align="center">{spot.data.demandPricing}</TableCell>
                 <TableCell align="center">
-                    <Button variant="contained" style={buttonStyle} align="center"
+                    <Button variant="contained" style={editBtnStyle} align="center"
                             onClick={()=> {
                                 navigate( `/spots/update/${spot.id}`)
                             }}>Edit</Button>
