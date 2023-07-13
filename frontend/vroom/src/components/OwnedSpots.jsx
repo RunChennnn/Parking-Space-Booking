@@ -25,8 +25,10 @@ function OwnedSpots() {
     const navigate = useNavigate()
 
     const buttonStyle = {
-        margin: '20px 30% 0 30%'
+        margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
+        width: '200px'
     }
+
 
     async function loadingSpotInfo(spotId) {
         const spot = await makeRequest('GET', `spot/${spotId}`, {})
