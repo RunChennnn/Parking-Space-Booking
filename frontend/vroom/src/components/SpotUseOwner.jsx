@@ -1,6 +1,7 @@
 import React from 'react'
 import makeRequest from "../utilities/makeRequest";
 import { useNavigate, useParams } from "react-router-dom";
+import NavigationBar from './NavigationBar';
 
 function SpotUseOwner() {
 
