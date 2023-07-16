@@ -7,9 +7,7 @@ import {Button} from "@mui/material";
 
 function SpotDetails() {
 
-    const navigate = useNavigate()
-
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     return(
         <>
