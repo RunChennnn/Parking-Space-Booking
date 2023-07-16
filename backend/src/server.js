@@ -202,6 +202,20 @@ app.get('/spot/:spotId', async (req, res) => {
     }
 });
 
+app.get('/spot/:spotId/bookings', async (req, res) => {
+    const sid = req.params.spotId
+    const response = {
+        upcoming: ["this1SafAKeID", "aN01theR_0ne"],
+        history: ["historyID1","historyID2","historyID3"]
+    }
+
+    if (true) { // if valid user ID
+        return res.status(200).json(response);
+    } else {
+        return res.status(500).json({ error: 'invalid user ID' })
+    } 
+});
+
 // Get user profile
 app.get('/user/:userID', async (req, res) => {
     const sid = req.params.userID

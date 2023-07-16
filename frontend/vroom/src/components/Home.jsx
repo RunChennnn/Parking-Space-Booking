@@ -9,7 +9,6 @@ function Home () {
 
   const [search, setSearch] = React.useState('');
   const [recommended, setRecommended] = React.useState([]);
-  const navigate = useNavigate();
 
   React.useEffect(() => {
     async function getData () {
@@ -45,6 +44,8 @@ function Home () {
     margin: '30px calc(50% - 75px)',
     width: '150px',
   };
+
+  const navigate = useNavigate();
 
   function doSearch () {
     navigate(`/search?search=${search}`);
