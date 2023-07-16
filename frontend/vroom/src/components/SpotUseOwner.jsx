@@ -1,8 +1,6 @@
-import React from "react"
-import NavigationBar from "./NavigationBar"
-import { useParams } from "react-router-dom"
-
-import {useNavigate} from "react-router-dom";
+import React from 'react'
+import makeRequest from "../utilities/makeRequest";
+import { useNavigate, useParams } from "react-router-dom";
 
 function SpotUseOwner() {
 
@@ -16,5 +14,4 @@ function SpotUseOwner() {
     </>
   )
 }
-
 export default SpotUseOwner
