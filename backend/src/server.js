@@ -1,9 +1,7 @@
 import express from "express";
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get, set, push } from 'firebase/database';
-import { getAuth } from "firebase/auth";
+import { db, auth } from './firebaseConfig.js';
 import { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword } from "./account.js";
 import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
 import { getUser, getUserBasic, patchUser } from "./user.js"
@@ -15,21 +13,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, }));
 app.use(bodyParser.json());
 
-const firebaseConfig = {
-    apiKey: "AIzaSyApBdX_ouOp0E9Bez09PtHyMa4UL-qDYBo",
-    authDomain: "room-e5563.firebaseapp.com",
-    projectId: "room-e5563",
-    storageBucket: "room-e5563.appspot.com",
-    messagingSenderId: "665563320009",
-    appId: "1:665563320009:web:2bff29562834fdf4bac718",
-    measurementId: "G-1NXQ4FX22V",
-    databaseURL: "https://room-e5563-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
-const firebase = initializeApp(firebaseConfig);
-const db = getDatabase(firebase);
-const auth = getAuth(firebase);
-  
-
 app.get('/test', (req, res) => {
     console.log(req.body);
     console.log("responted to /test");
@@ -37,13 +20,13 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/testDB', async (req,res) => {
-    console.log(req)
-    const testDataRef = ref(db, '/testDatabaseCollection')
-    const snapshot = await get(testDataRef);
+    const snapshot = await db.collection('testCollection').get()
     let respond;
-    console.log(snapshot.val());
-    if (snapshot.exists()){
-        respond = snapshot.val()
+    console.log(snapshot);
+    if (!snapshot.empty){
+        let documents = []
+        snapshot.forEach(doc => documents.push(doc.data()))
+        respond = documents
     } else {
         respond = "Nothing in the database"
     }
@@ -52,15 +35,16 @@ app.get('/testDB', async (req,res) => {
 });
 
 app.post('/testDB/spots', async (req, res) => {
-
-    const testDataRef = ref(db, '/testDatabaseCollection/Spots');
-
-    const newSpot = push(testDataRef)
-    const data = req.body;
-    await set(newSpot, data);
+    const data = {
+        Country: "Australia",
+        Food: "Roo steak",
+        Price: 190,
+        Veg: false
+    }
+    await db.collection('testCollection').add(data)
 
     console.log("Data added to the database");
-    res.status(200).json({status: 200,message: "Data added to the database"});
+    res.status(201).json({status: 201,message: "Data added to the database"});
 
 });
 

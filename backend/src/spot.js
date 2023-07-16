@@ -1,27 +1,10 @@
-import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get, set, push, update, remove } from 'firebase/database';
-import { getAuth } from "firebase/auth";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyApBdX_ouOp0E9Bez09PtHyMa4UL-qDYBo",
-    authDomain: "room-e5563.firebaseapp.com",
-    projectId: "room-e5563",
-    storageBucket: "room-e5563.appspot.com",
-    messagingSenderId: "665563320009",
-    appId: "1:665563320009:web:2bff29562834fdf4bac718",
-    measurementId: "G-1NXQ4FX22V",
-    databaseURL: "https://room-e5563-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
-const firebase = initializeApp(firebaseConfig);
-const db = getDatabase(firebase);
-const auth = getAuth(firebase);
+import { db } from './firebaseConfig.js'
 
 const createNewSpot = async (data) => {
     try {
-        const dataRef = ref(db, '/Spots');
-        const newSpot = push(dataRef)
-        await set(newSpot, data)
-        const sid = newSpot.key
+        const newSpot = await db.collection('Spots').add(data)
+        const sid = newSpot.id
     
         console.log("New Spot added to database");
         return {
@@ -41,12 +24,9 @@ const createNewSpot = async (data) => {
 
 const patchSpot = async (spotId, data) => {
     try {
-      const spotRef = ref(db, `/Spots/${spotId}`);
-      const snapshot = await get(spotRef);
-
-      if (snapshot.exists()){
-        await update(spotRef, data);
-    
+      const targetSpotRef = db.collection('Spots').doc(spotId)
+      if ((await targetSpotRef.get()).exists){
+        await targetSpotRef.update(data);
         console.log(`Spot ${spotId} updated in the database`);
         return {
             status: 200,
@@ -72,12 +52,9 @@ const patchSpot = async (spotId, data) => {
 
 const deleteSpot = async (spotId) => {
     try {
-      const spotRef = ref(db, `/Spots/${spotId}`);
-      const snapshot = await get(spotRef);
-
-      if (snapshot.exists()){
-        await remove(spotRef);
-    
+      const targetSpotRef = db.collection('Spots').doc(spotId)
+      if ((await targetSpotRef.get()).exists){
+        await targetSpotRef.delete();
         console.log(`Spot ${spotId} removed in the database`);
         return {
             status: 200,
@@ -103,11 +80,9 @@ const deleteSpot = async (spotId) => {
 
 const getSpot = async (spotId) => {
   try {
-    const spotRef = ref(db, `/Spots/${spotId}`);
-    const snapshot = await get(spotRef);
-
-    if (snapshot.exists()) {
-      const spotData = snapshot.val();
+    const targetSpot = await db.collection('Spots').doc(spotId).get()
+    if (targetSpot.exists) {
+      const spotData = targetSpot.data();
       console.log(`Spot ${spotId} infomation retrived from the database`, spotData);
       return {
         status: 200,

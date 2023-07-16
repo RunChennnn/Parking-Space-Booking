@@ -1,28 +1,6 @@
-import { initializeApp } from 'firebase/app';
+import { db, auth } from './firebaseConfig.js';
 import { getDatabase, ref, get, update, query, equalTo, orderByChild } from 'firebase/database';
-import { getAuth } from "firebase/auth";
 import admin from 'firebase-admin';
-import { createRequire } from 'module';
-
-// cannot import json directly in latest version, have to do this
-const require = createRequire(import.meta.url);
-const serviceAccount = require('../serviceAccountKey.json');
-
-const firebaseConfig = {
-    apiKey: "AIzaSyApBdX_ouOp0E9Bez09PtHyMa4UL-qDYBo",
-    authDomain: "room-e5563.firebaseapp.com",
-    projectId: "room-e5563",
-    storageBucket: "room-e5563.appspot.com",
-    messagingSenderId: "665563320009",
-    appId: "1:665563320009:web:2bff29562834fdf4bac718",
-    measurementId: "G-1NXQ4FX22V",
-    databaseURL: "https://room-e5563-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
-const firebase = initializeApp(firebaseConfig);
-const db = getDatabase(firebase);
-const auth = getAuth(firebase);
-
-admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
 
 const getUser = async (userId) => {
     try {
