@@ -23,7 +23,6 @@ function SearchStub (props) {
   };
 
   const address = `${props.streetNumber} ${props.streetName} ${props.suburb} ${props.postcode}`;
-  const price = formatPrice(props.basePrice);
 
   console.log(props);
     
@@ -31,9 +30,9 @@ function SearchStub (props) {
     <Card key={props.id} style={cardStyle}>
       <div>
         {/* <Typography variant='h6'>Address: (address for ID {props.spotID})</Typography> */}
-        <Typography variant='h6'>Address: {address}</Typography>
+        {/* <Typography variant='h6'>Address: {address}</Typography> */}
         {/* <Typography>Regular price per hour: (price for ID {props.spotID})</Typography> */}
-        <Typography>Regular price per hour: {formatPrice(props.basePrice)}</Typography>
+        {/* <Typography>Regular price per hour: {formatPrice(props.basePrice)}</Typography> */}
       </div>
       <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>View</Button>
       
