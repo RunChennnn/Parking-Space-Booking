@@ -8,6 +8,26 @@ function SpotUseOwner () {
 
   const params = useParams();
   const navigate = useNavigate();
+
+  const [address, setAddress] = React.useState('')
+  const [startTime, setStartTime] = React.useState('')
+  const [endTime, setEndTime] = React.useState('')
+  const [revenue, setRevenue] = React.useState(0)
+  const [feedback, setFeedback] = React.useState('')
+
+  const timeStampToDate = (timeStamp) => {
+      const date = new Date(timeStamp)
+      const dateFormat = date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes()
+      return dateFormat
+  }
+
+  async function loadingSpotUseDetails () {
+      const res = await makeRequest('GET',)
+  }
+
+  React.useEffect(() => {
+      loadingSpotUseDetails().then(r => {})
+  }, [])
     
   return (
     <>

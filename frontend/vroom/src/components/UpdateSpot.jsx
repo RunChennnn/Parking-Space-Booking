@@ -206,7 +206,7 @@ function UpdateSpot () {
             </Card>
             <div style={container}>
                  <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
-                 <Button variant="contained" style={buttonStyle} onClick={handleClickOpen}>Delete</Button>
+                 <Button variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">Delete</Button>
             </div>
             <Dialog
                 open={open}
@@ -222,7 +222,7 @@ function UpdateSpot () {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={confirmDelete} color="primary" autoFocus>Confirm</Button>
+                    <Button onClick={confirmDelete} color="error" autoFocus>Confirm</Button>
                 </DialogActions>
             </Dialog>
         </>
