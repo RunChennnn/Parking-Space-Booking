@@ -40,6 +40,9 @@ const recommendSpot = async (uid, num, alreadyReceived) => {
 //implement search by set query conditions
 const queryByConditions= (databaseRef, condtions) => {
     let query = databaseRef;
+    if (condtions.maxPrice) {
+      query = query.where('basePrice', "<=", condtions.maxPrice)
+    }
     const search = condtions.search
     console.log(`queryByConditions found condition ${search}`)
     return query

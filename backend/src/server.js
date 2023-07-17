@@ -6,6 +6,7 @@ import { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authA
 import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
 import { getUser, getUserBasic, patchUser } from "./user.js"
 import { recommendSpot, searchSpot } from "./search.js"
+import { confirmNewBooking } from "./booking.js"
 
 const port = 3141
 const app = express();
@@ -299,7 +300,7 @@ app.post('/recommend/:userID', async (req, res) => {
     
     if (respond.status === 200) {
         return res.status(200).json(respond);
-    } else if (respond.status === 400) {
+    } else if (respond.status === 404) {
         return res.status(404).json(respond);
     } else {
         return res.status(400).json({ message: 'Unknown Error' })
@@ -314,7 +315,7 @@ app.post('/search', async (req, res) => {
     
     if (respond.status === 200) {
         return res.status(200).json(respond);
-    } else if (respond.status === 400) {
+    } else if (respond.status === 404) {
         return res.status(404).json(respond);
     } else {
         return res.status(400).json({ message: 'Unknown Error' })
@@ -340,36 +341,28 @@ app.post('/book/:spotID/price', async (req, res) => { // TODO
     }
 })
 
-app.post('/book/:spotID/confirm', async (req, res) => { // TODO
-    const requestBodyLooksLikeThis = {
-        spotID: req.params.spotID,
-        startTime: 1688794787, // unix timestamp
-        endTime: 1688795245, // unix timestamp
-        cardNumber: '9234567898765432', // needs to be string to avoid integer overflow
-        cardName: 'Joe Biden',
-        cardCvv: 420,
-    }
 
-    if (true) { // If spot is available for this whole time
-        return res.status(200).json({ status: 'OK' }); // Don't care what this says
-    } else if (true) { // Spot became not available
-        return res.status(500).json({ error: 'spot not available' }); // don't change this error code without telling us
+app.post('/book/:spotID/confirm', async (req, res) => {
+    const spotID =  req.params.spotID
+    const {userID, startTime, endTime, cardNumber, cardName, cardCvv} = req.body;
+    const response = await confirmNewBooking(spotID, userID, startTime, endTime, cardNumber, cardName, cardCvv);
+
+    if (response.status === 201) { 
+        return res.status(201).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 409) {
+        return res.status(409).json(response);
     } else {
         return res.status(500).json({ error: 'other error' });
     }
 })
 
+
 app.get('/booking/:bookingID', async (req, res) => { // TODO
     const bookingID = req.params.bookingID;
-    const requestBodyLooksLikeThis = {
-        spotID: req.params.spotID,
-        startTime: 1688794787, // unix timestamp
-        endTime: 1688795245, // unix timestamp
-        cardNumber: '9234567898765432', // needs to be string to avoid integer overflow
-        cardName: 'Joe Biden',
-        cardCvv: 420,
-    }
-
     const response = {
         spotID: 28374592, // whatever ID format you usually use
         startTime: 1688794787, // unix timestamp
