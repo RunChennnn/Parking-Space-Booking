@@ -6,7 +6,7 @@ import { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authA
 import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
 import { getUser, getUserBasic, patchUser } from "./user.js"
 import { recommendSpot, searchSpot } from "./search.js"
-import { confirmNewBooking } from "./booking.js"
+import { confirmNewBooking, getPriceForBooking, getBooking, updateReview, deleteBooking } from "./booking.js"
 
 const port = 3141
 const app = express();
@@ -322,25 +322,23 @@ app.post('/search', async (req, res) => {
     }
 });
 
-app.post('/book/:spotID/price', async (req, res) => { // TODO
-    const requestBodyLooksLikeThis = {
-        spotID: 30,
-        startTime: 1688794787, // unix timestamp
-        endTime: 1688795245, // unix timestamp
-    }
-    // We'll make sure that the timestamps passed from the frontend will
-    // be on the hour
+app.post('/book/:spotID/price', async (req, res) => {
+    const spotID =  req.params.spotID
+    const {startTime, endTime} = req.body;
+    const response = await getPriceForBooking(spotID, startTime, endTime);
 
-    const response = {
-        price: 35.5 // float/double/whatever
-    }
-    if (true) { // If spot is available for this whole time
+    if (response.status === 200) { 
         return res.status(200).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 409) {
+        return res.status(409).json(response);
     } else {
-        return res.status(500).json({ error: 'spot not available' }); // don't change this error code without telling us
+        return res.status(500).json({ error: 'other error' });
     }
 })
-
 
 app.post('/book/:spotID/confirm', async (req, res) => {
     const spotID =  req.params.spotID
@@ -360,47 +358,48 @@ app.post('/book/:spotID/confirm', async (req, res) => {
     }
 })
 
-
-app.get('/booking/:bookingID', async (req, res) => { // TODO
-    const bookingID = req.params.bookingID;
-    const response = {
-        spotID: 28374592, // whatever ID format you usually use
-        startTime: 1688794787, // unix timestamp
-        endTime: 1688795245, // unix timestamp
-        price: 34.8,
-        refundAvailable: 0.5, // 0 for not available, 1 for 100%, 0.5 for 50%
-        // include rating: and review: if those are available too
-    }
-
-    if (true) { // valid request
+app.get('/booking/:bookingID', async (req, res) => {
+    const bookingID =  req.params.bookingID
+    const response = await getBooking(bookingID);
+    if (response.status === 200) { 
         return res.status(200).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
     } else {
-        return res.status(500).json({ error: 'invalid booking ID' }); // or other error, let us know
+        return res.status(500).json({ error: 'other error' });
     }
 })
 
 app.post('/booking/:bookingID/review', async (req, res) => { // TODO
     const bookingID = req.params.bookingID;
+    const { rating, review } = req.body;
+    const response = await updateReview(bookingID, rating, review);
 
-    const requestBodyLooksLikeThis = {
-        rating: 4, // star rating 1, 2, 3, 4, or 5
-        review: 'great' // text review
-    }
-
-    if (true) { // valid request
-        return res.status(200).json({ status: 'OK '}); // don't care what this says
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
     } else {
-        return res.status(500).json({ error: 'invalid spot ID' });
+        return res.status(500).json({ error: 'other error' });
     }
 })
 
 app.delete('/booking/:bookingID/cancel', async (req, res) => { // TODO
     const bookingID = req.params.bookingID;
+    const response = await deleteBooking(bookingID);
 
-    if (true) { // valid request
-        return res.status(200).json({ status: 'OK '}); // don't care what this says
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
     } else {
-        return res.status(500).json({ error: 'invalid spot ID' });
+        return res.status(500).json({ error: 'other error' });
     }
 })
 
