@@ -1,30 +1,16 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get, query } from 'firebase/database';
-
-const firebaseConfig = {
-    apiKey: "AIzaSyApBdX_ouOp0E9Bez09PtHyMa4UL-qDYBo",
-    authDomain: "room-e5563.firebaseapp.com",
-    projectId: "room-e5563",
-    storageBucket: "room-e5563.appspot.com",
-    messagingSenderId: "665563320009",
-    appId: "1:665563320009:web:2bff29562834fdf4bac718",
-    measurementId: "G-1NXQ4FX22V",
-    databaseURL: "https://room-e5563-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
-const firebase = initializeApp(firebaseConfig);
-const db = getDatabase(firebase);
+import { db } from "./firebaseConfig.js";
 
 const recommendSpot = async (uid, num, alreadyReceived) => {
     try {
       let spotList = []
-      const spotRef = ref(db, `/Spots`);
-      const snapshot = await get(spotRef);
+      const spotRef = db.collection('Spots');
+      const snapshot = await spotRef.get();
   
-      if (snapshot.exists()) {
+      if (!snapshot.empty) {
         let count = 0 
-        snapshot.forEach(spotshot => {
-            if (count < num && !alreadyReceived.includes(spotshot.key)) {
-                spotList.push(spotshot.key);
+        snapshot.forEach(spot => {
+            if (count < num && !alreadyReceived.includes(spot.id)) {
+                spotList.push(spot.id);
                 count ++;
             }
         });
@@ -53,23 +39,24 @@ const recommendSpot = async (uid, num, alreadyReceived) => {
 
 //implement search by set query conditions
 const queryByConditions= (databaseRef, condtions) => {
+    let query = databaseRef;
     const search = condtions.search
     console.log(`queryByConditions found condition ${search}`)
-    return query(databaseRef)
+    return query
 };
 
 const searchSpot = async (num, alreadyReceived, conditions) => {
     try {
       let spotList = []
-      const spotRef = ref(db, `/Spots`);
-      const searchedSpotRef = queryByConditions(spotRef , conditions);
-      const snapshot = await get(searchedSpotRef);
+      const spotRef = db.collection('Spots');
+      const spotQuery = queryByConditions(spotRef , conditions);
+      const snapshot = await spotQuery.get();
   
-      if (snapshot.exists()) {
+      if (!snapshot.empty) {
         let count = 0 
-        snapshot.forEach(spotshot => {
-            if (count < num && !alreadyReceived.includes(spotshot.key)) {
-                spotList.push(spotshot.key);
+        snapshot.forEach(spot => {
+            if (count < num && !alreadyReceived.includes(spot.id)) {
+                spotList.push(spot.id);
                 count ++;
             }
         });

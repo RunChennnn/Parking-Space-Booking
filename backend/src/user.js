@@ -1,22 +1,20 @@
 import { db, auth } from './firebaseConfig.js';
-import { getDatabase, ref, get, update, query, equalTo, orderByChild } from 'firebase/database';
-import admin from 'firebase-admin';
+import { checkPasswordNaive } from './account.js'
 
 const getUser = async (userId) => {
     try {
-        // note admin.auth().getUser() is a different thing!
-        const userRecord = await admin.auth().getUser(userId)
+        // auth.getUser() is a different thing!
+        const userRecord = await auth.getUser(userId)
 
-        const spotRef = ref(db, `/Spots`);
-        const userSpotRef = query(spotRef,orderByChild("owner"), equalTo(userId));
+        const spotRef = db.collection('Spots')
+        const userSpots = await spotRef.where('owner', '==', userId).get();
 
         const email = userRecord.email
         const upcoming = ["this1SafAKeID", "aN01theR_0ne"]
         const history = ["historyID1","historyID2","historyID3"]
         const spots =  []
 
-        const snapshot = await get(userSpotRef);
-        snapshot.forEach((spotshot) => {spots.push(spotshot.key);});
+        userSpots.forEach((spot) => {spots.push(spot.id);});
 
         console.log(`User ${userId} infomation retrived from the database`);
         return {
@@ -45,24 +43,22 @@ const getUser = async (userId) => {
     }
 };
 
-const users = new Object();
+const usersEmail = new Object();
 const getUserBasic = async (userId) => {
     try {
-        if (users[userId]) {
-            return users[userId]
+        if (usersEmail[userId]) {
+            return usersEmail[userId]
         }
-
         // note admin.auth().getUser() is a different thing!
-        const userRecord = await admin.auth().getUser(userId)
+        const userRecord = await auth.getUser(userId)
         const email = userRecord.email
-
 
         const data = {
             status: 200,
             message: "User information retrieval successfully",
             email: email,
         };
-        users[userId] = data;
+        usersEmail[userId] = data;
 
         console.log(`User ${userId} infomation retrived from the database`);
         return {
@@ -88,38 +84,23 @@ const getUserBasic = async (userId) => {
     }
 };
 
-
-const checkPasswordNaive = (pwdstr) => {
-    const hasUppercase = /[A-Z]/.test(pwdstr) ? 1:0;
-    const hasLowercase = /[a-z]/.test(pwdstr) ? 1:0;
-    const hasNumbers = /\d/.test(pwdstr) ? 1:0;
-
-    const hasCount = hasUppercase + hasLowercase + hasNumbers;
-    return (pwdstr.length >=8 && hasCount >= 2);
-}
-
 const patchUser = async (userId, data) => {
     try {
-        // note admin.auth().getUser() is not the getUser we defined earlier!
-        // const userRecord = await admin.auth().getUser(userId);
-
         if (data.hasOwnProperty("password")) {
             const newPassword = data.password;
             if (!checkPasswordNaive(newPassword)) {
                 throw new Error('Error: Weak Passord');
             } else {
-            await admin.auth().updateUser(userId, { password: newPassword});
+            await auth.updateUser(userId, { password: newPassword});
             }
         }
         if (data.hasOwnProperty("email")) {
             const newEmail = data.email;
-            await admin.auth().updateUser(userId, { email: newEmail});
+            await auth.updateUser(userId, { email: newEmail});
         }
-
-        
         console.log(`User ${userId} infomation updated in database`);
-        delete users[userId]
-        getUserBasic(userId);
+        delete usersEmail[userId]
+        // I removed getUser() in this line, it don't see why it needs to be called - Nick
         return {
             status: 200,
             message: `User ${userId} information update successfully`,
@@ -141,6 +122,5 @@ const patchUser = async (userId, data) => {
         }
     }
 };
-
 
 export { getUser, getUserBasic, patchUser };

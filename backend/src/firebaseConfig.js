@@ -1,5 +1,7 @@
 import { createRequire } from 'module';
 import admin from 'firebase-admin';
+import { initializeApp as initializeClient } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 const require = createRequire(import.meta.url);
 const serviceAccount = require('../serviceAccountKey.json');
@@ -21,4 +23,6 @@ admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
 const db = admin.firestore();
 const auth = admin.auth();
 
-export { firebaseConfig, db, auth }
+//Client side Initialization
+const client = initializeClient(firebaseConfig)
+export { db, auth, client }

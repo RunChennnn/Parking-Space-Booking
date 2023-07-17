@@ -1,4 +1,3 @@
-import { getDatabase, ref, get, set, push, update, remove } from 'firebase/database';
 import { db } from './firebaseConfig.js'
 
 const createNewSpot = async (data) => {
