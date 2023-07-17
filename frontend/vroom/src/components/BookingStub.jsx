@@ -1,7 +1,7 @@
 import React from "react"
 import { Button, Card, Typography } from "@mui/material"
 
-function SearchStub (props) {
+function BookingStub (props) {
 
   const cardStyle = {
     width: 'calc(100% - 130px)',
@@ -22,17 +22,31 @@ function SearchStub (props) {
     height: '36.5px',
   };
 
-  const address = `${props.streetNumber} ${props.streetName} ${props.suburb} ${props.postcode}`;
+  const address = `${props.spot.streetNumber} ${props.spot.streetName} ${props.spot.suburb} ${props.spot.postcode}`;
 
-  console.log(props);
+  const options = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }
+  const start = new Date(props.startTime * 1000).toLocaleDateString('en-UK', options);
+  const end = new Date(props.endTime * 1000).toLocaleDateString('en-UK', options);
+  console.log(start);
+  console.log(end);
+
+  let date = '';
+  if (start === end) {
+    date = start;
+  } else {
+    date = `${start} to ${end}`
+  }
     
   return (
     <Card key={props.id} style={cardStyle}>
       <div>
         {/* <Typography variant='h6'>Address: (address for ID {props.spotID})</Typography> */}
-        {/* <Typography variant='h6'>Address: {address}</Typography> */}
-        {/* <Typography>Regular price per hour: (price for ID {props.spotID})</Typography> */}
-        {/* <Typography>Regular price per hour: {formatPrice(props.basePrice)}</Typography> */}
+        <Typography variant='h6'>{address}</Typography>
+        <Typography>{date}</Typography>
       </div>
       <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>View</Button>
       
@@ -40,4 +54,4 @@ function SearchStub (props) {
   )
 }
 
-export default SearchStub
+export default BookingStub

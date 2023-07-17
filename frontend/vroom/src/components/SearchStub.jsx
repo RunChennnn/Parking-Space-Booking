@@ -28,8 +28,6 @@ function SearchStub (props) {
 
   const address = `${props.streetNumber} ${props.streetName} ${props.suburb} ${props.postcode}`;
   const price = formatPrice(props.basePrice);
-
-  console.log(props);
     
   return (
     <Card key={props.id} style={cardStyle}>
