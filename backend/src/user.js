@@ -5,16 +5,31 @@ const getUser = async (userId) => {
     try {
         // auth.getUser() is a different thing!
         const userRecord = await auth.getUser(userId)
+        const email = userRecord.email
+        let upcoming = []
+        let history = []
+        let spots =  []
 
         const spotRef = db.collection('Spots')
         const userSpots = await spotRef.where('owner', '==', userId).get();
-
-        const email = userRecord.email
-        const upcoming = ["this1SafAKeID", "aN01theR_0ne"]
-        const history = ["historyID1","historyID2","historyID3"]
-        const spots =  []
-
+        //assuming the upcoming and history are the user as renter.
+        const currentTime = Math.floor(Date.now() / 1000)
+        const upcomingBookingsRenter = await db.collection('Bookings').where('userID','==',userId).where('startTime', '>', currentTime).get()
+        const upcomingBookingsOwner= await db.collection('Bookings').where('ownerID','==',userId).where('startTime', '>', currentTime).get()
+        const historyBookingsRenter = await db.collection('Bookings').where('userID','==',userId).where('endTime', '<=', currentTime).get()
+        const historyBookingsOwner = await db.collection('Bookings').where('ownerID','==',userId).where('endTime', '<=', currentTime).get()
+        
+        upcomingBookingsRenter.forEach(booking => upcoming.push({id: booking.id, time: booking.data().startTime}))
+        upcomingBookingsOwner.forEach(booking => upcoming.push({id: booking.id, time: booking.data().startTime}))
+        historyBookingsRenter.forEach(booking => history.push({id: booking.id, time: booking.data().startTime}))
+        historyBookingsOwner.forEach(booking => history.push({id: booking.id, time: booking.data().startTime}))
         userSpots.forEach((spot) => {spots.push(spot.id);});
+        
+        //sort by startTime and give bookingID only
+        upcoming.sort((a, b) => a.time - b.time)
+        history.sort((a, b) => a.time - b.time)
+        upcoming = upcoming.map(record => record.id)
+        history = history.map(record => record.id)
 
         console.log(`User ${userId} infomation retrived from the database`);
         return {

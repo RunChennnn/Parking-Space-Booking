@@ -3,10 +3,10 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { db, auth } from './firebaseConfig.js';
 import { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword } from "./account.js";
-import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
+import { createNewSpot, patchSpot, deleteSpot, getSpot, getRating, getReviews } from "./spot.js";
 import { getUser, getUserBasic, patchUser } from "./user.js"
 import { recommendSpot, searchSpot } from "./search.js"
-import { confirmNewBooking, getPriceForBooking, getBooking, updateReview, deleteBooking } from "./booking.js"
+import { confirmNewBooking, getPriceForBooking, getBooking, updateReview, deleteBooking, getUpcomingBooking, getHistoryBooking, getAllBooking } from "./booking.js"
 
 const port = 3141
 const app = express();
@@ -336,6 +336,7 @@ app.post('/search', async (req, res) => {
     }
 });
 
+//get totalPrice of a spot
 app.post('/book/:spotID/price', async (req, res) => {
     const spotID =  req.params.spotID
     const {startTime, endTime} = req.body;
@@ -343,17 +344,18 @@ app.post('/book/:spotID/price', async (req, res) => {
 
     if (response.status === 200) { 
         return res.status(200).json(response);
-    } else if (response.status === 400) {
-        return res.status(400).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
     } else if (response.status === 404) {
         return res.status(404).json(response);
     } else if (response.status === 409) {
         return res.status(409).json(response);
     } else {
-        return res.status(500).json({ error: 'other error' });
+        return res.status(400).json({ error: 'other error' });
     }
 })
 
+//confirm booking and create a new booking document
 app.post('/book/:spotID/confirm', async (req, res) => {
     const spotID =  req.params.spotID
     const {userID, startTime, endTime, cardNumber, cardName, cardCvv} = req.body;
@@ -361,31 +363,33 @@ app.post('/book/:spotID/confirm', async (req, res) => {
 
     if (response.status === 201) { 
         return res.status(201).json(response);
-    } else if (response.status === 400) {
-        return res.status(400).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
     } else if (response.status === 404) {
         return res.status(404).json(response);
     } else if (response.status === 409) {
         return res.status(409).json(response);
     } else {
-        return res.status(500).json({ error: 'other error' });
+        return res.status(400).json({ error: 'other error' });
     }
 })
 
+//get details of a booking
 app.get('/booking/:bookingID', async (req, res) => {
     const bookingID =  req.params.bookingID
     const response = await getBooking(bookingID);
     if (response.status === 200) { 
         return res.status(200).json(response);
-    } else if (response.status === 400) {
-        return res.status(400).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
     } else if (response.status === 404) {
         return res.status(404).json(response);
     } else {
-        return res.status(500).json({ error: 'other error' });
+        return res.status(400).json({ error: 'other error' });
     }
 })
 
+//write or update review and rating for a booking
 app.post('/booking/:bookingID/review', async (req, res) => { // TODO
     const bookingID = req.params.bookingID;
     const { rating, review } = req.body;
@@ -393,59 +397,106 @@ app.post('/booking/:bookingID/review', async (req, res) => { // TODO
 
     if (response.status === 200) { 
         return res.status(200).json(response);
-    } else if (response.status === 400) {
-        return res.status(400).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
     } else if (response.status === 404) {
         return res.status(404).json(response);
     } else {
-        return res.status(500).json({ error: 'other error' });
+        return res.status(400).json({ error: 'other error' });
     }
 })
 
+// cancel a booking, thus delete the corresponding booking document
 app.delete('/booking/:bookingID/cancel', async (req, res) => { // TODO
     const bookingID = req.params.bookingID;
     const response = await deleteBooking(bookingID);
 
     if (response.status === 200) { 
         return res.status(200).json(response);
-    } else if (response.status === 400) {
-        return res.status(400).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
     } else if (response.status === 404) {
         return res.status(404).json(response);
     } else {
-        return res.status(500).json({ error: 'other error' });
+        return res.status(400).json({ error: 'other error' });
     }
 })
 
-app.get('/upcoming/:userID', (req, res) => { // TODO
+// get upcoming bookings of that user
+app.get('/upcoming/:userID', async (req, res) => { // TODO
     const userID = req.params.userID;
+    const response = await getUpcomingBooking(userID);
 
-    const response = {
-        asOwner: [3245, 45674], // list of IDs for bookings where this person is the owner, earliest to latest (can be empty)
-        asRenter: [96, 12753475983], // list of IDs for bookings where this person is the renter, earliest to latest (can be empty)
-    }
-
-    if (true) { // valid request
-        return res.status(200).json(response); // don't care what this says
-    } else {
-        return res.status(500).json({ error: 'invalid user ID' });
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    }  else {
+        return res.status(400).json({ error: 'other error' });
     }
 })
 
-app.get('/booking/:userID', (req, res) => { // TODO
+// get historical booking of that user
+app.get('/history/:userID', async (req, res) => { // TODO
     const userID = req.params.userID;
+    const response = await getHistoryBooking(userID);
 
-    const response = {
-        asOwner: [3245, 45674], // list of IDs for bookings where this person is the owner, earliest to latest (can be empty)
-        asRenter: [96, 12753475983], // list of IDs for bookings where this person is the renter, earliest to latest (can be empty)
-    }
-
-    if (true) { // valid request
-        return res.status(200).json(response); // don't care what this says
-    } else {
-        return res.status(500).json({ error: 'invalid user ID' });
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    }  else {
+        return res.status(400).json({ error: 'other error' });
     }
 })
+
+// get all bookings of that user
+app.get('/booking/all/:userID', async (req, res) => { // TODO
+    const userID = req.params.userID;
+    const response = await getAllBooking(userID);
+
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    }  else {
+        return res.status(400).json({ error: 'other error' });
+    }
+})
+
+// get average rating for a spot
+app.get('/spot/:spotID/rating', async (req, res) => { // TODO
+    const spotID = req.params.spotID;
+    const response = await getRating(spotID);
+
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    }  else {
+        return res.status(400).json({ error: 'other error' });
+    }
+})
+
+//get all ratings and reviews for a spot
+app.get('/spot/:spotID/reviews', async (req, res) => { // TODO
+    const spotID = req.params.spotID;
+    const num = req.query.num || 10
+    const response = await getReviews(num, spotID);
+
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 500) {
+        return res.status(500).json(response);
+    }  else {
+        return res.status(400).json({ error: 'other error' });
+    }
+})
+
 
 const server = app.listen(port, () => {
     console.log(`Backend is now listening on port ${port}!`);
