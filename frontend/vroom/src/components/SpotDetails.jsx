@@ -3,7 +3,9 @@ import NavigationBar from "./NavigationBar"
 import { useParams } from "react-router-dom"
 import makeRequest from "../utilities/makeRequest";
 import { useNavigate } from "react-router-dom";
-import {Button, Card} from "@mui/material";
+import {Avatar, Button, Card, CardContent, CardHeader, CardMedia, IconButton, Typography} from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {red} from "@mui/material/colors";
 
 function SpotDetails () {
 
@@ -25,9 +27,23 @@ function SpotDetails () {
   const [averRate, setAverRate] = React.useState(0)
 
   const buttonStyle = {
-      margin: '20px 20px 10px 20px',
+      margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
       width: '100px'
   }
+
+    const cardStyle = {
+        margin: '0',
+        padding: '5%',
+        backgroundColor: '#fffffa',
+        borderColor: '#ffffff',
+        borderStyle: 'solid',
+        borderWidth: '2px',
+        borderRadius: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
+        rowGap: '15px'
+    };
 
   const getAverageRate = (reviews) => {
       let averRate = 0, total = 0
@@ -40,7 +56,7 @@ function SpotDetails () {
 
 
   function toRentPage() {
-    navigate(`/spots/${params.spotID}/rent`)
+    navigate(`/spot/${params.spotID}/rent`)
   }
 
   React.useEffect(()=> {
@@ -48,7 +64,7 @@ function SpotDetails () {
   }, [])
 
   async function loadingSpotDetails() {
-      const res = await makeRequest('GET', `/spots/${params.spotID}`, {})
+      const res = await makeRequest('GET', `spot/${params.spotID}`, {})
       const spot = res.data
 
       //const reviewRes = await makeRequest('GET', ,{})
@@ -66,11 +82,11 @@ function SpotDetails () {
 
       setBasePrice(spot.basePrice)
 
-      setReviews(reviews)
+      //setReviews(reviews)
 
-      const rates = reviews.rates
-      const averRate = getAverageRate(rates)
-      setAverRate(averRate)
+      //const rates = reviews.rates
+      //const averRate = getAverageRate(rates)
+      //setAverRate(averRate)
 
   }
 
@@ -79,8 +95,39 @@ function SpotDetails () {
   return (
     <>
       <NavigationBar />
-
-      <Button variant="outlined" style={buttonStyle} onClick={toRentPage}>RENT</Button>
+        <Card sx={{maxWidth: 1200}}>
+            <CardHeader
+                avatar={
+                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                        P
+                    </Avatar>
+                }
+                action={
+                    <IconButton aria-label="settings">
+                        <MoreVertIcon />
+                    </IconButton>
+                }
+                title="Perfect parking spot for you"
+                subheader="Run Chen"
+            />
+            <CardMedia
+                component="img"
+                height="500"
+                image='../static/spot1.jpg'
+                alt="Spot1"
+            />
+            <CardContent >
+                <Typography paragraph>Description: {description}</Typography>
+                <Typography paragraph>Address: {address}</Typography>
+                <Typography paragraph>LargestVehicle: {largestVehicle}</Typography>
+                <Typography paragraph>Clearance: {clearance}</Typography>
+                <Typography paragraph>EV charging available: {evCharging ? 'Yes': 'No'}</Typography>
+                <Typography paragraph>DisabledAccess: {disabledAccess ? 'Yes' : 'No'}</Typography>
+                <Typography paragraph>Price: ${basePrice}</Typography>
+                <Typography paragraph>Average rate: {averRate}/5</Typography>
+            </CardContent>
+        </Card>
+      <Button variant="contained" style={buttonStyle} onClick={toRentPage}>RENT</Button>
     </>
   )
 }
