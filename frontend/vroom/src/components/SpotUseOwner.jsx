@@ -8,7 +8,6 @@ function SpotUseOwner() {
 
   const navigate = useNavigate()
   const params = useParams();
-  const navigate = useNavigate();
 
   const [address, setAddress] = React.useState('')
   const [startTime, setStartTime] = React.useState('')
@@ -37,8 +36,4 @@ function SpotUseOwner() {
     </>
   )
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> run2-sprint2
 export default SpotUseOwner
