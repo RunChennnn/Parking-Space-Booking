@@ -4,7 +4,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import NavigationBar from "./NavigationBar";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 
-function UpComingBooking() {
+function UpcomingBooking() {
 
     const params = useParams()
     const navigate = useNavigate()
@@ -97,4 +97,4 @@ function UpComingBooking() {
         </>
     )
 }
-export default UpComingBooking
+export default UpcomingBooking
