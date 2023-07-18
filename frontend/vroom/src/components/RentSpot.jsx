@@ -17,11 +17,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DateTimePickerVal from "./DateTimePickerVal";
 import {red} from "@mui/material/colors";
 import dayjs from "dayjs";
+import img from '../static/spot1.jpg'
+import ConfirmBookingDialog from "./ConfirmBookingDialog";
 
 function RentSpot () {
 
   const params = useParams();
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const [description, setDescription] = React.useState('')
   const [address, setAddress] = React.useState('')
@@ -33,11 +35,15 @@ function RentSpot () {
   const [startTime, setStartTime] = React.useState(dayjs())
   const [endTime, setEndTime] = React.useState(dayjs().add(1, "hour"))
 
+  const [basePrice, setBasePrice] = React.useState(0)
+
   const [price, setPrice] = React.useState(0)
 
   const [cardNumber, setCardNumber] = React.useState('')
   const [cardName, setCardName] = React.useState('')
   const [cardCVV, setCardCVV] = React.useState('')
+
+  const [open, setOpen] = React.useState(false)
 
   const cardStyle = {
       margin: '0',
@@ -56,13 +62,22 @@ function RentSpot () {
 
   const buttonStyle = {
       margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
-      width: '100px'
+      width: '200px'
   }
 
   const inputStyle = {
       backgroundColor: '#fff',
       margin: '0',
       padding: '0'
+  }
+
+  const dialogReq = {
+      spotID: params.spotID,
+      startTime: startTime.unix(),
+      endTime: endTime.unix(),
+      cardNumber: cardNumber,
+      cardName: cardName,
+      cardCvv: cardCVV
   }
 
   React.useEffect(()=> {
@@ -76,7 +91,7 @@ function RentSpot () {
           setEvCharging(spot.evCharging)
           setDisabledAccess(spot.disabledAccess)
           setLargestVehicle(spot.largestVehicle)
-          setPrice(spot.basePrice)
+          setBasePrice(spot.basePrice)
 
           const address = spot.streetNumber + " " + spot.streetName + " " + spot.suburb + " " + spot.postcode
           setAddress(address)
@@ -87,6 +102,17 @@ function RentSpot () {
       }
       loadingRentDetails()
   }, [])
+
+  async function confirmRenting() {
+      setOpen(true)
+      const timeReq = {
+          startTime: startTime.unix(),
+          endTime: endTime.unix()
+      }
+      const priceRes = await makeRequest('POST', `book/${params.spotID}/price`, timeReq)
+      setPrice(priceRes.price)
+      console.log(priceRes)
+  }
     
   return (
     <>
@@ -109,17 +135,17 @@ function RentSpot () {
             <CardMedia
                 component="img"
                 height="255"
-                image='../static/spot1.jpg'
+                src={img}
                 alt="Spot1"
             />
             <CardContent >
                 <Typography paragraph>Description: {description}</Typography>
                 <Typography paragraph>Address: {address}</Typography>
-                <Typography paragraph>LargestVehicle: {largestVehicle}</Typography>
+                <Typography paragraph>Largest Vehicle: {largestVehicle}</Typography>
                 <Typography paragraph>Clearance: {clearance}</Typography>
                 <Typography paragraph>EV charging available: {evCharging ? 'Yes' : 'No'}</Typography>
-                <Typography paragraph>DisabledAccess: {disabledAccess ? 'Yes' : 'No'}</Typography>
-                <Typography paragraph>Price: ${price}</Typography>
+                <Typography paragraph>Disabled Access: {disabledAccess ? 'Yes' : 'No'}</Typography>
+                <Typography paragraph>Regular Price per hour: ${basePrice}</Typography>
             </CardContent>
         </Card>
         <Card style={cardStyle}>
@@ -131,9 +157,9 @@ function RentSpot () {
                        value={cardName} onChange={(e) => setCardName(e.target.value)}/>
             <TextField fullWidth variant='outlined' size='small' label='CVV' style={inputStyle}
                        value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
-            <Button variant="contained" style={buttonStyle} align="center">Confirm</Button>
+            <Button variant="contained" style={buttonStyle} align="center" onClick={confirmRenting}>Go to Confirmation</Button>
         </Card>
-
+        <ConfirmBookingDialog confirmReq={dialogReq} price={price} open={open} setOpen={setOpen}/>
     </>
   )
 }

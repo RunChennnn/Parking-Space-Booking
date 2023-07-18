@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {Avatar, Button, Card, CardContent, CardHeader, CardMedia, IconButton, Typography} from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {red} from "@mui/material/colors";
+import img from '../static/spot1.jpg'
 
 function SpotDetails () {
 
@@ -90,8 +91,6 @@ function SpotDetails () {
 
   }
 
-
-    
   return (
     <>
       <NavigationBar />
@@ -113,7 +112,7 @@ function SpotDetails () {
             <CardMedia
                 component="img"
                 height="500"
-                image='../static/spot1.jpg'
+                image={img}
                 alt="Spot1"
             />
             <CardContent >
@@ -122,8 +121,8 @@ function SpotDetails () {
                 <Typography paragraph>LargestVehicle: {largestVehicle}</Typography>
                 <Typography paragraph>Clearance: {clearance}</Typography>
                 <Typography paragraph>EV charging available: {evCharging ? 'Yes': 'No'}</Typography>
-                <Typography paragraph>DisabledAccess: {disabledAccess ? 'Yes' : 'No'}</Typography>
-                <Typography paragraph>Price: ${basePrice}</Typography>
+                <Typography paragraph>Disabled Access: {disabledAccess ? 'Yes' : 'No'}</Typography>
+                <Typography paragraph>Regular Price per hour: ${basePrice}</Typography>
                 <Typography paragraph>Average rate: {averRate}/5</Typography>
             </CardContent>
         </Card>
