@@ -50,11 +50,13 @@ const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber,
                 error: "Spot is not availble"
             }
         } else {
+            const ownerID = (await db.collection('Spots').doc(spotID).get()).data().owner
             const currentTime = Math.floor(Date.now() / 1000)
             const price = await calculatePrice(spotID, startTime, endTime)
             const data = {
                 spotID: spotID,
                 userID: userID,
+                ownerID: ownerID,
                 startTime: startTime,
                 endTime: endTime,
                 cardNumber: cardNumber,
@@ -235,4 +237,79 @@ const deleteBooking = async (bookingID) => {
     }
 };
 
+const getUpcomingBooking = async (userID) => {
+    try {
+        let asOwner = [];
+        let asRenter = [];
+        const currentTime = Math.floor(Date.now() / 1000)
+        const ownerBookings = await db.collection('Bookings').where('ownerID','==',userID).where('startTime', '>', currentTime).get()
+        const renterBookings = await db.collection('Bookings').where('userID','==',userID).where('startTime', '>', currentTime).get()
+        ownerBookings.forEach(booking => asOwner.push(booking.id))
+        renterBookings.forEach(booking => asRenter.push(booking.id))
+        return {
+            status: 200,
+            asOwner: asOwner,
+            asRenter: asRenter,
+            message: "Upcoming bookings retrieved successfully"
+        }
+    } catch (error) {
+        console.error("Error retriving Booking:", error);
+        return {
+          status: 500,
+          message: "Booking retrival FAILED",
+          error: error.message
+        };
+    }
+};
+
+const getHistoryBooking = async (userID) => {
+    try {
+        let asOwner = [];
+        let asRenter = [];
+        const currentTime = Math.floor(Date.now() / 1000)
+        const ownerBookings = await db.collection('Bookings').where('ownerID','==',userID).where('endTime', '<=', currentTime).get()
+        const renterBookings = await db.collection('Bookings').where('userID','==',userID).where('endTime', '<=', currentTime).get()
+        ownerBookings.forEach(booking => asOwner.push(booking.id))
+        renterBookings.forEach(booking => asRenter.push(booking.id))
+        return {
+            status: 200,
+            asOwner: asOwner,
+            asRenter: asRenter,
+            message: "Historical bookings retrieved successfully"
+        }
+    } catch (error) {
+        console.error("Error retriving Booking:", error);
+        return {
+          status: 500,
+          message: "Booking retrival FAILED",
+          error: error.message
+        };
+    }
+};
+
+const getAllBooking = async (userID) => {
+    try {
+        let asOwner = [];
+        let asRenter = [];
+        const ownerBookings = await db.collection('Bookings').where('ownerID','==',userID).get()
+        const renterBookings = await db.collection('Bookings').where('userID','==',userID).get()
+        ownerBookings.forEach(booking => asOwner.push(booking.id))
+        renterBookings.forEach(booking => asRenter.push(booking.id))
+        return {
+            status: 200,
+            asOwner: asOwner,
+            asRenter: asRenter,
+            message: `All bookings of retrieved successfully`
+        }
+    } catch (error) {
+        console.error("Error retriving Booking:", error);
+        return {
+          status: 500,
+          message: "Booking retrival FAILED",
+          error: error.message
+        };
+    }
+};
+
 export { confirmNewBooking, getPriceForBooking, getBooking, updateReview, deleteBooking };
+export { getUpcomingBooking, getHistoryBooking, getAllBooking };

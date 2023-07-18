@@ -5,16 +5,22 @@ const getUser = async (userId) => {
     try {
         // auth.getUser() is a different thing!
         const userRecord = await auth.getUser(userId)
+        const email = userRecord.email
+        let upcoming = []
+        let history = []
+        let spots =  []
 
         const spotRef = db.collection('Spots')
         const userSpots = await spotRef.where('owner', '==', userId).get();
-
-        const email = userRecord.email
-        const upcoming = ["this1SafAKeID", "aN01theR_0ne"]
-        const history = ["historyID1","historyID2","historyID3"]
-        const spots =  []
-
+        //assuming the upcoming and history are the user as renter.
+        const currentTime = Math.floor(Date.now() / 1000)
+        const upcomingBookings = await db.collection('Bookings').where('userID','==',userId).where('startTime', '>', currentTime).get()
+        const historyBookings = await db.collection('Bookings').where('userID','==',userId).where('endTime', '<=', currentTime).get()
+        
+        upcomingBookings.forEach(booking => upcoming.push(booking.id))
+        historyBookings.forEach(booking => history.push(booking.id))
         userSpots.forEach((spot) => {spots.push(spot.id);});
+
 
         console.log(`User ${userId} infomation retrived from the database`);
         return {
