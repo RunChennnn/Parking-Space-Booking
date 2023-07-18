@@ -5,8 +5,7 @@ import makeRequest from "../utilities/makeRequest";
 import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AccountDetailRow from "./AccountDetailRow";
-import BookingStub from "./BookingStub"
-
+import BookingStub from "./BookingStub";
 
 function MyAccount () {
 
