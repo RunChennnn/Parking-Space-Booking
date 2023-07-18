@@ -1,34 +1,18 @@
 import express from "express";
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get, set, push } from 'firebase/database';
-import { getAuth } from "firebase/auth";
+import { db, auth } from './firebaseConfig.js';
 import { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword } from "./account.js";
 import { createNewSpot, patchSpot, deleteSpot, getSpot } from "./spot.js";
 import { getUser, getUserBasic, patchUser } from "./user.js"
 import { recommendSpot, searchSpot } from "./search.js"
+import { confirmNewBooking, getPriceForBooking, getBooking, updateReview, deleteBooking } from "./booking.js"
 
 const port = 3141
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, }));
 app.use(bodyParser.json());
-
-const firebaseConfig = {
-    apiKey: "AIzaSyApBdX_ouOp0E9Bez09PtHyMa4UL-qDYBo",
-    authDomain: "room-e5563.firebaseapp.com",
-    projectId: "room-e5563",
-    storageBucket: "room-e5563.appspot.com",
-    messagingSenderId: "665563320009",
-    appId: "1:665563320009:web:2bff29562834fdf4bac718",
-    measurementId: "G-1NXQ4FX22V",
-    databaseURL: "https://room-e5563-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
-const firebase = initializeApp(firebaseConfig);
-const db = getDatabase(firebase);
-const auth = getAuth(firebase);
-  
 
 app.get('/test', (req, res) => {
     console.log(req.body);
@@ -37,13 +21,13 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/testDB', async (req,res) => {
-    console.log(req)
-    const testDataRef = ref(db, '/testDatabaseCollection')
-    const snapshot = await get(testDataRef);
+    const snapshot = await db.collection('testCollection').get()
     let respond;
-    console.log(snapshot.val());
-    if (snapshot.exists()){
-        respond = snapshot.val()
+    console.log(snapshot);
+    if (!snapshot.empty){
+        let documents = []
+        snapshot.forEach(doc => documents.push(doc.data()))
+        respond = documents
     } else {
         respond = "Nothing in the database"
     }
@@ -52,15 +36,16 @@ app.get('/testDB', async (req,res) => {
 });
 
 app.post('/testDB/spots', async (req, res) => {
-
-    const testDataRef = ref(db, '/testDatabaseCollection/Spots');
-
-    const newSpot = push(testDataRef)
-    const data = req.body;
-    await set(newSpot, data);
+    const data = {
+        Country: "Australia",
+        Food: "Roo steak",
+        Price: 190,
+        Veg: false
+    }
+    await db.collection('testCollection').add(data)
 
     console.log("Data added to the database");
-    res.status(200).json({status: 200,message: "Data added to the database"});
+    res.status(201).json({status: 201,message: "Data added to the database"});
 
 });
 
@@ -329,7 +314,7 @@ app.post('/recommend/:userID', async (req, res) => {
     
     if (respond.status === 200) {
         return res.status(200).json(respond);
-    } else if (respond.status === 400) {
+    } else if (respond.status === 404) {
         return res.status(404).json(respond);
     } else {
         return res.status(400).json({ message: 'Unknown Error' })
@@ -344,100 +329,91 @@ app.post('/search', async (req, res) => {
     
     if (respond.status === 200) {
         return res.status(200).json(respond);
-    } else if (respond.status === 400) {
+    } else if (respond.status === 404) {
         return res.status(404).json(respond);
     } else {
         return res.status(400).json({ message: 'Unknown Error' })
     }
 });
 
-app.post('/book/:spotID/price', async (req, res) => { // TODO
-    const requestBodyLooksLikeThis = {
-        spotID: 30,
-        startTime: 1688794787, // unix timestamp
-        endTime: 1688795245, // unix timestamp
-    }
-    // We'll make sure that the timestamps passed from the frontend will
-    // be on the hour
+app.post('/book/:spotID/price', async (req, res) => {
+    const spotID =  req.params.spotID
+    const {startTime, endTime} = req.body;
+    const response = await getPriceForBooking(spotID, startTime, endTime);
 
-    const response = {
-        price: 35.5 // float/double/whatever
-    }
-    if (true) { // If spot is available for this whole time
+    if (response.status === 200) { 
         return res.status(200).json(response);
-    } else {
-        return res.status(500).json({ error: 'spot not available' }); // don't change this error code without telling us
-    }
-})
-
-app.post('/book/:spotID/confirm', async (req, res) => { // TODO
-    const requestBodyLooksLikeThis = {
-        spotID: req.params.spotID,
-        startTime: 1688794787, // unix timestamp
-        endTime: 1688795245, // unix timestamp
-        cardNumber: '9234567898765432', // needs to be string to avoid integer overflow
-        cardName: 'Joe Biden',
-        cardCvv: 420,
-    }
-
-    if (true) { // If spot is available for this whole time
-        return res.status(200).json({ status: 'OK' }); // Don't care what this says
-    } else if (true) { // Spot became not available
-        return res.status(500).json({ error: 'spot not available' }); // don't change this error code without telling us
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 409) {
+        return res.status(409).json(response);
     } else {
         return res.status(500).json({ error: 'other error' });
     }
 })
 
-app.get('/booking/:bookingID', async (req, res) => { // TODO
-    const bookingID = req.params.bookingID;
-    const requestBodyLooksLikeThis = {
-        spotID: req.params.spotID,
-        startTime: 1688794787, // unix timestamp
-        endTime: 1688795245, // unix timestamp
-        cardNumber: '9234567898765432', // needs to be string to avoid integer overflow
-        cardName: 'Joe Biden',
-        cardCvv: 420,
-    }
+app.post('/book/:spotID/confirm', async (req, res) => {
+    const spotID =  req.params.spotID
+    const {userID, startTime, endTime, cardNumber, cardName, cardCvv} = req.body;
+    const response = await confirmNewBooking(spotID, userID, startTime, endTime, cardNumber, cardName, cardCvv);
 
-    const response = {
-        spotID: 28374592, // whatever ID format you usually use
-        startTime: 1688794787, // unix timestamp
-        endTime: 1688795245, // unix timestamp
-        price: 34.8,
-        refundAvailable: 0.5, // 0 for not available, 1 for 100%, 0.5 for 50%
-        // include rating: and review: if those are available too
-    }
-
-    if (true) { // valid request
-        return res.status(200).json(response);
+    if (response.status === 201) { 
+        return res.status(201).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else if (response.status === 409) {
+        return res.status(409).json(response);
     } else {
-        return res.status(500).json({ error: 'invalid booking ID' }); // or other error, let us know
+        return res.status(500).json({ error: 'other error' });
+    }
+})
+
+app.get('/booking/:bookingID', async (req, res) => {
+    const bookingID =  req.params.bookingID
+    const response = await getBooking(bookingID);
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
+    } else {
+        return res.status(500).json({ error: 'other error' });
     }
 })
 
 app.post('/booking/:bookingID/review', async (req, res) => { // TODO
     const bookingID = req.params.bookingID;
+    const { rating, review } = req.body;
+    const response = await updateReview(bookingID, rating, review);
 
-    const requestBodyLooksLikeThis = {
-        rating: 4, // star rating 1, 2, 3, 4, or 5
-        review: 'great' // text review
-    }
-
-    if (true) { // valid request
-        return res.status(200).json({ status: 'OK '}); // don't care what this says
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
     } else {
-        return res.status(500).json({ error: 'invalid spot ID' });
+        return res.status(500).json({ error: 'other error' });
     }
 })
 
 app.delete('/booking/:bookingID/cancel', async (req, res) => { // TODO
     const bookingID = req.params.bookingID;
+    const response = await deleteBooking(bookingID);
 
-    if (true) { // valid request
-        return res.status(200).json({ status: 'OK '}); // don't care what this says
+    if (response.status === 200) { 
+        return res.status(200).json(response);
+    } else if (response.status === 400) {
+        return res.status(400).json(response);
+    } else if (response.status === 404) {
+        return res.status(404).json(response);
     } else {
-        return res.status(500).json({ error: 'invalid spot ID' });
+        return res.status(500).json({ error: 'other error' });
     }
 })
 

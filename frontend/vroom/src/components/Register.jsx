@@ -74,17 +74,19 @@ function Register () {
     };
     const response = await makeRequest("POST", "auth/register", request);
     if (response.error) {
-      if (response.error === 'Firebase: Error (auth/email-already-in-use).') {
+      if (response.error === 'Firebase: Error (auth/email-already-in-use).' || response.error === 'The email address is already in use by another account.') {
         setErrorMessage('This email address is already used for an account. Please select a different email address and try again.');
         setShowError(true)
       } else if (response.error === 'Weak Password') {
         setErrorMessage('Please choose a different password and try again. Passwords must contain at least 8 characters, and contain at least 2 of the following: lowercase characters, uppercase characters, numbers.');
         setShowError(true)
-      } else if (response.error === 'Firebase: Error (auth/invalid-email).') {
+      } else if (response.error === 'Firebase: Error (auth/invalid-email).' || response.error === 'The email address is improperly formatted.') {
         setErrorMessage('Please choose a valid email address.');
         setShowError(true)
       } else {
         console.log(`Unknown error: ${response.error}`);
+        setErrorMessage(response.error)
+        setShowError(true);
       }
     } else {
       // Correct credentials, so log in

@@ -1,20 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get } from 'firebase/database';
-import { getAuth, getIdToken, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, EmailAuthProvider } from "firebase/auth";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyApBdX_ouOp0E9Bez09PtHyMa4UL-qDYBo",
-    authDomain: "room-e5563.firebaseapp.com",
-    projectId: "room-e5563",
-    storageBucket: "room-e5563.appspot.com",
-    messagingSenderId: "665563320009",
-    appId: "1:665563320009:web:2bff29562834fdf4bac718",
-    measurementId: "G-1NXQ4FX22V",
-    databaseURL: "https://room-e5563-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
-const firebase = initializeApp(firebaseConfig);
-const db = getDatabase(firebase);
-const auth = getAuth(firebase);
+import { auth, client } from './firebaseConfig.js';
+import { getAuth, getIdToken, signOut, signInWithEmailAndPassword } from "firebase/auth";
 
 const checkPasswordNaive = (pwdstr) => {
     const hasUppercase = /[A-Z]/.test(pwdstr) ? 1:0;
@@ -35,13 +20,13 @@ const registerNewAccount = async (email, password) => {
                 error: "Weak Password"
             })
         } else {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const token = await getIdToken(userCredential.user);
-            console.log("Account Created: ", userCredential.user.uid);
+            const newUser = await auth.createUser({email:email, password:password});
+            const token = await auth.createCustomToken(newUser.uid);
+            console.log("Account Created: ", newUser.uid);
     
             return ({
                 status: 201,
-                userID: userCredential.user.uid,
+                userID: newUser.uid,
                 token: token,
                 message: "Account successfully created"
             });
@@ -59,7 +44,8 @@ const registerNewAccount = async (email, password) => {
 
 const signInAccount = async (email, password) => {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const clientAuth = getAuth(client);
+        const userCredential = await signInWithEmailAndPassword(clientAuth, email, password);
         const token = await getIdToken(userCredential.user);
         console.log("Signed in successfully: ", userCredential.user.uid);
         
@@ -81,11 +67,11 @@ const signInAccount = async (email, password) => {
 }
 
 const deleteAccount = async (uid) => {
-    const user = auth.currentUser;
-
-    if (user && user.uid === uid) {
+    //this should be implemented later stage either by token or password check
+    const authorizedUser = true;
+    if (authorizedUser) {
         try {
-            await user.delete();
+            await auth.deleteUser(uid);
             console.log("Account Deleted: ", uid);
             return {
                 status: 200,
@@ -110,7 +96,8 @@ const deleteAccount = async (uid) => {
 
 const authAccountwithPassword = async (email, password) => {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const clientAuth = getAuth(client);
+        const userCredential = await signInWithEmailAndPassword(clientAuth, email, password);
         const token = await getIdToken(userCredential.user);
 
         return {
@@ -129,12 +116,11 @@ const authAccountwithPassword = async (email, password) => {
 
 const signOutAccount = async () => {
     try {
-        await signOut(auth);
+        await signOut(getAuth(client));
         console.log('User signed out');
     } catch (error) {
         console.error('Error signing out: ', error);
     }
 };
 
-
-export { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword };
+export { registerNewAccount, signInAccount, deleteAccount, signOutAccount, authAccountwithPassword, checkPasswordNaive };
