@@ -153,6 +153,8 @@ const getBooking = async (bookingID) => {
             return {
               status: 200,
               spotID: data.spotID,
+              userID: data.userID,
+              ownerID:data.ownerID,
               startTime: data.startTime,
               endTime: data.endTime,
               price: data.price,
