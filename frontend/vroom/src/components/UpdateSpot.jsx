@@ -1,7 +1,7 @@
 import React from "react"
 import {useNavigate, useParams} from 'react-router-dom'
 import NavigationBar from "./NavigationBar";
-import {Button, Card, TextField} from "@mui/material";
+import {Button, Card, Checkbox, FormControl, FormControlLabel, TextField} from "@mui/material";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import makeRequest from "../utilities/makeRequest";
 
@@ -25,12 +25,17 @@ function UpdateSpot () {
     const [cardName, setCardName] = React.useState('');
     const [cardCVV, setCardCVV] = React.useState('');
 
+    const [demandPricing, setDemandPricing] = React.useState(false)
+    const [disabledAccess, setDisabledAccess] = React.useState(false)
+    const [evCharging, setEvCharging] = React.useState(false)
+
     const [showError, setShowError] = React.useState(false);
 
     const [open, setOpen] = React.useState(false);
 
     const buttonStyle = {
-        margin: '20px 30px 20px 30px'
+        margin: '20px 20px 10px 20px',
+        width: '100px'
     }
 
     const inputStyle = {
@@ -69,6 +74,18 @@ function UpdateSpot () {
         setOpen(false)
     }
 
+    const handleDemandPricingChange = (e) => {
+        setDemandPricing(e.target.checked)
+    }
+
+    const handleDisabledAccessChange = (e) => {
+        setDisabledAccess(e.target.checked)
+    }
+
+    const handleEvChargingChange = (e) => {
+        setEvCharging(e.target.checked)
+    }
+
 
     React.useEffect(() => {
         async function loadingSpotInfo() {
@@ -87,6 +104,10 @@ function UpdateSpot () {
             setCardName(spot.cardName)
             setCardCVV(spot.cardCVV)
 
+            setDemandPricing(spot.demandPricing)
+            setDisabledAccess(spot.disabledAccess)
+            setEvCharging(spot.evCharging)
+
         }
         loadingSpotInfo()
         //console.log(res)
@@ -99,10 +120,10 @@ function UpdateSpot () {
             cardName: cardName,
             cardNumber: cardNumber,
             clearance: clearance,
-            demandPricing: true,
+            demandPricing: demandPricing,
             description: description,
-            disabledAccess: false,
-            evCharging: true,
+            disabledAccess: disabledAccess,
+            evCharging: evCharging,
             largestVehicle: largestVehicle,
             owner: localStorage.getItem('vroom-id'),
             postcode: postcode,
@@ -154,6 +175,10 @@ function UpdateSpot () {
                 <TextField width='1px' variant='outlined' size='small' label='Postcode'
                            placeholder='2000' style={inputStyle}
                            value={postcode} onChange={(e) => setPostcode(e.target.value)}></TextField>
+                <FormControl variant="standard">
+                    <FormControlLabel control={<Checkbox checked={demandPricing} onChange={handleDemandPricingChange} name="DemandPricing"/> }
+                                      label="DemandPricing"/>
+                </FormControl>
                 <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)'
                            placeholder='16' style={inputStyle}
                            value={basePrice} onChange={(e) => setBasePrice(e.target.value)}/>
@@ -163,6 +188,14 @@ function UpdateSpot () {
                 <TextField width='1px' variant='outlined' size='small' label='Clearance height'
                            placeholder='2.2' style={inputStyle}
                            value={clearance} onChange={(e) => setClearance(e.target.value)}></TextField>
+                <FormControl variant="standard">
+                    <FormControlLabel control={<Checkbox checked={disabledAccess} onChange={handleDisabledAccessChange} name="DisabledAccess"/> }
+                                      label="DisabledAccess"/>
+                </FormControl>
+                <FormControl variant="standard">
+                    <FormControlLabel control={<Checkbox checked={evCharging} onChange={handleEvChargingChange} name="EvCharging"/> }
+                                      label="EvCharging"/>
+                </FormControl>
                 <div>{"Revenue will be paid into the following bank account"}</div>
                 <TextField fullWidth variant='outlined' size='small' label='Card Number'
                            value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
@@ -173,7 +206,7 @@ function UpdateSpot () {
             </Card>
             <div style={container}>
                  <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
-                 <Button variant="contained" style={buttonStyle} onClick={handleClickOpen}>Delete</Button>
+                 <Button variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">Delete</Button>
             </div>
             <Dialog
                 open={open}
@@ -189,7 +222,7 @@ function UpdateSpot () {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={confirmDelete} color="primary" autoFocus>Confirm</Button>
+                    <Button onClick={confirmDelete} color="error" autoFocus>Confirm</Button>
                 </DialogActions>
             </Dialog>
         </>

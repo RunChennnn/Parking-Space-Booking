@@ -2,7 +2,8 @@ import React from "react"
 import NavigationBar from "./NavigationBar";
 import {useNavigate, useParams} from "react-router-dom";
 import makeRequest from "../utilities/makeRequest";
-import {Button, Card, TextField} from "@mui/material";
+import {Button, Card, Checkbox, TextField} from "@mui/material";
+import {FormControl, FormLabel, FormControlLabel, Radio, RadioGroup} from "@mui/material";
 
 function NewSpot () {
 
@@ -22,10 +23,16 @@ function NewSpot () {
     const [cardName, setCardName] = React.useState('');
     const [cardCVV, setCardCVV] = React.useState('');
 
+    // variale for radio group
+    const [demandPricing, setDemandPricing] = React.useState(false)
+    const [disabledAccess, setDisabledAccess] = React.useState(false)
+    const [evCharging, setEvCharging] = React.useState(false)
+
     const [showError, setShowError] = React.useState(false);
 
     const buttonStyle = {
-        margin: '20px 30% 0 30%'
+        margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
+        width: '100px'
     }
 
     const inputStyle = {
@@ -53,6 +60,19 @@ function NewSpot () {
         rowGap: '15px'
     };
 
+    const handleDemandPricingChange = (e) => {
+        setDemandPricing(e.target.checked)
+    }
+
+    const handleDisabledAccessChange = (e) => {
+        setDisabledAccess(e.target.checked)
+    }
+
+    const handleEvChargingChange = (e) => {
+        setEvCharging(e.target.checked)
+    }
+
+
     async function confirmRegister() {
         const req = {
             basePrice: basePrice,
@@ -60,10 +80,10 @@ function NewSpot () {
             cardName: cardName,
             cardNumber: cardNumber,
             clearance: clearance,
-            demandPricing: true,
+            demandPricing: demandPricing,
             description: description,
-            disabledAccess: false,
-            evCharging: true,
+            disabledAccess: disabledAccess,
+            evCharging: evCharging,
             largestVehicle: largestVehicle,
             owner: localStorage.getItem('vroom-id'),
             postcode: postcode,
@@ -101,6 +121,10 @@ function NewSpot () {
                 <TextField width='1px' variant='outlined' size='small' label='Postcode'
                            placeholder='2000' style={inputStyle}
                            value={postcode} onChange={(e) => setPostcode(e.target.value)}></TextField>
+                <FormControl variant="standard">
+                    <FormControlLabel control={<Checkbox checked={demandPricing} onChange={handleDemandPricingChange} name="DemandPricing"/> }
+                      label="DemandPricing"/>
+                </FormControl>
                 <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)'
                            placeholder='16' style={inputStyle}
                            value={basePrice} onChange={(e) => setBasePrice(e.target.value)}/>
@@ -110,6 +134,14 @@ function NewSpot () {
                 <TextField width='1px' variant='outlined' size='small' label='Clearance height'
                            placeholder='2.2' style={inputStyle}
                            value={clearance} onChange={(e) => setClearance(e.target.value)}></TextField>
+                <FormControl variant="standard">
+                    <FormControlLabel control={<Checkbox checked={disabledAccess} onChange={handleDisabledAccessChange} name="DisabledAccess"/> }
+                                      label="DisabledAccess"/>
+                </FormControl>
+                <FormControl variant="standard">
+                    <FormControlLabel control={<Checkbox checked={evCharging} onChange={handleEvChargingChange} name="EvCharging"/> }
+                                      label="EvCharging"/>
+                </FormControl>
                 <div>{"Revenue will be paid into the following bank account"}</div>
                 <TextField fullWidth variant='outlined' size='small' label='Card Number'
                            value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
