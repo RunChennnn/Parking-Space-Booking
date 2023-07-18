@@ -14,13 +14,22 @@ const getUser = async (userId) => {
         const userSpots = await spotRef.where('owner', '==', userId).get();
         //assuming the upcoming and history are the user as renter.
         const currentTime = Math.floor(Date.now() / 1000)
-        const upcomingBookings = await db.collection('Bookings').where('userID','==',userId).where('startTime', '>', currentTime).get()
-        const historyBookings = await db.collection('Bookings').where('userID','==',userId).where('endTime', '<=', currentTime).get()
+        const upcomingBookingsRenter = await db.collection('Bookings').where('userID','==',userId).where('startTime', '>', currentTime).get()
+        const upcomingBookingsOwner= await db.collection('Bookings').where('ownerID','==',userId).where('startTime', '>', currentTime).get()
+        const historyBookingsRenter = await db.collection('Bookings').where('userID','==',userId).where('endTime', '<=', currentTime).get()
+        const historyBookingsOwner = await db.collection('Bookings').where('ownerID','==',userId).where('endTime', '<=', currentTime).get()
         
-        upcomingBookings.forEach(booking => upcoming.push(booking.id))
-        historyBookings.forEach(booking => history.push(booking.id))
+        upcomingBookingsRenter.forEach(booking => upcoming.push({id: booking.id, time: booking.data().startTime}))
+        upcomingBookingsOwner.forEach(booking => upcoming.push({id: booking.id, time: booking.data().startTime}))
+        historyBookingsRenter.forEach(booking => history.push({id: booking.id, time: booking.data().startTime}))
+        historyBookingsOwner.forEach(booking => history.push({id: booking.id, time: booking.data().startTime}))
         userSpots.forEach((spot) => {spots.push(spot.id);});
-
+        
+        //sort by startTime and give bookingID only
+        upcoming.sort((a, b) => a.time - b.time)
+        history.sort((a, b) => a.time - b.time)
+        upcoming = upcoming.map(record => record.id)
+        history = history.map(record => record.id)
 
         console.log(`User ${userId} infomation retrived from the database`);
         return {
