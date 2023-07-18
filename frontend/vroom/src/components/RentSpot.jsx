@@ -32,10 +32,6 @@ function RentSpot () {
 
   const [startTime, setStartTime] = React.useState(dayjs())
   const [endTime, setEndTime] = React.useState(dayjs().add(1, "hour"))
-    function onChange (start, end) {
-      setStartTime(start);
-      setEndTime(end);
-    }
 
   const [price, setPrice] = React.useState(0)
 
@@ -85,8 +81,8 @@ function RentSpot () {
           const address = spot.streetNumber + " " + spot.streetName + " " + spot.suburb + " " + spot.postcode
           setAddress(address)
 
-          console.log(startTime)
-          console.log(endTime)
+          //console.log(startTime)
+          //console.log(endTime)
 
       }
       loadingRentDetails()
