@@ -21,8 +21,9 @@ function BookingStub (props) {
     width: '100px',
     height: '36.5px',
   };
-
-  const address = `${props.spot.streetNumber} ${props.spot.streetName} ${props.spot.suburb} ${props.spot.postcode}`;
+  const spot = props.spot.data;
+  const address = `${spot.streetNumber} ${spot.streetName} ${spot.suburb} ${spot.postcode}`;
+  console.log(props);
 
   const options = {
     weekday: 'long',
@@ -31,8 +32,6 @@ function BookingStub (props) {
   }
   const start = new Date(props.startTime * 1000).toLocaleDateString('en-UK', options);
   const end = new Date(props.endTime * 1000).toLocaleDateString('en-UK', options);
-  console.log(start);
-  console.log(end);
 
   let date = '';
   if (start === end) {
