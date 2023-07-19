@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom"
 import makeRequest from "../utilities/makeRequest";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import {Card, CardContent, CardHeader, Typography} from "@mui/material";
+import ReviewBoxOwner from "./ReviewBoxOwner";
 
 function SpotUseOwner() {
 
@@ -14,6 +16,8 @@ function SpotUseOwner() {
   const [startTime, setStartTime] = React.useState('')
   const [endTime, setEndTime] = React.useState('')
   const [revenue, setRevenue] = React.useState(0)
+
+  const [rating, setRating] = React.useState(2.5)
   const [review, setReview] = React.useState('')
 
   const timeStampToDate = (timeStamp) => {
@@ -22,7 +26,18 @@ function SpotUseOwner() {
   }
 
   async function loadingSpotUseDetails () {
-      const res = await makeRequest('GET',)
+      const booking = await makeRequest('GET', `booking/${params.bookingID}`, {})
+      setRating(booking.rating)
+      setReview(booking.review)
+      setRevenue(booking.price)
+
+      const spotRes = await makeRequest('GET', `spot/${booking.spotID}`,{})
+      const spot = spotRes.data
+      const address = spot.streetNumber + " " + spot.streetName + " " + spot.suburb + " " + spot.postcode
+      setAddress(address)
+
+      setStartTime(timeStampToDate(booking.startTime))
+      setEndTime(timeStampToDate(booking.endTime))
   }
 
   React.useEffect(() => {
@@ -32,7 +47,18 @@ function SpotUseOwner() {
   return (
     <>
       <NavigationBar />
-      Spot use page for booking with ID {params.bookingID} from the perspective of the owner
+      <Card >
+          <CardHeader >
+              <Typography paragraph variant="h5">Booking Details</Typography>
+          </CardHeader>
+          <CardContent>
+              <Typography paragraph>Address: {address}</Typography>
+              <Typography paragraph>StartTime: {startTime}</Typography>
+              <Typography paragraph>EndTime: {endTime}</Typography>
+              <Typography paragraph>Revenue:${revenue}</Typography>
+              <ReviewBoxOwner rating={rating} review={review}/>
+          </CardContent>
+      </Card>
     </>
   )
 }
