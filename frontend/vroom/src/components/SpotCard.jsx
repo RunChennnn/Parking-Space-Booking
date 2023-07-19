@@ -22,7 +22,7 @@ import {purple50} from "mui/source/styles/colors";
 function SpotCard(props) {
 
     const [expand, setExpand] = React.useState(false)
-    const [reviews, setReviews] = React.useState([1,2,3])
+    const [reviews, setReviews] = React.useState([])
 
     const handleExpandClick = () => {
         setExpand(!expand)
@@ -42,21 +42,6 @@ function SpotCard(props) {
     function formatPrice(price) {
         return `$${Number(price).toFixed(2)}`
     }
-
-    function generateReviewItem(rev) {
-         const item = (
-             <ListItem>
-                 <ListItemAvatar>
-                     <Avatar sx={{bgcolor: purple50}} aria-label="recipe">
-                         R
-                     </Avatar>
-                 </ListItemAvatar>
-                 <ListItemText primary="Tom and Jerry" secondary="July 18, 2023" />
-             </ListItem>
-         )
-         return item
-    }
-
 
 
     return (
@@ -105,7 +90,13 @@ function SpotCard(props) {
                 <CardContent>
                     <Typography paragraph>Average rate: {props.cardInfo.averRate}/5</Typography>
                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                        {reviews}
+                        {props.cardInfo.reviews.map((rev) =>
+                            <>
+                            <div>{rev.rating}</div>
+                            <div>{rev.review}</div>
+                            <div>{rev.renterID}</div>
+                            </>
+                        )}
                     </List>
                 </CardContent>
             </Collapse>
