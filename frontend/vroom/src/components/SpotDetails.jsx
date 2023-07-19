@@ -76,7 +76,7 @@ function SpotDetails () {
       const averRateRes = await makeRequest('GET', `spot/${params.spotID}/rating`, {})
       setAverRate(averRateRes.rating)
 
-      const reviewsRes = await makeRequest('GET', `spot/${params.spotID}/review?num=10`, {})
+      const reviewsRes = await makeRequest('GET', `spot/${params.spotID}/reviews?num=10`, {})
       setReviews(reviewsRes.reviews)
 
 

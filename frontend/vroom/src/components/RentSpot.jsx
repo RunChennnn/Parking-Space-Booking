@@ -164,7 +164,7 @@ function RentSpot () {
                        value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
             <Button variant="contained" style={buttonStyle} align="center" onClick={confirmRenting}>Go to Confirmation</Button>
         </Card>
-        <ConfirmBookingDialog confirmReq={dialogReq} price={price} open={open} setOpen={setOpen}/>
+        <ConfirmBookingDialog confirmReq={dialogReq} price={price} open={open} setOpen={setOpen} spotID={params.spotID}/>
     </>
   )
 }
