@@ -1,13 +1,13 @@
 import React from "react";
 import makeRequest from "../utilities/makeRequest";
 import {
-    Avatar, Button,
+    Avatar, Box, Button,
     Card,
     CardActions,
     CardContent,
     CardHeader,
     CardMedia, Collapse,
-    IconButton, List, ListItem, ListItemAvatar, ListItemText,
+    IconButton, List, ListItem, ListItemAvatar, ListItemText, Rating,
     Typography
 } from "@mui/material";
 import {red} from "@mui/material/colors";
@@ -16,13 +16,26 @@ import img from "../static/spot1.jpg";
 import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import {purple50} from "mui/source/styles/colors";
+import {purple50, purple500} from "mui/source/styles/colors";
+import StarIcon from "@mui/icons-material/Star";
 
 
 function SpotCard(props) {
 
     const [expand, setExpand] = React.useState(false)
-    const [reviews, setReviews] = React.useState([])
+
+    const rateLabels = {
+        0.5: 'Useless',
+        1: 'Useless+',
+        1.5: 'Poor',
+        2: 'Poor+',
+        2.5: 'Ok',
+        3: 'Ok+',
+        3.5: 'Good',
+        4: 'Good+',
+        4.5: 'Excellent',
+        5: 'Excellent+',
+    }
 
     const handleExpandClick = () => {
         setExpand(!expand)
@@ -74,6 +87,20 @@ function SpotCard(props) {
                 <Typography paragraph>EV charging available: {props.cardInfo.evCharging ? 'Yes': 'No'}</Typography>
                 <Typography paragraph>Disabled Access: {props.cardInfo.disabledAccess ? 'Yes' : 'No'}</Typography>
                 <Typography paragraph>Regular Price per hour: {formatPrice(props.cardInfo.basePrice)}</Typography>
+                <Typography paragraph>Average rate: {props.cardInfo.averRate}/5</Typography>
+                <Box sx={{
+                    width: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                }}>
+                    <Rating
+                        name="average rating"
+                        value={props.cardInfo.averRate}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={<StarIcon style={{opacity: 0.55}} fontSize="inherit"/>}
+                    />
+                </Box>
             </CardContent>
             <CardActions>
                 <Typography variant="button" display="block" gutterBottom>Recent Reviews</Typography>
@@ -88,13 +115,30 @@ function SpotCard(props) {
             </CardActions>
             <Collapse in={expand} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography paragraph>Average rate: {props.cardInfo.averRate}/5</Typography>
-                    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                    <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}>
                         {props.cardInfo.reviews.map((rev) =>
                             <>
-                            <div>{rev.rating}</div>
-                            <div>{rev.review}</div>
-                            <div>{rev.renterID}</div>
+                               <ListItem>
+                                   <ListItemAvatar>
+                                       <Avatar sx={{ bgcolor: purple500 }} aria-label="recipe">R</Avatar>
+                                   </ListItemAvatar>
+                                   <ListItemText
+                                       primary="COMP9900 Vroom Renter"
+                                       secondary={
+                                           <React.Fragment>
+                                               <Typography
+                                                   sx={{ display: 'inline' }}
+                                                   component="span"
+                                                   variant="body2"
+                                                   color="text.primary"
+                                               >
+                                                   {rateLabels[rev.rating]} ----
+                                               </Typography>
+                                               {rev.review}
+                                           </React.Fragment>
+                                       }
+                                   />
+                               </ListItem>
                             </>
                         )}
                     </List>
