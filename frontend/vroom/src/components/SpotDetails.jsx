@@ -7,6 +7,7 @@ import {Avatar, Button, Card, CardContent, CardHeader, CardMedia, IconButton, Ty
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {red} from "@mui/material/colors";
 import img from '../static/spot1.jpg'
+import SpotCard from "./SpotCard";
 
 function SpotDetails () {
 
@@ -17,42 +18,31 @@ function SpotDetails () {
 
   const [address, setAddress] = React.useState('')
 
-  const [largestVehicle, setLargestVehicle] = React.useState('')
+  const [largestVehicle, setLargestVehicle] = React.useState(0)
   const [clearance, setClearance] = React.useState('')
   const [evCharging, setEvCharging] = React.useState(false)
   const [disabledAccess, setDisabledAccess] = React.useState(false)
   const [basePrice, setBasePrice] = React.useState('')
 
-  // review of past renters
-  const [reviews, setReviews] = React.useState([])
   const [averRate, setAverRate] = React.useState(0)
+  const [reviews, setReviews] = React.useState([])
 
   const buttonStyle = {
       margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
       width: '100px'
   }
 
-    const cardStyle = {
-        margin: '0',
-        padding: '5%',
-        backgroundColor: '#fffffa',
-        borderColor: '#ffffff',
-        borderStyle: 'solid',
-        borderWidth: '2px',
-        borderRadius: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-evenly',
-        rowGap: '15px'
-    };
-
-  const getAverageRate = (reviews) => {
-      let averRate = 0, total = 0
-      for(const review of reviews) {
-          averRate += review.rate
-          total += 1
-      }
-      return averRate/total
+  const cardInfo = {
+      spotID: params.spotID,
+      description: description,
+      address: address,
+      largestVehicle: largestVehicle,
+      clearance: clearance,
+      evCharging: evCharging,
+      disabledAccess: disabledAccess,
+      basePrice: basePrice,
+      averRate: averRate,
+      reviews: reviews
   }
 
 
@@ -83,49 +73,22 @@ function SpotDetails () {
 
       setBasePrice(spot.basePrice)
 
-      //setReviews(reviews)
+      const averRateRes = await makeRequest('GET', `spot/${params.spotID}/rating`, {})
+      setAverRate(averRateRes.rating)
 
-      //const rates = reviews.rates
-      //const averRate = getAverageRate(rates)
-      //setAverRate(averRate)
+      const reviewsRes = await makeRequest('GET', `spot/${params.spotID}/review?num=10`, {})
+      setReviews(reviewsRes.reviews)
+
 
   }
+
+
 
   return (
     <>
       <NavigationBar />
-        <Card sx={{maxWidth: 1200}}>
-            <CardHeader
-                avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        P
-                    </Avatar>
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
-                }
-                title="Perfect parking spot for you"
-                subheader="Run Chen"
-            />
-            <CardMedia
-                component="img"
-                height="500"
-                image={img}
-                alt="Spot1"
-            />
-            <CardContent >
-                <Typography paragraph>Description: {description}</Typography>
-                <Typography paragraph>Address: {address}</Typography>
-                <Typography paragraph>LargestVehicle: {largestVehicle}</Typography>
-                <Typography paragraph>Clearance: {clearance}</Typography>
-                <Typography paragraph>EV charging available: {evCharging ? 'Yes': 'No'}</Typography>
-                <Typography paragraph>Disabled Access: {disabledAccess ? 'Yes' : 'No'}</Typography>
-                <Typography paragraph>Regular Price per hour: ${basePrice}</Typography>
-                <Typography paragraph>Average rate: {averRate}/5</Typography>
-            </CardContent>
-        </Card>
+      <SpotCard cardInfo={cardInfo}/>
+
       <Button variant="contained" style={buttonStyle} onClick={toRentPage}>RENT</Button>
     </>
   )

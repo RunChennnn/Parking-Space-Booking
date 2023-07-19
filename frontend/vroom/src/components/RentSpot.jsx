@@ -72,6 +72,7 @@ function RentSpot () {
   }
 
   const dialogReq = {
+      userID: localStorage.getItem('vroom-id'),
       spotID: params.spotID,
       startTime: startTime.unix(),
       endTime: endTime.unix(),
@@ -113,11 +114,15 @@ function RentSpot () {
       setPrice(priceRes.price)
       console.log(priceRes)
   }
+
+    function formatPrice (price) {
+        return `$${Number(price).toFixed(2)}`
+    }
     
   return (
     <>
         <NavigationBar />
-        <Card sx={{maxWidth: 600}}>
+        <Card sx={{maxWidth: 1200}}>
             <CardHeader
                 avatar={
                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -134,7 +139,7 @@ function RentSpot () {
             />
             <CardMedia
                 component="img"
-                height="255"
+                height="500"
                 src={img}
                 alt="Spot1"
             />
@@ -142,10 +147,10 @@ function RentSpot () {
                 <Typography paragraph>Description: {description}</Typography>
                 <Typography paragraph>Address: {address}</Typography>
                 <Typography paragraph>Largest Vehicle: {largestVehicle}</Typography>
-                <Typography paragraph>Clearance: {clearance}</Typography>
+                <Typography paragraph>Clearance: {clearance}m</Typography>
                 <Typography paragraph>EV charging available: {evCharging ? 'Yes' : 'No'}</Typography>
                 <Typography paragraph>Disabled Access: {disabledAccess ? 'Yes' : 'No'}</Typography>
-                <Typography paragraph>Regular Price per hour: ${basePrice}</Typography>
+                <Typography paragraph>Regular Price per hour: {formatPrice(basePrice)}</Typography>
             </CardContent>
         </Card>
         <Card style={cardStyle}>
