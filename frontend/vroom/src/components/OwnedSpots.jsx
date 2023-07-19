@@ -20,7 +20,7 @@ function OwnedSpots() {
     const [spots, setSpots] = useState([])
     const [spotList, setSpotList] = useState([]);
 
-    const params = useParams()
+    //const params = useParams()
 
     const navigate = useNavigate()
 
@@ -91,7 +91,7 @@ function OwnedSpots() {
         const newSpotList = await Promise.all(spotsId.map(async (spot) => {
             return await generateTableRow(spot);
         }))
-        console.log(newSpotList);
+        //console.log(newSpotList);
         setSpotList([...newSpotList]);
     }
 

@@ -12,7 +12,7 @@ function ConfirmBookingDialog(props) {
     }
 
     async function onConfirm() {
-        const res = await makeRequest('POST', `book/${props.spotID}/confirm`, props.confirmReq)
+        await makeRequest('POST', `book/${props.confirmReq.spotID}/confirm`, props.confirmReq)
         navigate(`/account/${localStorage.getItem('vroom-id')}`)
     }
 
