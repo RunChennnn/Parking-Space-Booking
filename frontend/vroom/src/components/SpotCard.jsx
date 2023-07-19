@@ -132,7 +132,7 @@ function SpotCard(props) {
                                                    variant="body2"
                                                    color="text.primary"
                                                >
-                                                   {rateLabels[rev.rating]} ----
+                                                   {rateLabels[rev.rating]}
                                                </Typography>
                                                {rev.review}
                                            </React.Fragment>
