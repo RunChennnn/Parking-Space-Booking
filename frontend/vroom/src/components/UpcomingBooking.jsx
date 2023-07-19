@@ -2,7 +2,18 @@ import React from "react";
 import makeRequest from "../utilities/makeRequest";
 import {useNavigate, useParams} from "react-router-dom";
 import NavigationBar from "./NavigationBar";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+    Button,
+    Card, CardContent,
+    CardMedia,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle, Typography
+} from "@mui/material";
+import dayjs from 'dayjs'
+import img from '../static/booking1.jpg'
 
 function UpcomingBooking() {
 
@@ -12,7 +23,7 @@ function UpcomingBooking() {
     // spot address
     const [address, setAddress] = React.useState('')
     // renting price
-    const [price, setPrice] = React.useState('')
+    const [price, setPrice] = React.useState(0)
 
     // booking time()
     const [startTime, setStartTime] = React.useState('')
@@ -26,17 +37,24 @@ function UpcomingBooking() {
     }
 
     const timeStampToDate = (timeStamp) => {
-        const date = new Date(timeStamp)
-        const dateFormat = date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes()
-        return dateFormat
+        const date = dayjs.unix(timeStamp).format('ddd, MMM D, YYYY h:mm A')
+        return date
     }
 
 
     async function loadingBookingDetails() {
-        const res = await makeRequest('GET', `/booking/${params.bookingID}`, {})
-        const booking = res.data
+        const res = await makeRequest('GET', `booking/${params.bookingID}`, {})
+        const booking = res
 
-        const address = booking.streetNumber + " " + booking.streetName + " " + booking.suburb + " " + booking.postcode
+        console.log(booking)
+
+        const spotRes = await makeRequest('GET', `spot/${booking.spotID}`, {})
+        //console.log(spotRes)
+
+        const spot = spotRes.data
+        console.log(spot)
+
+        const address = spot.streetNumber + " " + spot.streetName + " " + spot.suburb + " " + spot.postcode
         setAddress(address)
 
         const startTime = timeStampToDate(booking.startTime)
@@ -44,6 +62,7 @@ function UpcomingBooking() {
 
         setStartTime(startTime)
         setEndTime(endTime)
+        setPrice(booking.price)
 
     }
 
@@ -61,7 +80,7 @@ function UpcomingBooking() {
     }
 
     async function confirmCancel() {
-        const res = await makeRequest('DELETE', `booking/${params.bookingID}`)
+        const res = await makeRequest('DELETE', `booking/${params.bookingID}/cancel`)
         if(res.error) {
             alert("fail to cancel")
             handleClose()
@@ -76,7 +95,21 @@ function UpcomingBooking() {
     return (
         <>
             <NavigationBar/>
-            <Button variant="outlined" style={buttonStyle} onClick={handleClickOpen} color="error">CANCEL</Button>
+            <Card sx={{maxWidth: 600}}>
+                <CardMedia
+                    component="img"
+                    height="255"
+                    src={img}
+                    alt="Book1"
+                />
+                <CardContent>
+                    <Typography paragraph>Address: {address}</Typography>
+                    <Typography paragraph>StartFrom: {startTime}</Typography>
+                    <Typography paragraph>EndAt: {endTime}</Typography>
+                    <Typography paragraph>Price: ${price}</Typography>
+                </CardContent>
+            </Card>
+            <Button variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">CANCEL</Button>
             <Dialog
                 open={dialogVisible}
                 onClose={handleClose}
