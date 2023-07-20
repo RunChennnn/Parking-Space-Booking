@@ -1,9 +1,9 @@
-import React from "react"
-import NavigationBar from "./NavigationBar"
-import { Button, Menu, MenuItem, Slider, TextField, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import makeRequest from "../utilities/makeRequest";
-import SearchStub from "./SearchStub";
+import React from 'react'
+import NavigationBar from './NavigationBar'
+import { Button, Menu, MenuItem, Slider, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import makeRequest from '../utilities/makeRequest';
+import SearchStub from './SearchStub';
 
 function SpotSearch () {
   const urlParams = new URLSearchParams(window.location.search);
@@ -29,7 +29,7 @@ function SpotSearch () {
         num: 10,
         alreadyReceived: [],
       };
-      
+
       if (search !== '' && search !== null) { request.search = search }
       if (vehicleType !== 'Select') { request.vehicleType = vehicleType }
       request.evCharging = ev;
@@ -37,7 +37,7 @@ function SpotSearch () {
       if (clearance !== 0) { request.minClearance = clearance }
       if (price !== 100) { request.maxPrice = price }
 
-      const response = await makeRequest("POST", `recommend/${localStorage.getItem('vroom-id')}`, request);
+      const response = await makeRequest('POST', `recommend/${localStorage.getItem('vroom-id')}`, request);
 
       const tmp = []
 
@@ -88,12 +88,8 @@ function SpotSearch () {
   }
   const vehicleTypeList = [];
   for (const option of vehicleTypeOptions) {
-    function onClick () {
-      setVehicleType(option);
-      setAnchorVT(null);
-    }
     vehicleTypeList.push((
-      <MenuItem id={`vehicle-type-${option}`} key={`vehicle-type-${option}`} onClick={onClick}>{option}</MenuItem>
+      <MenuItem id={`vehicle-type-${option}`} key={`vehicle-type-${option}`} onClick={() => { setVehicleType(option); setAnchorVT(null); }}>{option}</MenuItem>
     ))
   }
 
@@ -125,7 +121,7 @@ function SpotSearch () {
     gridTemplateColumns: '200px 400px',
     rowGap: '10px'
   }
-  
+
   // Handle text search
   function doSearch () {
     const paramString = getParamString();
@@ -135,7 +131,7 @@ function SpotSearch () {
 
   function priceLabelFormat (price) {
     if (price === 100) {
-      return "No Maximum"
+      return 'No Maximum'
     } else {
       return `$${price}`
     }
@@ -143,12 +139,12 @@ function SpotSearch () {
 
   function clearanceLabelFormat (clearance) {
     if (clearance === 0) {
-      return "No Minimum"
+      return 'No Minimum'
     } else {
       return `${clearance}m`
     }
   }
-    
+
   return (
     <>
       <NavigationBar />

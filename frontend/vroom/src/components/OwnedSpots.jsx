@@ -1,65 +1,62 @@
-import React, {useState} from "react"
-import {useNavigate, useParams} from 'react-router-dom'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
-    Table,
-    Button,
-    Typography,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableBody,
-    TablePagination, TableFooter
+  Table,
+  Button,
+  Typography,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TablePagination, TableFooter
 } from '@mui/material'
 import Paper from '@mui/material/Paper'
-import makeRequest from "../utilities/makeRequest";
-import NavigationBar from "./NavigationBar";
+import makeRequest from '../utilities/makeRequest';
+import NavigationBar from './NavigationBar';
 
-function OwnedSpots() {
+function OwnedSpots () {
+  const [spots, setSpots] = useState([])
+  const [spotList, setSpotList] = useState([]);
 
-    const [spots, setSpots] = useState([])
-    const [spotList, setSpotList] = useState([]);
+  // const params = useParams()
 
-    //const params = useParams()
+  const navigate = useNavigate()
 
-    const navigate = useNavigate()
+  const buttonStyle = {
+    margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
+    width: '200px'
+  }
 
-    const buttonStyle = {
-        margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
-        width: '200px'
-    }
+  const editBtnStyle = {
+    margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
+    width: '100px'
+  }
 
-    const editBtnStyle = {
-        margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
-        width: '100px'
-    }
+  async function loadingSpotInfo (spotId) {
+    const spot = await makeRequest('GET', `spot/${spotId}`, {})
+    console.log(spot)
+    return spot
+  }
 
+  React.useEffect(() => {
+    loadingSpots()
+  }, [])
 
-    async function loadingSpotInfo(spotId) {
-        const spot = await makeRequest('GET', `spot/${spotId}`, {})
-        console.log(spot)
-        return spot
-    }
+  function toRegisterSpot () {
+    navigate('/spots/new')
+  }
 
-    React.useEffect(() => {
-        loadingSpots()
-    }, [])
-
-    function toRegisterSpot() {
-        navigate('/spots/new')
-    }
-
-    /**
+  /**
      *  The function to generate table row for each spot
      * @param spotId
      * @returns {JSX.Element}
      */
-    async function generateTableRow(spotId) {
+  async function generateTableRow (spotId) {
+    const spot = await loadingSpotInfo(spotId)
+    spot.data.demandPricing = `${spot.data.demandPricing}`
 
-        const spot = await loadingSpotInfo(spotId)
-        spot.data.demandPricing = `${spot.data.demandPricing}`
-
-        const ret = (
+    const ret = (
             <TableRow
                 key={spot.id}
                 sx={{ '&:last-child td, &:last-child `qth': { border: 0 } }}
@@ -72,45 +69,44 @@ function OwnedSpots() {
                 <TableCell align="center">{spot.data.demandPricing}</TableCell>
                 <TableCell align="center">
                     <Button variant="contained" style={editBtnStyle} align="center"
-                            onClick={()=> {
-                                navigate( `/spots/update/${spot.id}`)
+                            onClick={() => {
+                              navigate(`/spots/update/${spot.id}`)
                             }}>Edit</Button>
                 </TableCell>
             </TableRow>
-        )
-        return ret;
+    )
+    return ret;
+  }
 
-    }
+  async function loadingSpots () {
+    const userRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
+    const spotsId = userRes.spots
+    // const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
+    setSpots(spotsId)
 
-    async function loadingSpots() {
-        const userRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
-        const spotsId = userRes.spots
-        //const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
-        setSpots(spotsId)
+    const newSpotList = await Promise.all(spotsId.map(async (spot) => {
+      return await generateTableRow(spot);
+    }))
+    // console.log(newSpotList);
+    setSpotList([...newSpotList]);
+  }
 
-        const newSpotList = await Promise.all(spotsId.map(async (spot) => {
-            return await generateTableRow(spot);
-        }))
-        //console.log(newSpotList);
-        setSpotList([...newSpotList]);
-    }
-
-    /**
+  /**
      *  the definition of Owned List
      */
-    const [page,setPage] = React.useState(0)
-    const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    }
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  }
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10))
-        setPage(0)
-    }
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
-    return (
+  return (
         <>
             <div>
                 <NavigationBar />
@@ -138,10 +134,10 @@ function OwnedSpots() {
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     SelectProps={{
-                                        inputProps: {
-                                            'aria-label': 'rows per page',
-                                        },
-                                        native: true,
+                                      inputProps: {
+                                        'aria-label': 'rows per page',
+                                      },
+                                      native: true,
                                     }}
                                     onPageChange={handleChangePage}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
@@ -153,7 +149,6 @@ function OwnedSpots() {
                 <Button variant="contained" style={buttonStyle} onClick={toRegisterSpot} >Register new spot</Button>
             </div>
         </>
-    )
-
+  )
 }
 export default OwnedSpots;

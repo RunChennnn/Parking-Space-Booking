@@ -1,15 +1,12 @@
-import React from "react"
-import NavigationBar from "./NavigationBar"
-import { useParams } from "react-router-dom"
-import makeRequest from "../utilities/makeRequest";
-import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
-import {Card, CardContent, CardHeader, Typography} from "@mui/material";
-import ReviewBoxOwner from "./ReviewBoxOwner";
+import React from 'react'
+import NavigationBar from './NavigationBar'
+import { useParams } from 'react-router-dom'
+import makeRequest from '../utilities/makeRequest';
+import dayjs from 'dayjs';
+import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import ReviewBoxOwner from './ReviewBoxOwner';
 
-function SpotUseOwner() {
-
-  const navigate = useNavigate()
+function SpotUseOwner () {
   const params = useParams();
 
   const [address, setAddress] = React.useState('')
@@ -21,29 +18,29 @@ function SpotUseOwner() {
   const [review, setReview] = React.useState('')
 
   const timeStampToDate = (timeStamp) => {
-      const date = dayjs.unix(timeStamp).format('ddd, MMM D, YYYY h:mm A')
-      return date
+    const date = dayjs.unix(timeStamp).format('ddd, MMM D, YYYY h:mm A')
+    return date
   }
 
   async function loadingSpotUseDetails () {
-      const booking = await makeRequest('GET', `booking/${params.bookingID}`, {})
-      setRating(booking.rating)
-      setReview(booking.review)
-      setRevenue(booking.price)
+    const booking = await makeRequest('GET', `booking/${params.bookingID}`, {})
+    setRating(booking.rating)
+    setReview(booking.review)
+    setRevenue(booking.price)
 
-      const spotRes = await makeRequest('GET', `spot/${booking.spotID}`,{})
-      const spot = spotRes.data
-      const address = spot.streetNumber + " " + spot.streetName + " " + spot.suburb + " " + spot.postcode
-      setAddress(address)
+    const spotRes = await makeRequest('GET', `spot/${booking.spotID}`, {})
+    const spot = spotRes.data
+    const address = spot.streetNumber + ' ' + spot.streetName + ' ' + spot.suburb + ' ' + spot.postcode
+    setAddress(address)
 
-      setStartTime(timeStampToDate(booking.startTime))
-      setEndTime(timeStampToDate(booking.endTime))
+    setStartTime(timeStampToDate(booking.startTime))
+    setEndTime(timeStampToDate(booking.endTime))
   }
 
   React.useEffect(() => {
-      loadingSpotUseDetails().then(r => {})
+    loadingSpotUseDetails().then(r => {})
   }, [])
-    
+
   return (
     <>
       <NavigationBar />

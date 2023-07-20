@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import { Alert, Button, Card, TextField, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
@@ -40,17 +40,15 @@ const errorStyle = {
 };
 
 function Register () {
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [showError, setShowError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-    
+
   const navigate = useNavigate();
 
   function validPassword () {
-
     // Unmatched passwords
     if (password !== confirmPassword) {
       setErrorMessage('Please ensure passwords match and try again.');
@@ -62,17 +60,16 @@ function Register () {
   }
 
   async function pressRegister () {
-
     // Check passwords equal
     if (!validPassword()) {
       return;
     }
-    
+
     const request = {
       email,
       password
     };
-    const response = await makeRequest("POST", "auth/register", request);
+    const response = await makeRequest('POST', 'auth/register', request);
     if (response.error) {
       if (response.error === 'Firebase: Error (auth/email-already-in-use).' || response.error === 'The email address is already in use by another account.') {
         setErrorMessage('This email address is already used for an account. Please select a different email address and try again.');
@@ -92,12 +89,12 @@ function Register () {
       // Correct credentials, so log in
       localStorage.setItem('vroom-token', response.token);
       localStorage.setItem('vroom-id', response.userID);
-      navigate("/home");
+      navigate('/home');
     }
   }
 
   function pressLogin () {
-    navigate("/login")
+    navigate('/login')
   }
 
   return (

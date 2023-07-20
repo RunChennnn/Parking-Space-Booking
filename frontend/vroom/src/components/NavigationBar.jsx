@@ -1,9 +1,8 @@
-import React from "react"
+import React from 'react'
 import { Button } from '@mui/material'
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 function NavigationBar () {
-
   const navigate = useNavigate();
 
   const height = '60px';
@@ -11,7 +10,7 @@ function NavigationBar () {
   const barStyle = {
     backgroundColor: '#ddd',
     width: '100vw',
-    height: height,
+    height,
     position: 'fixed',
     top: 0,
     left: 0,
@@ -23,7 +22,7 @@ function NavigationBar () {
 
   const spacerStyle = {
     width: '100vw',
-    height: height,
+    height,
   };
 
   const buttonStyle = {
@@ -52,7 +51,7 @@ function NavigationBar () {
     localStorage.removeItem('vroom-id');
     navigate('/login');
   }
-  
+
   return (
     <>
       <div style={spacerStyle}></div>

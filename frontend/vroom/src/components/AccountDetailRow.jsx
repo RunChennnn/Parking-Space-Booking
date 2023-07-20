@@ -1,8 +1,7 @@
-import React from "react";
-import { Typography } from "@mui/material";
+import React from 'react';
+import { Typography } from '@mui/material';
 
 function AccountDetailRow (props) {
-
   const divStyle = {
     display: 'grid',
     gridTemplateColumns: '10vw 25vw',

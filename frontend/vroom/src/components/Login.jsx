@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import { Alert, Button, Card, TextField, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
@@ -40,12 +40,11 @@ const errorStyle = {
 };
 
 function Login () {
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [showError, setShowError] = React.useState(false);
   const [errorText, setErrorText] = React.useState('');
-    
+
   const navigate = useNavigate();
 
   async function pressLogin () {
@@ -53,7 +52,7 @@ function Login () {
       email,
       password
     };
-    const response = await makeRequest("POST", "auth/login", request);
+    const response = await makeRequest('POST', 'auth/login', request);
     if (response.error) {
       if (response.error === 'Firebase: Error (auth/wrong-password).' || response.error === 'Firebase: Error (auth/user-not-found).') {
         setShowError(true)
@@ -68,12 +67,12 @@ function Login () {
       // Correct credentials, so log in
       localStorage.setItem('vroom-token', response.token);
       localStorage.setItem('vroom-id', response.userID);
-      navigate("/home");
+      navigate('/home');
     }
   }
 
   function pressRegister () {
-    navigate("/register")
+    navigate('/register')
   }
 
   return (
@@ -87,7 +86,7 @@ function Login () {
         </Card>
         <Card style={cardStyle}>
         <Typography align='center' variant='h5'>
-          Don't have an account?
+          Don&apos;t have an account?
         </Typography>
         <Button id='register-button' variant="contained" style={buttonStyle} onClick={pressRegister}>Register</Button>
         </Card>

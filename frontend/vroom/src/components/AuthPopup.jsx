@@ -1,9 +1,8 @@
-import React from "react";
-import { Alert, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from "@mui/material";
-import makeRequest from "../utilities/makeRequest";
+import React from 'react';
+import { Alert, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@mui/material';
+import makeRequest from '../utilities/makeRequest';
 
 function AuthPopup (props) {
-
   const [password, setPassword] = React.useState('');
   const [showError, setShowError] = React.useState(false);
 
@@ -21,13 +20,13 @@ function AuthPopup (props) {
 
   async function onConfirm () {
     const preresponse = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}/basic`, {});
-    const response = await makeRequest('POST', `auth/${localStorage.getItem('vroom-id')}`, { email: preresponse.email, password: password });
+    const response = await makeRequest('POST', `auth/${localStorage.getItem('vroom-id')}`, { email: preresponse.email, password });
     if (!response.error) {
       props.onConfirm();
     } else {
       setShowError(true);
     }
-  };
+  }
 
   function onBack () {
     setShowError(false);
@@ -52,7 +51,7 @@ function AuthPopup (props) {
           <Button id='auth-back-button' variant="outlined" onClick={onBack}>Back</Button>
           <Button id='auth-confirm-button' variant="contained" onClick={onConfirm}>Confirm</Button>
         </DialogActions>
-        
+
       </Dialog>
     </>
   )

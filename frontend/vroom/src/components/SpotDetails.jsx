@@ -1,16 +1,11 @@
-import React from "react"
-import NavigationBar from "./NavigationBar"
-import { useParams } from "react-router-dom"
-import makeRequest from "../utilities/makeRequest";
-import { useNavigate } from "react-router-dom";
-import {Avatar, Button, Card, CardContent, CardHeader, CardMedia, IconButton, Typography} from "@mui/material";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {red} from "@mui/material/colors";
-import img from '../static/spot1.jpg'
-import SpotCard from "./SpotCard";
+import React from 'react'
+import NavigationBar from './NavigationBar'
+import { useParams, useNavigate } from 'react-router-dom'
+import makeRequest from '../utilities/makeRequest';
+import { Button } from '@mui/material';
+import SpotCard from './SpotCard';
 
 function SpotDetails () {
-
   const params = useParams();
   const navigate = useNavigate();
 
@@ -28,61 +23,56 @@ function SpotDetails () {
   const [reviews, setReviews] = React.useState([])
 
   const buttonStyle = {
-      margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
-      width: '100px'
+    margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
+    width: '100px'
   }
 
   const cardInfo = {
-      spotID: params.spotID,
-      description: description,
-      address: address,
-      largestVehicle: largestVehicle,
-      clearance: clearance,
-      evCharging: evCharging,
-      disabledAccess: disabledAccess,
-      basePrice: basePrice,
-      averRate: averRate,
-      reviews: reviews
+    spotID: params.spotID,
+    description,
+    address,
+    largestVehicle,
+    clearance,
+    evCharging,
+    disabledAccess,
+    basePrice,
+    averRate,
+    reviews
   }
 
-
-  function toRentPage() {
+  function toRentPage () {
     navigate(`/spot/${params.spotID}/rent`)
   }
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     loadingSpotDetails().then(r => {})
   }, [])
 
-  async function loadingSpotDetails() {
-      const res = await makeRequest('GET', `spot/${params.spotID}`, {})
-      const spot = res.data
+  async function loadingSpotDetails () {
+    const res = await makeRequest('GET', `spot/${params.spotID}`, {})
+    const spot = res.data
 
-      //const reviewRes = await makeRequest('GET', ,{})
-      //const reviews = reviewRes.data
+    // const reviewRes = await makeRequest('GET', ,{})
+    // const reviews = reviewRes.data
 
-      setDescription(spot.description)
+    setDescription(spot.description)
 
-      const address = spot.streetNumber + " " + spot.streetName + " " + spot.suburb + " " + spot.postcode
-      setAddress(address)
+    const address = spot.streetNumber + ' ' + spot.streetName + ' ' + spot.suburb + ' ' + spot.postcode
+    setAddress(address)
 
-      setLargestVehicle(spot.largestVehicle)
-      setClearance(spot.clearance)
-      setEvCharging(spot.evCharging)
-      setDisabledAccess(spot.disabledAccess)
+    setLargestVehicle(spot.largestVehicle)
+    setClearance(spot.clearance)
+    setEvCharging(spot.evCharging)
+    setDisabledAccess(spot.disabledAccess)
 
-      setBasePrice(spot.basePrice)
+    setBasePrice(spot.basePrice)
 
-      const averRateRes = await makeRequest('GET', `spot/${params.spotID}/rating`, {})
-      setAverRate(averRateRes.rating)
+    const averRateRes = await makeRequest('GET', `spot/${params.spotID}/rating`, {})
+    setAverRate(averRateRes.rating)
 
-      const reviewsRes = await makeRequest('GET', `spot/${params.spotID}/reviews?num=10`, {})
-      setReviews(reviewsRes.reviews)
-
-
+    const reviewsRes = await makeRequest('GET', `spot/${params.spotID}/reviews?num=10`, {})
+    setReviews(reviewsRes.reviews)
   }
-
-
 
   return (
     <>

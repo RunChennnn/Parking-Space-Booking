@@ -1,13 +1,11 @@
-import React from "react"
-import { useParams } from 'react-router-dom'
-import NavigationBar from "./NavigationBar"
-import AuthPopup from "./AuthPopup"
-import { Button, TextField, Typography } from "@mui/material"
-import makeRequest from "../utilities/makeRequest"
-import { useNavigate } from "react-router-dom"
+import React from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import NavigationBar from './NavigationBar'
+import AuthPopup from './AuthPopup'
+import { Button, TextField, Typography } from '@mui/material'
+import makeRequest from '../utilities/makeRequest'
 
 function UpdateAccount () {
-
   const navigate = useNavigate();
   const params = useParams();
   const [email, setEmail] = React.useState('');
@@ -49,7 +47,6 @@ function UpdateAccount () {
     width: '200px',
   };
 
-
   function pressUpdate () {
     setShowUpdatePopup(true);
   }
@@ -59,7 +56,7 @@ function UpdateAccount () {
   }
 
   async function doUpdate () {
-    let request = {}
+    const request = {}
     if (email !== '') {
       request.email = email;
     }
@@ -76,7 +73,7 @@ function UpdateAccount () {
 
   async function doDelete () {
     await makeRequest('DELETE', `user/${params.userID}/delete`);
-    navigate(`/`);
+    navigate('/');
   }
 
   React.useEffect(() => {
@@ -88,14 +85,13 @@ function UpdateAccount () {
     }
 
     getData();
-    
   }, [])
-  
+
   return (
-    <>  
+    <>
       <NavigationBar />
       <Typography style={instructionStyle} align='center'>
-        Fill in any fields you'd like to change. If you leave any blank, they'll remain unchanged. You'll be prompted for your old password to make any changes.
+        Fill in any fields you&apos;d like to change. If you leave any blank, they&apos;ll remain unchanged. You&apos;ll be prompted for your old password to make any changes.
       </Typography>
       <div style={formStyle}>
         <TextField id='email-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='New Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>

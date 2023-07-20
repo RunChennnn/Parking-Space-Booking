@@ -1,11 +1,12 @@
-import React from "react"
-import NavigationBar from "./NavigationBar"
-import { Button, TextField, Typography } from "@mui/material";
-import makeRequest from "../utilities/makeRequest";
-import SearchStub from "./SearchStub";
-import { useNavigate } from "react-router-dom";
+import React from 'react'
+import NavigationBar from './NavigationBar'
+import { Button, TextField, Typography } from '@mui/material';
+import makeRequest from '../utilities/makeRequest';
+import SearchStub from './SearchStub';
+import { useNavigate } from 'react-router-dom';
 
 function Home () {
+  const navigate = useNavigate();
 
   const [search, setSearch] = React.useState('');
   const [recommended, setRecommended] = React.useState([]);
@@ -16,7 +17,7 @@ function Home () {
         num: 5,
         alreadyReceived: [],
       };
-      const response = await makeRequest("POST", `recommend/${localStorage.getItem('vroom-id')}`, request);
+      const response = await makeRequest('POST', `recommend/${localStorage.getItem('vroom-id')}`, request);
 
       const tmp = []
 
@@ -31,7 +32,7 @@ function Home () {
     }
 
     getData();
-  }, [])
+  }, [navigate])
 
   const inputStyle = {
     backgroundColor: '#fff',
@@ -45,12 +46,10 @@ function Home () {
     width: '150px',
   };
 
-  const navigate = useNavigate();
-
   function doSearch () {
     navigate(`/search?search=${search}`);
   }
-    
+
   return (
     <>
       <NavigationBar />

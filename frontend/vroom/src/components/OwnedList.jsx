@@ -1,11 +1,10 @@
-function OwnedList(props) {
+import React from 'react'
 
-
-
-    return (
+function OwnedList (props) {
+  return (
         <>
 
         </>
-    )
+  )
 }
 export default OwnedList

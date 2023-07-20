@@ -25,7 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --verbose --detectOpenHandles",
     "eject": "react-scripts eject",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +48,12 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "cypress": "^12.16.0"
+    "cypress": "^12.16.0",
+    "eslint": "^8.26.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-jest": "^27.1.3",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.31.10"
   }
 }

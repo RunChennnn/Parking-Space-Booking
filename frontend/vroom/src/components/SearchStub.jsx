@@ -1,8 +1,7 @@
-import React from "react"
-import { Button, Card, Typography } from "@mui/material"
+import React from 'react'
+import { Button, Card, Typography } from '@mui/material'
 
 function SearchStub (props) {
-
   function formatPrice (price) {
     return `$${Number(price).toFixed(2)}`
   }
@@ -28,7 +27,7 @@ function SearchStub (props) {
 
   const address = `${props.streetNumber} ${props.streetName} ${props.suburb} ${props.postcode}`;
   const price = formatPrice(props.basePrice);
-    
+
   return (
     <Card key={props.id} style={cardStyle}>
       <div>
@@ -36,7 +35,7 @@ function SearchStub (props) {
         <Typography>Regular price per hour: {price}</Typography>
       </div>
       <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>View</Button>
-      
+
     </Card>
   )
 }

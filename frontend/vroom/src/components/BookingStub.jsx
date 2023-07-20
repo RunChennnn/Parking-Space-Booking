@@ -1,8 +1,7 @@
-import React from "react"
-import { Button, Card, Typography } from "@mui/material"
+import React from 'react'
+import { Button, Card, Typography } from '@mui/material'
 
 function BookingStub (props) {
-
   const cardStyle = {
     width: 'calc(100% - 130px)',
     margin: '20px 50px',
@@ -39,7 +38,7 @@ function BookingStub (props) {
   } else {
     date = `${start} to ${end}`
   }
-    
+
   return (
     <Card key={props.id} style={cardStyle}>
       <div>
@@ -48,7 +47,7 @@ function BookingStub (props) {
         <Typography>{date}</Typography>
       </div>
       <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>View</Button>
-      
+
     </Card>
   )
 }

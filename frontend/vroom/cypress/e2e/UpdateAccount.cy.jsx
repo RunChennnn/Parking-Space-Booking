@@ -14,7 +14,10 @@ describe('Update Account', () => {
     cy.get('#update-account-button').click();
 
     // Submit new email
-    cy.get('#email-input').type('cypress.temporary@email.com');
+    cy.get('#email-input').should('have.value', 'cypress.tests@email.com')
+    // cy.contains('cypress.tests@email.com', { timeout: 20000 });
+    // cy.wait(500);
+    cy.get('#email-input').focus().clear().type('cypress.temporary@email.com');
     cy.get('#update-account-button').click();
     cy.get('#auth-password-input').type(password);
     cy.get('#auth-confirm-button').click();
@@ -26,7 +29,10 @@ describe('Update Account', () => {
     cy.get('#update-account-button').click();
 
     // Submit new email
-    cy.get('#email-input').type('cypress.tests@email.com');
+    cy.get('#email-input').should('have.value', 'cypress.temporary@email.com')
+    // cy.contains('cypress.temporary@email.com', { timeout: 20000 });
+    // cy.wait(500);
+    cy.get('#email-input').focus().clear().type('cypress.tests@email.com');
     cy.get('#update-account-button').click();
     cy.get('#auth-password-input').type(password);
     cy.get('#auth-confirm-button').click();
