@@ -72,7 +72,8 @@ function MyAccount () {
         <Button id='update-account-button' variant="contained" style={buttonStyle} onClick={pressUpdateAccount}>Update Account</Button>
         <Button id='view-history-button' variant="contained" style={buttonStyle} onClick={pressViewHistory}>View History</Button>
       </div>
-      <Typography variant='h3' align='center'>Upcoming Bookings</Typography>
+      {bookings.length === 0 && (<Typography variant='h6' align='center'>No Upcoming Bookings</Typography>)}
+      {bookings.length > 0 && (<Typography variant='h3' align='center'>Upcoming Bookings</Typography>)}
       {bookings}
     </>
   )

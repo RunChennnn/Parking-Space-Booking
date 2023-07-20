@@ -7,13 +7,14 @@ import SearchStub from "./SearchStub";
 
 function SpotSearch () {
   const urlParams = new URLSearchParams(window.location.search);
-  const [search, setSearch] = React.useState(urlParams.get('search'));
+  const [search, setSearch] = React.useState(urlParams.get('search') ? urlParams.get('search') : '');
   const [recommended, setRecommended] = React.useState([])
   const navigate = useNavigate();
 
   function getParamString () {
     let paramString = '';
-    if (search.length > 0) { paramString += `search=${search}&` }
+    console.log(`SEARCH: ${search}`)
+    if (search !== '' && search !== null) { paramString += `search=${search}&` }
     if (vehicleType !== 'Select') { paramString += `vehicleType=${vehicleType}&` }
     paramString += `evCharging=${ev}&`
     paramString += `disabledAccess=${disabledAccess}&`
@@ -25,9 +26,17 @@ function SpotSearch () {
   React.useEffect(() => {
     async function getData () {
       const request = {
-        num: 5,
+        num: 10,
         alreadyReceived: [],
       };
+      
+      if (search !== '' && search !== null) { request.search = search }
+      if (vehicleType !== 'Select') { request.vehicleType = vehicleType }
+      request.evCharging = ev;
+      request.disabledAccess = disabledAccess;
+      if (clearance !== 0) { request.minClearance = clearance }
+      if (price !== 100) { request.maxPrice = price }
+
       const response = await makeRequest("POST", `recommend/${localStorage.getItem('vroom-id')}`, request);
 
       const tmp = []
@@ -37,8 +46,8 @@ function SpotSearch () {
         prop.data.id = id;
         prop.data.doView = () => navigate(`/spot/${id}`);
         tmp.push(SearchStub(prop.data));
-        setRecommended(tmp);
       }
+      setRecommended(tmp);
     }
 
     getData();
@@ -119,16 +128,31 @@ function SpotSearch () {
   
   // Handle text search
   function doSearch () {
-    const paramString = getParamString()
+    const paramString = getParamString();
     navigate(`/search?${paramString}`);
+    window.location.reload(false);
   }
 
-  // TODO handle results
+  function priceLabelFormat (price) {
+    if (price === 100) {
+      return "No Maximum"
+    } else {
+      return `$${price}`
+    }
+  }
+
+  function clearanceLabelFormat (clearance) {
+    if (clearance === 0) {
+      return "No Minimum"
+    } else {
+      return `${clearance}m`
+    }
+  }
     
   return (
     <>
       <NavigationBar />
-      <TextField id='search-input' variant='outlined' placeholder="Find a spot..." style={inputStyle} value={search} onChange={(e) => setSearch(e.target.value)} />
+      <TextField id='search-input' variant='outlined' placeholder="Find a spot..." style={inputStyle} value={search} onChange={(e) => { setSearch(e.target.value) }} />
       <div style={filterBarStyle}>
         <div>
           <Button style={filterStyle} onClick={vehicleTypeClick} variant='outlined'>Vehicle type: {vehicleType}</Button>
@@ -141,9 +165,9 @@ function SpotSearch () {
       </div>
       <div style={divSliderStyle}>
         <Typography>Maximum hourly price: </Typography>
-        <Slider style={priceSliderStyle} min={0} max={100} step={1} value={price} valueLabelDisplay='auto' valueLabelFormat={(value) => `\$${value}`} onChange={(e) => setPrice(e.target.value)}></Slider>
+        <Slider style={priceSliderStyle} min={0} max={100} step={1} value={price} valueLabelDisplay='auto' valueLabelFormat={priceLabelFormat} onChange={(e) => setPrice(e.target.value)}></Slider>
         <Typography>Minimum clearance: </Typography>
-        <Slider style={clearanceSliderStyle} min={0} max={6} step={0.1} value={clearance} valueLabelDisplay='auto' valueLabelFormat={(value) => `${value}m`} onChange={(e) => setClearance(e.target.value)}></Slider>
+        <Slider style={clearanceSliderStyle} min={0} max={6} step={0.1} value={clearance} valueLabelDisplay='auto' valueLabelFormat={clearanceLabelFormat} onChange={(e) => setClearance(e.target.value)}></Slider>
       </div>
       <Button id='search-button' variant='contained' style={buttonStyle} onClick={doSearch}>Search</Button>
       {recommended}

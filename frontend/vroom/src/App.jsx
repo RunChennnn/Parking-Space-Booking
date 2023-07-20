@@ -17,6 +17,72 @@ import SpotSearch from './components/SpotSearch';
 import SpotDetails from './components/SpotDetails';
 import RentSpot from './components/RentSpot';
 
+
+// https://www.geeksforgeeks.org/longest-common-substring-dp-29/
+function longestCommonSubstring (a, b) {
+
+  const aLen = a.length
+  const bLen = b.length
+
+  function doLCS (aIndex, bIndex, currentCount) {
+
+    // Exit if we reached the end
+    if (aIndex === 0 || bIndex === 0) { return currentCount; }
+
+    // Keep going with this count if the characters are the same
+    if (a[aIndex - 1] === b[bIndex - 1]) {
+      currentCount = doLCS(aIndex - 1, bIndex - 1, currentCount + 1)
+    }
+
+    return Math.max(
+      currentCount, Math.max(
+        doLCS(aIndex, bIndex - 1, 0),
+        doLCS(aIndex - 1, bIndex, 0)
+      )
+    )
+  }
+
+  return doLCS(a.length, b.length, 0);
+}
+
+// https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/
+function longestCommonSubsequence (a, b) {
+
+  a = a.toLowerCase();
+  b = b.toLowerCase();
+
+  // Dynamic programming setup
+  let arr = new Array(a.length + 1)
+  for (let i = 0; i < a.length + 1; i++) {
+    arr[i] = new Array(b.length + 1).fill(-1);
+  }
+
+  function doLCS (aIndex, bIndex) {
+
+    // Exit if we reached the end
+    if (aIndex === 0 || bIndex === 0) { return 0; }
+
+    // Case where characters match
+    if (a[aIndex - 1] === b[bIndex - 1]) {
+      arr[aIndex][bIndex] = 1 + doLCS(aIndex - 1, bIndex - 1);
+      return arr[aIndex][bIndex];
+    }
+
+    if (arr[aIndex][bIndex] !== -1) {
+      return arr[aIndex][bIndex];
+    }
+
+    return Math.max(doLCS(aIndex - 1, bIndex), doLCS(aIndex, bIndex - 1));
+
+  }
+  return doLCS(a.length, b.length);
+}
+
+const w1 = "kensington";
+const w2 = "o3ensington"
+console.log(longestCommonSubsequence(w1, w2))
+console.log(longestCommonSubstring(w1, w2))
+
 function App() {
 
   return (

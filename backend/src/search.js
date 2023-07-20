@@ -1,6 +1,44 @@
 import { db } from "./firebaseConfig.js";
 
-const calculateSimilarityScores = async (spotData, refSpotsData) => {
+// https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/
+function longestCommonSubsequence (a, b) {
+
+  try {
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+
+    // Dynamic programming setup
+    let arr = new Array(a.length + 1)
+    for (let i = 0; i < a.length + 1; i++) {
+      arr[i] = new Array(b.length + 1).fill(-1);
+    }
+
+    function doLCS (aIndex, bIndex) {
+
+      // Exit if we reached the end
+      if (aIndex === 0 || bIndex === 0) { return 0; }
+
+      // Case where characters match
+      if (a[aIndex - 1] === b[bIndex - 1]) {
+        arr[aIndex][bIndex] = 1 + doLCS(aIndex - 1, bIndex - 1);
+        return arr[aIndex][bIndex];
+      }
+
+      if (arr[aIndex][bIndex] !== -1) {
+        return arr[aIndex][bIndex];
+      }
+
+      return arr[aIndex][bIndex] = Math.max(doLCS(aIndex - 1, bIndex), doLCS(aIndex, bIndex - 1));
+      // return arr[aIndex][bIndex];
+
+    }
+    return doLCS(a.length, b.length);
+  } catch (error) {
+    return 0;
+  }
+}
+
+const calculateSimilarityScores = async (spotData, refSpotsData, request) => {
   let similarityScore = 0
   // I declare all fields explicitly here on purpose to make it clear what is used in recommend criteria
   const streetName = spotData.streetName;
@@ -12,8 +50,14 @@ const calculateSimilarityScores = async (spotData, refSpotsData) => {
   const disabledAccess = spotData.disabledAccess;
   const clearance = spotData.clearance;
   const basePrice = spotData.basePrice;
+  const postcode = spotData.postcode;
 
-  refSpotsData.forEach( refSpot => {
+  // Search-specific stuff
+  const searchableAddress = `${streetNumber} ${streetName} ${suburb} ${postcode}`
+  similarityScore += longestCommonSubsequence(request.search, searchableAddress) * 50;
+  
+  // Recommendation stuff
+  refSpotsData.forEach( refSpot => { 
     if (streetName ===  refSpot.streetName) {
       similarityScore += 3
     }
@@ -47,20 +91,47 @@ const calculateSimilarityScores = async (spotData, refSpotsData) => {
       similarityScore += priceSimilarity
     }
   })
+
+  // Set to zero if unusable
+  if (request.evCharging) {
+    if (!evCharging) { similarityScore = -1; }
+  }
+
+  if (request.disabledAccess) {
+    if (!disabledAccess) { similarityScore = -1; }
+  }
+
+  if (request.minClearance) {
+    if (request.clearance > clearance) { similarityScore = -1; }
+  }
+
+  if (request.maxPrice) {
+    if (request.maxPrice < basePrice) { similarityScore = -1; }
+  }
+
   return similarityScore
 }
 
-const evaluateAndSort = async (potentialSpots, previousSpotsData ) => {
+const evaluateAndSort = async (potentialSpots, previousSpotsData, request) => {
   let spotScores = [];
   potentialSpots.forEach(async spot => {
-    spotScores.push({id:spot.id, score: await calculateSimilarityScores(spot.data(), previousSpotsData)})
+    const score = await calculateSimilarityScores(spot.data(), previousSpotsData, request);
+    if (score === -1) return;
+    spotScores.push({id:spot.id, score: score})
     spotScores.sort((a,b)=> b.score - a.score)
   })
   return spotScores;
 }
 
-const recommendSpot = async (uid, num, alreadyReceived) => {
+const recommendSpot = async (request) => {
     try {
+
+      console.log('REQUEST');
+      console.log(request)
+
+      const uid = request.uid
+      const num = request.num;
+      const alreadyReceived = request.alreadyReceived;
       let spotList = []
       const previousBookings = await db.collection('Bookings').where('userID', '==', uid).limit(5).get();
       let previousSpotsData = []
@@ -72,7 +143,7 @@ const recommendSpot = async (uid, num, alreadyReceived) => {
 
       const spotRef = db.collection('Spots').where('owner', '!=', uid);
       const potentialSpots = await spotRef.get();
-      let spotScores = await evaluateAndSort(potentialSpots, previousSpotsData);
+      let spotScores = await evaluateAndSort(potentialSpots, previousSpotsData, request);
 
       if (!potentialSpots.empty) {
         let count = 0 
@@ -82,7 +153,7 @@ const recommendSpot = async (uid, num, alreadyReceived) => {
                 count ++;
             }
         });
-        console.log(`${spotList.length} Spots recommended for user ${uid}`, spotList);
+        // console.log(`${spotList.length} Spots recommended for user ${uid}`, spotList);
         return {
           status: 200,
           message: `${spotList.length} Spots successfully recommended`,
@@ -90,7 +161,7 @@ const recommendSpot = async (uid, num, alreadyReceived) => {
           scores: spotScores,
         };
       } else {
-        console.log(`Database is empty, unable to give recommendation`);
+        // console.log(`Database is empty, unable to give recommendation`);
         return {
           status: 404,
           message: `No spot record in database`
@@ -113,7 +184,7 @@ const queryByConditions= (databaseRef, condtions) => {
       query = query.where('basePrice', "<=", condtions.maxPrice)
     }
     const search = condtions.search
-    console.log(`queryByConditions found condition ${search}`)
+    // console.log(`queryByConditions found condition ${search}`)
     return query
 };
 
@@ -132,7 +203,7 @@ const searchSpot = async (num, alreadyReceived, conditions) => {
                 count ++;
             }
         });
-        console.log(`Seach success, ${spotList.length} Spots retrieved`, spotList);
+        // console.log(`Seach success, ${spotList.length} Spots retrieved`, spotList);
         return {
           status: 200,
           message: `${spotList.length} Spots successfully retrieved`,
@@ -140,7 +211,7 @@ const searchSpot = async (num, alreadyReceived, conditions) => {
           conditions: conditions
         };
       } else {
-        console.log(`Search requested, but database is empty`);
+        // console.log(`Search requested, but database is empty`);
         return {
           status: 404,
           message: `No spot record in database`

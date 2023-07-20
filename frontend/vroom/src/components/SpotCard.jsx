@@ -57,6 +57,7 @@ function SpotCard(props) {
     }
 
 
+    let keyCount = 0;
     return (
         <Card sx={{maxWidth: 1200}}>
             <CardHeader
@@ -118,7 +119,8 @@ function SpotCard(props) {
                     <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}>
                         {props.cardInfo.reviews.map((rev) =>
                             <>
-                               <ListItem>
+                               <ListItem key={keyCount}>
+                                {console.log(rev)}
                                    <ListItemAvatar>
                                        <Avatar sx={{ bgcolor: purple500 }} aria-label="recipe">R</Avatar>
                                    </ListItemAvatar>
@@ -134,7 +136,7 @@ function SpotCard(props) {
                                                >
                                                    {rateLabels[rev.rating]}
                                                </Typography>
-                                               {rev.review}
+                                               {" " + rev.review}
                                            </React.Fragment>
                                        }
                                    />

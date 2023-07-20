@@ -26,8 +26,8 @@ function Home () {
         prop.data.id = id;
         prop.data.doView = () => navigate(`/spot/${id}`);
         tmp.push(SearchStub(prop.data));
-        setRecommended(tmp);
       }
+      setRecommended(tmp);
     }
 
     getData();

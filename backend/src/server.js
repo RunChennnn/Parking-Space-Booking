@@ -310,7 +310,10 @@ app.post('/recommend/:userID', async (req, res) => {
     const uid = req.params.userID
     const num = req.body.num;
     const alreadyReceived = req.body.alreadyReceived;
-    const respond = await recommendSpot(uid, num, alreadyReceived);
+    const request = req.body;
+    request.uid = req.params.userID;
+    const respond = await recommendSpot(request);
+    // const respond = await recommendSpot(uid, num, alreadyReceived);
     
     if (respond.status === 200) {
         return res.status(200).json(respond);
@@ -324,16 +327,20 @@ app.post('/recommend/:userID', async (req, res) => {
 //Search spots
 ////It gives first num spots at the moment, will implement the real search later
 app.post('/search', async (req, res) => {
-    const { num, alreadyReceived, ...conditions} = req.body;
-    const respond = await searchSpot(num, alreadyReceived,conditions);
     
-    if (respond.status === 200) {
-        return res.status(200).json(respond);
-    } else if (respond.status === 404) {
-        return res.status(404).json(respond);
-    } else {
-        return res.status(400).json({ message: 'Unknown Error' })
-    }
+    // console.log('searching');
+    const response = await searchBackup(req);
+    return res.status(200).json(response);
+    // const { num, alreadyReceived, ...conditions} = req.body;
+    // const respond = await searchSpot(num, alreadyReceived,conditions);
+    
+    // if (respond.status === 200) {
+    //     return res.status(200).json(respond);
+    // } else if (respond.status === 404) {
+    //     return res.status(404).json(respond);
+    // } else {
+    //     return res.status(400).json({ message: 'Unknown Error' })
+    // }
 });
 
 //get totalPrice of a spot

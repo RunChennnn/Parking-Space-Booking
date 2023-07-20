@@ -78,6 +78,18 @@ function UpdateAccount () {
     await makeRequest('DELETE', `user/${params.userID}/delete`);
     navigate(`/`);
   }
+
+  React.useEffect(() => {
+    async function getData () {
+      const response = await makeRequest('GET', `user/${params.userID}/basic`, {});
+      setEmail(response.email);
+      setPassword('');
+      setConfirmPassword('');
+    }
+
+    getData();
+    
+  }, [])
   
   return (
     <>  

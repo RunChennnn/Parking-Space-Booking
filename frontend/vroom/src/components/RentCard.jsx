@@ -23,6 +23,7 @@ function RentCard(props) {
 
     const [open, setOpen] = React.useState(false)
     const [error, setError] = React.useState(false)
+    const [errorMessage, setErrorMessage] = React.useState('');
 
     const [startTime, setStartTime] = React.useState(dayjs())
     const [endTime, setEndTime] = React.useState(dayjs().add(1, 'hour'))
@@ -78,6 +79,24 @@ function RentCard(props) {
     }
 
     async function confirmRenting() {
+        // Basic data validation
+        if (cardNumber.length !== 16 || isNaN(cardNumber)) {
+            setErrorMessage("Please input a valid card number. A valid card number should contain 16 digits.");
+            setError(true);
+            return;
+        }
+        if (cardName.length === 0) {
+            setErrorMessage("Please enter a name for the card.");
+            setError(true);
+            return;
+        }
+        if (cardCvv.length !== 3 || isNaN(cardCvv)) {
+            setErrorMessage("Please input a valid CVV. A valid CVV should contain 3 digits.");
+            setError(true);
+            return;
+        }
+        
+
         const timeReq = {
             startTime: startTime.unix(),
             endTime: endTime.unix()
@@ -86,12 +105,14 @@ function RentCard(props) {
         await makeRequest('POST', `book/${props.rentReq.spotID}/price`, timeReq).then((res)=> {
             console.log(res)
             if(res.status === 200) {
-                setPrice(res.price)
-                setOpen(true)
+                setPrice(res.price);
+                setOpen(true);
+                setError(false);
             }
             else if (res.status === 409) {
                 // alert('Spot not available')
-                setError(true)
+                setErrorMessage("The Spot is not available now, book another time.");
+                setError(true);
             }
             // setPrice(priceRes.price)
             // console.log(priceRes)
@@ -133,15 +154,16 @@ function RentCard(props) {
             </Card>
             <Card style={cardStyle}>
                 <DateTimePickerVal changeStart={setStartTime} changeEnd={setEndTime} start={startTime} end={endTime} />
-                <div>{"Revenue will be paid into the following bank account"}</div>
+                {/* <div>{"Revenue will be paid into the following bank account"}</div> */}
+                <Typography>Cost will be incurred by the following card</Typography>
                 <TextField fullWidth variant='outlined' size='small' label='Card Number' style={inputStyle}
                            value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
                 <TextField fullWidth variant='outlined' size='small' label='Card Name' style={inputStyle}
                            value={cardName} onChange={(e) => setCardName(e.target.value)}/>
                 <TextField fullWidth variant='outlined' size='small' label='CVV' style={inputStyle}
                            value={cardCvv} onChange={(e) => setCardCvv(e.target.value)}></TextField>
+                {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
                 <Button variant="contained" style={buttonStyle} align="center" onClick={confirmRenting}>Go to Confirmation</Button>
-                {error && (<Alert severity="error" style={errorStyle}>{"The Spot is not available now, book another time"}</Alert>)}
             </Card>
             <ConfirmBookingDialog confirmReq={dialogReq} price={price} open={open} setOpen={setOpen} spotID={props.rentReq.spotID}/>
         </>
