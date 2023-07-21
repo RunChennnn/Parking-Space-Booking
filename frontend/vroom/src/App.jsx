@@ -15,6 +15,7 @@ import SpotUseOwner from './pages/SpotUseOwner';
 import SpotSearch from './pages/SpotSearch';
 import SpotDetails from './pages/SpotDetails';
 import RentSpot from './pages/RentSpot';
+import BookingHistory from './pages/BookingHistory';
 
 function App () {
   return (
@@ -36,6 +37,7 @@ function App () {
           <Route path="search" element={<SpotSearch />} />
           <Route path="spot/:spotID" element={<SpotDetails />} />
           <Route path="spot/:spotID/rent" element={<RentSpot />} />
+          <Route path="history/:userID" element={<BookingHistory />} />
           {/* Add more Routes as needed */}
           <Route path = "*" element={<>Page not found</>} /> {/* Catch all */}
         </Routes>
