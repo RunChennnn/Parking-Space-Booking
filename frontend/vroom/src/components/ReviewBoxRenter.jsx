@@ -30,7 +30,7 @@ function ReviewBoxRenter (props) {
               display: 'flex',
               alignItems: 'center'
             }}>
-                <Rating
+                <Rating id='rating-input'
                     name="spot use rating"
                     value={props.rating}
                     onChange={(e, value) => { props.setRating(value) }}
@@ -39,7 +39,7 @@ function ReviewBoxRenter (props) {
                 />
                 <Box sx={{ ml: 2 }}>{rateLabels[props.rating]}</Box>
             </Box>
-            <TextField fullWidth variant="outlined" style={inputStyle} value={props.review}
+            <TextField fullWidth variant="outlined" style={inputStyle} value={props.review} id='review-input'
                        placeholder="write your review here" onChange={(e) => { props.setReview(e.target.value) }}/>
         </>
   )

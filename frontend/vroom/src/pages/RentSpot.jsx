@@ -1,8 +1,8 @@
 import React from 'react'
-import NavigationBar from './NavigationBar'
+import NavigationBar from '../components/NavigationBar'
 import { useParams } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
-import RentCard from './RentCard';
+import RentCard from '../components/RentCard';
 
 function RentSpot () {
   const params = useParams();
@@ -42,9 +42,6 @@ function RentSpot () {
 
       const address = spot.streetNumber + ' ' + spot.streetName + ' ' + spot.suburb + ' ' + spot.postcode
       setAddress(address)
-
-      // console.log(startTime)
-      // console.log(endTime)
     }
     loadingRentDetails().then(r => {})
   }, [])

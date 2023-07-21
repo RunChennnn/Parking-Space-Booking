@@ -254,52 +254,6 @@ app.patch('/user/:userID/update', async (req, res) => {
     Starts here
 */
 
-/*
-app.post('/recommend/:userID', async (req, res) => { // TODO
-
-    const num = req.body.num;
-    const alreadyReceived = req.body.alreadyReceived;
-    // Return num IDs of recommended spots for this user, that aren't
-    // included in alreadyReceived
-
-    const arr = [];
-    for (let i = 0; i < num; i++) {
-        arr.push(`dummySpot${i + 1}`);
-    };
-    const response = {
-        ids: arr,
-    };
-    return res.status(200).json(response);
-});
-
-app.post('/search', async (req, res) => { // TODO
-    const requestBodyLooksLikeThis = {
-        search: 'Sydney', // Just generic text, could be address or username
-        maxPrice: undefined, // int
-        minDistance: undefined, // int
-        maxDistance: undefined, // int
-        minRating: undefined, // int
-        vehicleType: undefined, // string, we need to figure out what the options are
-        minClearance: undefined, // float (to 0.1)
-        evCharging: undefined, // bool
-        disabledAccess: undefined, // book
-        num: 20, // number of IDs to return
-        alreadyReceived: [], // list of IDs already received, so don't return these, look for others
-    }
-    // Most for filters, if a filter isn't set then there won't be a
-    // field. So a request could JUST have a 'search' field
-
-    const arr = [];
-    for (let i = 0; i < req.body.num; i++) {
-        arr.push(`dummySpot${i + 1}`);
-    };
-    const response = {
-        ids: arr,
-    };
-    return res.status(200).json(response);
-})
-*/
-
 // Recommend unreceived spot
 // It gives first num spots at the moment, will implement the real recommendation later
 app.post('/recommend/:userID', async (req, res) => {
@@ -392,7 +346,7 @@ app.get('/booking/:bookingID', async (req, res) => {
 })
 
 // write or update review and rating for a booking
-app.post('/booking/:bookingID/review', async (req, res) => { // TODO
+app.post('/booking/:bookingID/review', async (req, res) => {
   const bookingID = req.params.bookingID;
   const { rating, review } = req.body;
   const response = await updateReview(bookingID, rating, review);
@@ -409,7 +363,7 @@ app.post('/booking/:bookingID/review', async (req, res) => { // TODO
 })
 
 // cancel a booking, thus delete the corresponding booking document
-app.delete('/booking/:bookingID/cancel', async (req, res) => { // TODO
+app.delete('/booking/:bookingID/cancel', async (req, res) => {
   const bookingID = req.params.bookingID;
   const response = await deleteBooking(bookingID);
 
@@ -425,7 +379,7 @@ app.delete('/booking/:bookingID/cancel', async (req, res) => { // TODO
 })
 
 // get upcoming bookings of that user
-app.get('/upcoming/:userID', async (req, res) => { // TODO
+app.get('/upcoming/:userID', async (req, res) => {
   const userID = req.params.userID;
   const response = await getUpcomingBooking(userID);
 
@@ -439,7 +393,7 @@ app.get('/upcoming/:userID', async (req, res) => { // TODO
 })
 
 // get historical booking of that user
-app.get('/history/:userID', async (req, res) => { // TODO
+app.get('/history/:userID', async (req, res) => {
   const userID = req.params.userID;
   const response = await getHistoryBooking(userID);
 
@@ -453,7 +407,7 @@ app.get('/history/:userID', async (req, res) => { // TODO
 })
 
 // get all bookings of that user
-app.get('/booking/all/:userID', async (req, res) => { // TODO
+app.get('/booking/all/:userID', async (req, res) => {
   const userID = req.params.userID;
   const response = await getAllBooking(userID);
 
@@ -467,7 +421,7 @@ app.get('/booking/all/:userID', async (req, res) => { // TODO
 })
 
 // get average rating for a spot
-app.get('/spot/:spotID/rating', async (req, res) => { // TODO
+app.get('/spot/:spotID/rating', async (req, res) => {
   const spotID = req.params.spotID;
   const response = await getRating(spotID);
 
@@ -483,7 +437,7 @@ app.get('/spot/:spotID/rating', async (req, res) => { // TODO
 })
 
 // get all ratings and reviews for a spot
-app.get('/spot/:spotID/reviews', async (req, res) => { // TODO
+app.get('/spot/:spotID/reviews', async (req, res) => {
   const spotID = req.params.spotID;
   const num = req.query.num || 10
   const response = await getReviews(num, spotID);
@@ -497,6 +451,53 @@ app.get('/spot/:spotID/reviews', async (req, res) => { // TODO
   } else {
     return res.status(400).json({ error: 'other error' });
   }
+})
+
+/*
+    Sprint III (3) (three) related,
+    Starts here
+*/
+
+// Returns weather for the next 7 days (today, as well as the following 6 days)
+app.get('/weather/:postcode', async (req, res) => {
+  const postcode = req.params.postcode;
+
+  const response = {
+    summary: ['Rain', 'Rain', 'Snow', 'Cloud', 'Thunderstorm', 'Drizzle', 'Clear'], // categoristation (https://openweathermap.org/weather-conditions)
+    low: [12.1, 9.5, 8.0, 3.9, -1.0, 2.1, 3.8], // minimum temperature in celsius (float)
+    high: [19.7, 18.4, 19.5, 22.6, 11.1, 13.2, 13.9], // maximum temperature in celsius (float)
+    rain: [0.15, 1.21, 6.00, 0.02, 0.00, 0.00, 0.00], // rain in mm (float)
+  }
+
+  if (true) { // can find weather for this location
+    return res.status(200).json(response);
+  } else {
+    return res.status(500).json({ error: 'unable to find weather for this location' })
+  }
+})
+
+// Return IDs of all upcoming bookings from all users
+app.get('/admin/upcoming', async (req, res) => {
+  const response = {
+    bookingIDs: ['fakeBookingID1', 'fakeBookingID2']
+  }
+  return res.status(200).json(response);
+})
+
+// Return IDs of all historical bookings from all users
+app.get('/admin/history', async (req, res) => {
+  const response = {
+    bookingIDs: ['fakeBookingID3', 'fakeBookingID4']
+  }
+  return res.status(200).json(response);
+})
+
+// Return IDs of all users
+app.get('/admin/users', async (req, res) => {
+  const response = {
+    userIDs: ['fakeUserID1', 'fakeUserID2']
+  }
+  return res.status(200).json(response);
 })
 
 const server = app.listen(port, () => {

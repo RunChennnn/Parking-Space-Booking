@@ -1,10 +1,10 @@
 import React from 'react'
-import NavigationBar from './NavigationBar'
+import NavigationBar from '../components/NavigationBar'
 import { useParams } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
 import dayjs from 'dayjs';
 import { Button, Card, CardContent, CardHeader, Typography } from '@mui/material';
-import ReviewBoxRenter from './ReviewBoxRenter';
+import ReviewBoxRenter from '../components/ReviewBoxRenter';
 
 function SpotUseRenter () {
   const params = useParams();
@@ -69,7 +69,7 @@ function SpotUseRenter () {
           <ReviewBoxRenter rating={rating} review={review} setRating={setRating} setReview={setReview}/>
         </CardContent>
       </Card>
-      <Button style={buttonStyle} variant="contained" onClick={uploadReviews}>Confirm</Button>
+      <Button id='confirm-button' style={buttonStyle} variant="contained" onClick={uploadReviews}>Confirm</Button>
     </>
   )
 }

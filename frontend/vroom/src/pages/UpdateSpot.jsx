@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import NavigationBar from './NavigationBar';
+import NavigationBar from '../components/NavigationBar';
 import { Button, Card, Checkbox, FormControl, FormControlLabel, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import makeRequest from '../utilities/makeRequest';
 
@@ -149,53 +149,53 @@ function UpdateSpot () {
             <NavigationBar />
             <Card style={cardStyle}>
                 <div>{'Update Spot'}</div>
-                <TextField fullWidth variant='outlined' size='small' label='Description'
+                <TextField fullWidth variant='outlined' size='small' label='Description' id='description-input'
                            placeholder='Description' style={inputStyle}
                            value={description} onChange={(e) => setDescription(e.target.value)}></TextField>
-                <TextField width='1px' variant='outlined' size='small' label='Street Number'
+                <TextField width='1px' variant='outlined' size='small' label='Street Number' id='street-number-input'
                            placeholder='42' style={inputStyle}
                            value={streetNumber} onChange={(e) => setStreetNumber(e.target.value)}/>
-                <TextField width='5px' variant='outlined' size='small' label='Street Name'
+                <TextField width='5px' variant='outlined' size='small' label='Street Name' id='street-name-input'
                            placeholder='Wallaby way' style={inputStyle}
                            value={streetName} onChange={(e) => setStreetName(e.target.value)}></TextField>
-                <TextField width='5px' variant='outlined' size='small' label='Suburb'
+                <TextField width='5px' variant='outlined' size='small' label='Suburb' id='suburb-input'
                            placeholder='Sydney' style={inputStyle}
                            value={suburb} onChange={(e) => setSuburb(e.target.value)}/>
-                <TextField width='1px' variant='outlined' size='small' label='Postcode'
+                <TextField width='1px' variant='outlined' size='small' label='Postcode' id='postcode-input'
                            placeholder='2000' style={inputStyle}
                            value={postcode} onChange={(e) => setPostcode(e.target.value)}></TextField>
                 <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox checked={demandPricing} onChange={handleDemandPricingChange} name="DemandPricing"/> }
+                    <FormControlLabel control={<Checkbox id='surge-pricing-checkbox' checked={demandPricing} onChange={handleDemandPricingChange} name="DemandPricing"/> }
                                       label="DemandPricing"/>
                 </FormControl>
-                <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)'
+                <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)' id='price-input'
                            placeholder='16' style={inputStyle}
                            value={basePrice} onChange={(e) => setBasePrice(e.target.value)}/>
-                <TextField width='5px' variant='outlined' size='small' label='Largest Vehicle'
+                <TextField width='5px' variant='outlined' size='small' label='Largest Vehicle' id='vehicle-input'
                            placeholder='Select option' style={inputStyle}
                            value={largestVehicle} onChange={(e) => setLargestVehicle(e.target.value)}></TextField>
-                <TextField width='1px' variant='outlined' size='small' label='Clearance height'
+                <TextField width='1px' variant='outlined' size='small' label='Clearance height' id='clearance-input'
                            placeholder='2.2' style={inputStyle}
                            value={clearance} onChange={(e) => setClearance(e.target.value)}></TextField>
                 <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox checked={disabledAccess} onChange={handleDisabledAccessChange} name="DisabledAccess"/> }
+                    <FormControlLabel control={<Checkbox id='disabled-checkbox' checked={disabledAccess} onChange={handleDisabledAccessChange} name="DisabledAccess"/> }
                                       label="DisabledAccess"/>
                 </FormControl>
                 <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox checked={evCharging} onChange={handleEvChargingChange} name="EvCharging"/> }
+                    <FormControlLabel control={<Checkbox id='ev-checkbox' checked={evCharging} onChange={handleEvChargingChange} name="EvCharging"/> }
                                       label="EvCharging"/>
                 </FormControl>
                 <div>{'Revenue will be paid into the following bank account'}</div>
-                <TextField fullWidth variant='outlined' size='small' label='Card Number'
+                <TextField fullWidth variant='outlined' size='small' label='Card Number' id='card-number-input'
                            value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
-                <TextField width='5px' variant='outlined' size='small' label='Card Name'
+                <TextField width='5px' variant='outlined' size='small' label='Card Name' id='card-name-input'
                            value={cardName} onChange={(e) => setCardName(e.target.value)}/>
-                <TextField width='1px' variant='outlined' size='small' label='CVV'
+                <TextField width='1px' variant='outlined' size='small' label='CVV' id='cvv-input'
                            value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
             </Card>
             <div style={container}>
-                 <Button variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
-                 <Button variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">Delete</Button>
+                 <Button id='update-button' variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
+                 <Button id='delete-button' variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">Delete</Button>
             </div>
             <Dialog
                 open={open}
@@ -210,8 +210,8 @@ function UpdateSpot () {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={confirmDelete} color="error" autoFocus>Confirm</Button>
+                    <Button id='cancel-button' onClick={handleClose} color="primary">Cancel</Button>
+                    <Button id='confirm-button' onClick={confirmDelete} color="error" autoFocus>Confirm</Button>
                 </DialogActions>
             </Dialog>
         </>

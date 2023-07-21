@@ -152,14 +152,14 @@ function RentCard (props) {
                 <DateTimePickerVal changeStart={setStartTime} changeEnd={setEndTime} start={startTime} end={endTime} />
                 {/* <div>{"Revenue will be paid into the following bank account"}</div> */}
                 <Typography>Cost will be incurred by the following card</Typography>
-                <TextField fullWidth variant='outlined' size='small' label='Card Number' style={inputStyle}
+                <TextField fullWidth variant='outlined' size='small' label='Card Number' style={inputStyle} id='card-number-input'
                            value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
-                <TextField fullWidth variant='outlined' size='small' label='Card Name' style={inputStyle}
+                <TextField fullWidth variant='outlined' size='small' label='Card Name' style={inputStyle} id='card-name-input'
                            value={cardName} onChange={(e) => setCardName(e.target.value)}/>
-                <TextField fullWidth variant='outlined' size='small' label='CVV' style={inputStyle}
+                <TextField fullWidth variant='outlined' size='small' label='CVV' style={inputStyle} id='cvv-input'
                            value={cardCvv} onChange={(e) => setCardCvv(e.target.value)}></TextField>
                 {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
-                <Button variant="contained" style={buttonStyle} align="center" onClick={confirmRenting}>Go to Confirmation</Button>
+                <Button id='go-to-confirm-button' variant="contained" style={buttonStyle} align="center" onClick={confirmRenting}>Go to Confirmation</Button>
             </Card>
             <ConfirmBookingDialog confirmReq={dialogReq} price={price} open={open} setOpen={setOpen} spotID={props.rentReq.spotID}/>
         </>

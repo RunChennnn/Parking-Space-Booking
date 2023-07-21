@@ -1,5 +1,5 @@
 import React from 'react'
-import NavigationBar from './NavigationBar';
+import NavigationBar from '../components/NavigationBar';
 import { useNavigate } from 'react-router-dom';
 import makeRequest from '../utilities/makeRequest';
 import { Button, Card, Checkbox, TextField, FormControl, FormControlLabel } from '@mui/material';
@@ -101,51 +101,51 @@ function NewSpot () {
             <Card style={cardStyle}>
                 <NavigationBar />
                 <div>{'New Spot'}</div>
-                <TextField fullWidth variant='outlined' size='small' label='Description'
+                <TextField fullWidth variant='outlined' size='small' label='Description' id='description-input'
                            placeholder='Description' style={inputStyle}
                            value={description} onChange={(e) => setDescription(e.target.value)}></TextField>
-                <TextField width='1px' variant='outlined' size='small' label='Street Number'
+                <TextField width='1px' variant='outlined' size='small' label='Street Number' id='street-number-input'
                            placeholder='42' style={inputStyle}
                            value={streetNumber} onChange={(e) => setStreetNumber(e.target.value)}/>
-                <TextField width='5px' variant='outlined' size='small' label='Street Name'
+                <TextField width='5px' variant='outlined' size='small' label='Street Name' id='street-name-input'
                            placeholder='Wallaby way' style={inputStyle}
                            value={streetName} onChange={(e) => setStreetName(e.target.value)}></TextField>
-                <TextField width='5px' variant='outlined' size='small' label='Suburb'
+                <TextField width='5px' variant='outlined' size='small' label='Suburb' id='suburb-input'
                            placeholder='Sydney' style={inputStyle}
                            value={suburb} onChange={(e) => setSuburb(e.target.value)}/>
-                <TextField width='1px' variant='outlined' size='small' label='Postcode'
+                <TextField width='1px' variant='outlined' size='small' label='Postcode' id='postcode-input'
                            placeholder='2000' style={inputStyle}
                            value={postcode} onChange={(e) => setPostcode(e.target.value)}></TextField>
                 <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox checked={demandPricing} onChange={handleDemandPricingChange} name="DemandPricing"/> }
+                    <FormControlLabel control={<Checkbox id='surge-pricing-input' checked={demandPricing} onChange={handleDemandPricingChange} name="DemandPricing"/> }
                       label="DemandPricing"/>
                 </FormControl>
-                <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)'
+                <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)' id='price-input'
                            placeholder='16' style={inputStyle}
                            value={basePrice} onChange={(e) => setBasePrice(e.target.value)}/>
-                <TextField width='5px' variant='outlined' size='small' label='Largest Vehicle'
+                <TextField width='5px' variant='outlined' size='small' label='Largest Vehicle' id='vehicle-input'
                            placeholder='Select option' style={inputStyle}
                            value={largestVehicle} onChange={(e) => setLargestVehicle(e.target.value)}></TextField>
-                <TextField width='1px' variant='outlined' size='small' label='Clearance height'
+                <TextField width='1px' variant='outlined' size='small' label='Clearance height' id='clearance-input'
                            placeholder='2.2' style={inputStyle}
                            value={clearance} onChange={(e) => setClearance(e.target.value)}></TextField>
                 <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox checked={disabledAccess} onChange={handleDisabledAccessChange} name="DisabledAccess"/> }
+                    <FormControlLabel control={<Checkbox id='disabled-input' checked={disabledAccess} onChange={handleDisabledAccessChange} name="DisabledAccess"/> }
                                       label="DisabledAccess"/>
                 </FormControl>
                 <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox checked={evCharging} onChange={handleEvChargingChange} name="EvCharging"/> }
+                    <FormControlLabel control={<Checkbox id='ev-input' checked={evCharging} onChange={handleEvChargingChange} name="EvCharging"/> }
                                       label="EvCharging"/>
                 </FormControl>
                 <div>{'Revenue will be paid into the following bank account'}</div>
-                <TextField fullWidth variant='outlined' size='small' label='Card Number'
+                <TextField fullWidth variant='outlined' size='small' label='Card Number' id='card-number-input'
                            value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
-                <TextField width='5px' variant='outlined' size='small' label='Card Name'
+                <TextField width='5px' variant='outlined' size='small' label='Card Name' id='card-name-input'
                            value={cardName} onChange={(e) => setCardName(e.target.value)}/>
-                <TextField width='1px' variant='outlined' size='small' label='CVV'
+                <TextField width='1px' variant='outlined' size='small' label='CVV' id='cvv-input'
                            value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
             </Card>
-            <Button variant="contained" style={buttonStyle} align="center" onClick={confirmRegister}>Register</Button>
+            <Button id='confirm-register-button' variant="contained" style={buttonStyle} align="center" onClick={confirmRegister}>Register</Button>
         </>
   )
 }

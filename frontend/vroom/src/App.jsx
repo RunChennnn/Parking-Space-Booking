@@ -1,20 +1,20 @@
 import './App.css'
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
-import Home from './components/Home';
-import MyAccount from './components/MyAccount';
-import UpdateAccount from './components/UpdateAccount';
-import OwnedSpots from './components/OwnedSpots';
-import NewSpot from './components/NewSpot';
-import UpdateSpot from './components/UpdateSpot';
-import UpcomingBooking from './components/UpcomingBooking';
-import SpotUseRenter from './components/SpotUseRenter';
-import SpotUseOwner from './components/SpotUseOwner';
-import SpotSearch from './components/SpotSearch';
-import SpotDetails from './components/SpotDetails';
-import RentSpot from './components/RentSpot';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Home from './pages/Home';
+import MyAccount from './pages/MyAccount';
+import UpdateAccount from './pages/UpdateAccount';
+import OwnedSpots from './pages/OwnedSpots';
+import NewSpot from './pages/NewSpot';
+import UpdateSpot from './pages/UpdateSpot';
+import UpcomingBooking from './pages/UpcomingBooking';
+import SpotUseRenter from './pages/SpotUseRenter';
+import SpotUseOwner from './pages/SpotUseOwner';
+import SpotSearch from './pages/SpotSearch';
+import SpotDetails from './pages/SpotDetails';
+import RentSpot from './pages/RentSpot';
 
 function App () {
   return (

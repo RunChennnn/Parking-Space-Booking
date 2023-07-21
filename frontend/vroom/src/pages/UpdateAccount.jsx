@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import NavigationBar from './NavigationBar'
-import AuthPopup from './AuthPopup'
+import NavigationBar from '../components/NavigationBar'
+import AuthPopup from '../components/AuthPopup'
 import { Button, TextField, Typography } from '@mui/material'
 import makeRequest from '../utilities/makeRequest'
 

@@ -1,9 +1,9 @@
 import React from 'react'
-import NavigationBar from './NavigationBar'
+import NavigationBar from '../components/NavigationBar'
 import { Button, Menu, MenuItem, Slider, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import makeRequest from '../utilities/makeRequest';
-import SearchStub from './SearchStub';
+import SearchStub from '../components/SearchStub';
 
 function SpotSearch () {
   const urlParams = new URLSearchParams(window.location.search);
@@ -151,19 +151,19 @@ function SpotSearch () {
       <TextField id='search-input' variant='outlined' placeholder="Find a spot..." style={inputStyle} value={search} onChange={(e) => { setSearch(e.target.value) }} />
       <div style={filterBarStyle}>
         <div>
-          <Button style={filterStyle} onClick={vehicleTypeClick} variant='outlined'>Vehicle type: {vehicleType}</Button>
-          <Menu anchorEl={anchorVT} open={anchorVT !== null}>
+          <Button id='vehicle-type-button' style={filterStyle} onClick={vehicleTypeClick} variant='outlined'>Vehicle type: {vehicleType}</Button>
+          <Menu id='vehicle-type-list' anchorEl={anchorVT} open={anchorVT !== null}>
             {vehicleTypeList}
           </Menu>
         </div>
-        <Button style={filterStyle} onClick={() => setEv(!ev)} variant='outlined'>EV charging required: {ev ? 'Yes' : 'No'}</Button>
-        <Button style={filterStyle} onClick={() => setDisabledAccess(!disabledAccess)} variant='outlined'>Disabled access required: {disabledAccess ? 'Yes' : 'No'}</Button>
+        <Button id='ev-button' style={filterStyle} onClick={() => setEv(!ev)} variant='outlined'>EV charging required: {ev ? 'Yes' : 'No'}</Button>
+        <Button id='disabled-button' style={filterStyle} onClick={() => setDisabledAccess(!disabledAccess)} variant='outlined'>Disabled access required: {disabledAccess ? 'Yes' : 'No'}</Button>
       </div>
       <div style={divSliderStyle}>
         <Typography>Maximum hourly price: </Typography>
-        <Slider style={priceSliderStyle} min={0} max={100} step={1} value={price} valueLabelDisplay='auto' valueLabelFormat={priceLabelFormat} onChange={(e) => setPrice(e.target.value)}></Slider>
+        <Slider id='price-slider' style={priceSliderStyle} min={0} max={100} step={1} value={price} valueLabelDisplay='auto' valueLabelFormat={priceLabelFormat} onChange={(e) => setPrice(e.target.value)}></Slider>
         <Typography>Minimum clearance: </Typography>
-        <Slider style={clearanceSliderStyle} min={0} max={6} step={0.1} value={clearance} valueLabelDisplay='auto' valueLabelFormat={clearanceLabelFormat} onChange={(e) => setClearance(e.target.value)}></Slider>
+        <Slider id='clearance-slider' style={clearanceSliderStyle} min={0} max={6} step={0.1} value={clearance} valueLabelDisplay='auto' valueLabelFormat={clearanceLabelFormat} onChange={(e) => setClearance(e.target.value)}></Slider>
       </div>
       <Button id='search-button' variant='contained' style={buttonStyle} onClick={doSearch}>Search</Button>
       {recommended}

@@ -1,9 +1,9 @@
 import React from 'react'
-import NavigationBar from './NavigationBar'
+import NavigationBar from '../components/NavigationBar'
 import { useParams, useNavigate } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
 import { Button } from '@mui/material';
-import SpotCard from './SpotCard';
+import SpotCard from '../components/SpotCard';
 
 function SpotDetails () {
   const params = useParams();
@@ -52,9 +52,6 @@ function SpotDetails () {
     const res = await makeRequest('GET', `spot/${params.spotID}`, {})
     const spot = res.data
 
-    // const reviewRes = await makeRequest('GET', ,{})
-    // const reviews = reviewRes.data
-
     setDescription(spot.description)
 
     const address = spot.streetNumber + ' ' + spot.streetName + ' ' + spot.suburb + ' ' + spot.postcode
@@ -78,8 +75,7 @@ function SpotDetails () {
     <>
       <NavigationBar />
       <SpotCard cardInfo={cardInfo}/>
-
-      <Button variant="contained" style={buttonStyle} onClick={toRentPage}>RENT</Button>
+      <Button id='rent-button' variant="contained" style={buttonStyle} onClick={toRentPage}>Rent</Button>
     </>
   )
 }

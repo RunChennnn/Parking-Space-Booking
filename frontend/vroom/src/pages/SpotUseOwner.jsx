@@ -1,10 +1,10 @@
 import React from 'react'
-import NavigationBar from './NavigationBar'
+import NavigationBar from '../components/NavigationBar'
 import { useParams } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
 import dayjs from 'dayjs';
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
-import ReviewBoxOwner from './ReviewBoxOwner';
+import ReviewBoxOwner from '../components/ReviewBoxOwner';
 
 function SpotUseOwner () {
   const params = useParams();

@@ -1,10 +1,10 @@
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import NavigationBar from './NavigationBar'
+import NavigationBar from '../components/NavigationBar'
 import makeRequest from '../utilities/makeRequest';
 import { Button, Typography } from '@mui/material';
-import AccountDetailRow from './AccountDetailRow';
-import BookingStub from './BookingStub';
+import AccountDetailRow from '../components/AccountDetailRow';
+import BookingStub from '../components/BookingStub';
 
 function MyAccount () {
   const navigate = useNavigate();

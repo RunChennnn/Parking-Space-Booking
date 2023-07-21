@@ -17,11 +17,11 @@ function DateTimePickerVal (props) {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Typography variant="subtitle1" style={typoStyle} gutterBottom >Booking DateTime Picker</Typography>
             <DemoContainer components={['StartTimePicker', 'EndTimePicker']}>
-                <DateTimePicker
+                <DateTimePicker id='start-time-picker'
                    label="StartTimePicker"
                    value={props.start}
                    onChange={(newTime) => props.changeStart(newTime)}/>
-                <DateTimePicker
+                <DateTimePicker id='end-time-picker'
                    label="EndTimePicker"
                    value={props.end}
                    onChange={(newTime) => props.changeEnd(newTime)}

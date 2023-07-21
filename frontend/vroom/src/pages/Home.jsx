@@ -1,8 +1,8 @@
 import React from 'react'
-import NavigationBar from './NavigationBar'
+import NavigationBar from '../components/NavigationBar'
 import { Button, TextField, Typography } from '@mui/material';
 import makeRequest from '../utilities/makeRequest';
-import SearchStub from './SearchStub';
+import SearchStub from '../components/SearchStub';
 import { useNavigate } from 'react-router-dom';
 
 function Home () {

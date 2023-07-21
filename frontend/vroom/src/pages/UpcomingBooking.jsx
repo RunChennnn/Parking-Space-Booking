@@ -1,7 +1,7 @@
 import React from 'react';
 import makeRequest from '../utilities/makeRequest';
 import { useNavigate, useParams } from 'react-router-dom';
-import NavigationBar from './NavigationBar';
+import NavigationBar from '../components/NavigationBar';
 import {
   Button,
   Card, CardContent,
@@ -103,7 +103,7 @@ function UpcomingBooking () {
                     <Typography paragraph>Price: ${price}</Typography>
                 </CardContent>
             </Card>
-            <Button variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">CANCEL</Button>
+            <Button id='cancel-button' variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">CANCEL</Button>
             <Dialog
                 open={dialogVisible}
                 onClose={handleClose}
@@ -117,8 +117,8 @@ function UpcomingBooking () {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={confirmCancel} color="error" autoFocus>Confirm</Button>
+                    <Button id='cancel-cancel-button' onClick={handleClose} color="primary">Cancel</Button>
+                    <Button id='confirm-cancel-button' onClick={confirmCancel} color="error" autoFocus>Confirm</Button>
                 </DialogActions>
             </Dialog>
         </>

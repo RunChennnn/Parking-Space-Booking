@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import makeRequest from '../utilities/makeRequest';
-import NavigationBar from './NavigationBar';
+import NavigationBar from '../components/NavigationBar';
 
 function OwnedSpots () {
   const [spots, setSpots] = useState([])
@@ -68,7 +68,7 @@ function OwnedSpots () {
                 <TableCell align="center">{spot.data.basePrice}</TableCell>
                 <TableCell align="center">{spot.data.demandPricing}</TableCell>
                 <TableCell align="center">
-                    <Button variant="contained" style={editBtnStyle} align="center"
+                    <Button variant="contained" style={editBtnStyle} align="center" id={`${spot.id}-edit-button`}
                             onClick={() => {
                               navigate(`/spots/update/${spot.id}`)
                             }}>Edit</Button>
@@ -146,7 +146,7 @@ function OwnedSpots () {
                         </TableFooter>
                     </Table>
                 </TableContainer>
-                <Button variant="contained" style={buttonStyle} onClick={toRegisterSpot} >Register new spot</Button>
+                <Button id='new-spot-button' variant="contained" style={buttonStyle} onClick={toRegisterSpot} >Register new spot</Button>
             </div>
         </>
   )

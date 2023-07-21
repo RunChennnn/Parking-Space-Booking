@@ -102,6 +102,7 @@ function SpotCard (props) {
             <CardActions>
                 <Typography variant="button" display="block" gutterBottom>Recent Reviews</Typography>
                 <ExpandMore
+                    id='expand-reviews-button'
                     expand={expand}
                     onClick={handleExpandClick}
                     aria-expanded={expand}

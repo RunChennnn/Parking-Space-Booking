@@ -33,8 +33,8 @@ function ConfirmBookingDialog (props) {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="error">Cancel</Button>
-                <Button onClick={onConfirm} color="primary" autoFocus>Confirm</Button>
+                <Button id='cancel-confirm-button' onClick={handleClose} color="error">Cancel</Button>
+                <Button id='confirm-confirm-button' onClick={onConfirm} color="primary" autoFocus>Confirm</Button>
             </DialogActions>
         </Dialog>
   )
