@@ -43,7 +43,3 @@ describe('Login', () => {
     cy.url().should('contain', '/home');
   })
 })
-
-// describe('Login', loginTest)
-
-// export default loginTest

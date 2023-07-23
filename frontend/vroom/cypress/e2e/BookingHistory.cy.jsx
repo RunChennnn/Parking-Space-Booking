@@ -67,7 +67,3 @@ describe('Booking History', () => {
   })
 
 })
-
-// describe('Login', loginTest)
-
-// export default loginTest

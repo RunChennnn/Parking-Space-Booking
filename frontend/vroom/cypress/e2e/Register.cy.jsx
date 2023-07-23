@@ -95,7 +95,3 @@ describe('Register', () => {
     // account registered above.
   })
 })
-
-// describe('Register', registerTest)
-
-// export default registerTest

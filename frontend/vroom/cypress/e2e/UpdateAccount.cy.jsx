@@ -85,7 +85,3 @@ describe('Update Account', () => {
     cy.contains('No Upcoming Bookings') // Make sure test runs to completion
   })
 })
-
-// describe('Update Account', updateAccountTest)
-
-// export default updateAccountTest
