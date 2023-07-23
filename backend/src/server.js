@@ -7,6 +7,7 @@ import { createNewSpot, patchSpot, deleteSpot, getSpot, getRating, getReviews } 
 import { getUser, getUserBasic, patchUser } from './user.js'
 import { recommendSpot } from './search.js'
 import { confirmNewBooking, getPriceForBooking, getBooking, updateReview, deleteBooking, getUpcomingBooking, getHistoryBooking, getAllBooking } from './booking.js'
+import { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin } from './admin.js'
 
 const port = 3141
 const app = express();
@@ -478,26 +479,45 @@ app.get('/weather/:postcode', async (req, res) => {
 
 // Return IDs of all upcoming bookings from all users
 app.get('/admin/upcoming', async (req, res) => {
-  const response = {
-    bookingIDs: ['fakeBookingID1', 'fakeBookingID2']
+  const response = await getAdminUpcomingBooking()
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 401) {
+    return res.status(401).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json(response);
 })
 
 // Return IDs of all historical bookings from all users
 app.get('/admin/history', async (req, res) => {
-  const response = {
-    bookingIDs: ['fakeBookingID3', 'fakeBookingID4']
+  const response = await getAdminHistoryBooking()
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 401) {
+    return res.status(401).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json(response);
 })
 
 // Return IDs of all users
 app.get('/admin/users', async (req, res) => {
-  const response = {
-    userIDs: ['fakeUserID1', 'fakeUserID2']
+  //const response = {userIDs: ['fakeUserID1', 'fakeUserID2']}
+  const response = await getUsersForAdmin()
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 401) {
+    return res.status(401).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json(response);
 })
 
 const server = app.listen(port, () => {

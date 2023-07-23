@@ -241,8 +241,8 @@ const getUpcomingBooking = async (userID) => {
     const asOwner = [];
     const asRenter = [];
     const currentTime = Math.floor(Date.now() / 1000)
-    const ownerBookings = await db.collection('Bookings').where('ownerID', '==', userID).where('startTime', '>', currentTime).get()
-    const renterBookings = await db.collection('Bookings').where('userID', '==', userID).where('startTime', '>', currentTime).get()
+    const ownerBookings = await db.collection('Bookings').where('ownerID', '==', userID).where('endTime', '>', currentTime).get()
+    const renterBookings = await db.collection('Bookings').where('userID', '==', userID).where('endTime', '>', currentTime).get()
     ownerBookings.forEach(booking => asOwner.push(booking.id))
     renterBookings.forEach(booking => asRenter.push(booking.id))
     return {

@@ -14,8 +14,8 @@ const getUser = async (userId) => {
     const userSpots = await spotRef.where('owner', '==', userId).get();
     // assuming the upcoming and history are the user as renter.
     const currentTime = Math.floor(Date.now() / 1000)
-    const upcomingBookingsRenter = await db.collection('Bookings').where('userID', '==', userId).where('startTime', '>', currentTime).get()
-    const upcomingBookingsOwner = await db.collection('Bookings').where('ownerID', '==', userId).where('startTime', '>', currentTime).get()
+    const upcomingBookingsRenter = await db.collection('Bookings').where('userID', '==', userId).where('endTime', '>', currentTime).get()
+    const upcomingBookingsOwner = await db.collection('Bookings').where('ownerID', '==', userId).where('endTime', '>', currentTime).get()
     const historyBookingsRenter = await db.collection('Bookings').where('userID', '==', userId).where('endTime', '<=', currentTime).get()
     const historyBookingsOwner = await db.collection('Bookings').where('ownerID', '==', userId).where('endTime', '<=', currentTime).get()
 
@@ -112,10 +112,11 @@ const patchUser = async (userId, data) => {
     if (data.email) {
       const newEmail = data.email;
       await auth.updateUser(userId, { email: newEmail });
+      const ownedSpots = await db.collection('Spots').where('owner', '==', userId).get()
+      ownedSpots.forEach( async spot => await db.collection('Spots').doc(spot.id).update({ownerEmail:newEmail}))
     }
     console.log(`User ${userId} infomation updated in database`);
     delete usersEmail[userId]
-    // I removed getUser() in this line, it don't see why it needs to be called - Nick
     return {
       status: 200,
       message: `User ${userId} information update successfully`,
