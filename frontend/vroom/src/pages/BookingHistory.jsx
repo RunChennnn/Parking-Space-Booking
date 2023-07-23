@@ -39,6 +39,7 @@ function BookingHistory () {
         }
         booking.spot = spot;
         booking.id = id;
+        booking.currentUserID = params.userID;
         return booking;
       }));
       bookings.sort((a, b) => b.startTime - a.startTime);
