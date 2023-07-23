@@ -6,8 +6,8 @@ function BookingStub (props) {
     width: 'calc(100% - 130px)',
     margin: '20px 50px',
     padding: '15px',
-    backgroundColor: '#f8f8f8',
-    borderColor: '#aaa',
+    backgroundColor: localStorage.getItem('vroom-id') === props.ownerID ? '#ffefa8' : '#f8f8f8',
+    borderColor: localStorage.getItem('vroom-id') === props.ownerID ? '#f7ae02' : '#aaa',
     borderStyle: 'solid',
     borderWidth: '1px',
     borderRadius: '10px',
@@ -43,7 +43,7 @@ function BookingStub (props) {
     <Card key={props.id} style={cardStyle}>
       <div>
         {/* <Typography variant='h6'>Address: (address for ID {props.spotID})</Typography> */}
-        <Typography variant='h6'>{address}</Typography>
+        <Typography variant='h6'>{address} {localStorage.getItem('vroom-id') === props.ownerID && '(as owner)'}</Typography>
         <Typography>{date}</Typography>
       </div>
       <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>View</Button>

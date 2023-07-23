@@ -36,17 +36,28 @@ function MyAccount () {
       const response = await makeRequest('GET', `user/${params.userID}`, {});
       console.log(response);
 
-      const tmp = [];
+      // const tmp = [];
       // Add upcoming bookings
-      for (const bookingID of response.upcoming) {
-        const prop = await makeRequest('GET', `booking/${bookingID}`, {});
-        const spot = await makeRequest('GET', `spot/${prop.spotID}`, {});
-        prop.doView = () => navigate(`/booking/upcoming/${bookingID}`);
-        prop.id = bookingID;
-        prop.spot = spot;
-        tmp.push(BookingStub(prop));
-      }
-      setBookings(tmp);
+      // for (const bookingID of response.upcoming) {
+      //   const prop = await makeRequest('GET', `booking/${bookingID}`, {});
+      //   const spot = await makeRequest('GET', `spot/${prop.spotID}`, {});
+      //   prop.doView = () => navigate(`/booking/upcoming/${bookingID}`);
+      //   prop.id = bookingID;
+      //   prop.spot = spot;
+      //   tmp.push(BookingStub(prop));
+      // }
+      const tmp = await Promise.all(response.upcoming.map(async (id) => {
+        const booking = await makeRequest('GET', `booking/${id}`);
+        const spot = await makeRequest('GET', `spot/${booking.spotID}`);
+        booking.doView = () => navigate(`/booking/upcoming/${id}`);
+        booking.spot = spot;
+        booking.id = id;
+        return booking;
+      }));
+      // setBookings(tmp);
+      setBookings(tmp.map((elem) => {
+        return BookingStub(elem);
+      }))
     }
     getData();
     getBookings();
@@ -57,8 +68,7 @@ function MyAccount () {
   }
 
   function pressViewHistory () {
-    console.log('Not yet implemented');
-    // navigate(`account/${params.userID}/update`);
+    navigate(`/history/${params.userID}`);
   }
 
   return (
