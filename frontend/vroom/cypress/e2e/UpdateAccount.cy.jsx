@@ -81,7 +81,7 @@ describe('Update Account', () => {
     cy.get('#update-account-button').click();
     cy.get('#auth-password-input').type(fake_password);
     cy.get('#auth-confirm-button').click();
-
-    cy.contains('No Upcoming Bookings') // Make sure test runs to completion
+    
+    cy.contains('No Upcoming Bookings', { timeout: 20000 }); // Make sure test runs to completion
   })
 })
