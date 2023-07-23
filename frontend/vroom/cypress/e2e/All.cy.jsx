@@ -3,3 +3,4 @@ import './Register.cy';
 import './Login.cy';
 import './UpdateAccount.cy';
 import './BookingHistory.cy';
+import './Search.cy';
