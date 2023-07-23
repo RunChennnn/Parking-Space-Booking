@@ -54,7 +54,11 @@ function Login () {
     };
     const response = await makeRequest('POST', 'auth/login', request);
     if (response.error) {
-      if (response.error === 'Firebase: Error (auth/wrong-password).' || response.error === 'Firebase: Error (auth/user-not-found).') {
+      if (
+        response.error === 'Firebase: Error (auth/wrong-password).' ||
+        response.error === 'Firebase: Error (auth/user-not-found).' ||
+        response.error === 'Firebase: Error (auth/invalid-email).'
+      ) {
         setShowError(true)
         setErrorText('Invalid username or password, please try again.');
       } else if (response.error === 'Firebase: Error (auth/missing-password).') {
