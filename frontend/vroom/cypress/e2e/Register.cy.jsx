@@ -89,7 +89,7 @@ describe('Register', () => {
     cy.get('#auth-confirm-button').click();
 
     // Check back at login page
-    cy.contains('Don\'t have an account?', { timeout: 20000});
+    cy.contains('Don\'t have an account?');
 
     // NOTE: if this fails, you might need to manually delete the 
     // account registered above.
