@@ -122,13 +122,13 @@ const getPriceForBooking = async (spotID, startTime, endTime) => {
   }
 };
 
-const calculateRefundAvailability = (bookingTime) => {
+const calculateRefundAvailability = (startTime) => {
   let refundAvailable;
   const currentTime = Math.floor(Date.now() / 1000)
-  const hourPast = (currentTime - bookingTime) / 3600
-  if (hourPast <= 1) {
+  const hourRemained = (startTime - currentTime) / 3600
+  if (hourRemained > 72) {
     refundAvailable = 1
-  } else if (hourPast <= 12) {
+  } else if (hourRemained > 24) {
     refundAvailable = 0.5
   } else {
     refundAvailable = 0
@@ -147,7 +147,7 @@ const getBooking = async (bookingID) => {
       }
     } else {
       const data = booking.data();
-      const refundAvailable = calculateRefundAvailability(data.bookingTime);
+      const refundAvailable = calculateRefundAvailability(data.startTime);
       console.log('Booking retrived successfully');
       return {
         status: 200,
@@ -157,7 +157,7 @@ const getBooking = async (bookingID) => {
         startTime: data.startTime,
         endTime: data.endTime,
         price: data.price,
-        refundAvailable, // 0 for not available, 1 for 100%, 0.5 for 50%
+        refundAvailable: refundAvailable, // 0 for not available, 1 for 100%, 0.5 for 50%
         rating: data.rating,
         review: data.review,
         message: `booking ${bookingID} retrieved successfully`
