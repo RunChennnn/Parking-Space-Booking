@@ -4,6 +4,7 @@ import { Button, TextField, Typography } from '@mui/material';
 import makeRequest from '../utilities/makeRequest';
 import SearchStub from '../components/SearchStub';
 import { useNavigate } from 'react-router-dom';
+import { adminIsLoggedIn } from '../utilities/admin';
 
 function Home () {
   const navigate = useNavigate();
@@ -55,8 +56,16 @@ function Home () {
       <NavigationBar />
       <TextField id='search-input' variant='outlined' placeholder="Find a spot..." style={inputStyle} value={search} onChange={(e) => setSearch(e.target.value)} />
       <Button id='search-button' variant='contained' style={buttonStyle} onClick={doSearch}>Search</Button>
-      <Typography align='center' variant='h2'>Recommended for you</Typography>
-      {recommended}
+      {adminIsLoggedIn()
+        ? (
+        <Typography variant='h6' align='center'>Caution: You are logged in as the system administrator.</Typography>
+          )
+        : (
+        <>
+          <Typography align='center' variant='h2'>Recommended for you</Typography>
+          {recommended}
+        </>
+          )}
     </>
   )
 }
