@@ -14,6 +14,7 @@ import {
 import Paper from '@mui/material/Paper'
 import makeRequest from '../utilities/makeRequest';
 import NavigationBar from '../components/NavigationBar';
+import { adminIsLoggedIn } from '../utilities/admin';
 
 function OwnedSpots () {
   const [spots, setSpots] = useState([])
@@ -79,8 +80,17 @@ function OwnedSpots () {
   }
 
   async function loadingSpots () {
-    const userRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
-    const spotsId = userRes.spots
+    var spotsId = null;
+    if (adminIsLoggedIn()) {
+      const response = await makeRequest('GET', 'admin/spots', {});
+      spotsId = response.spotIDs;
+    } else {
+      const userRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {});
+      spotsId = userRes.spots;
+    }
+    console.log(spotsId);
+    // const userRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
+    // const spotsId = userRes.spots
     // const spotsId = ["-NYzaGK84xgqAtpbZpTC", "-NYzaM8nAZoyWJxiFVTx", "-NYzaNqMKptGsNcmt8OR", "-NYzaS2A29F0qpuyadUs"]
     setSpots(spotsId)
 

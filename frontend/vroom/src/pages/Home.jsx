@@ -58,7 +58,7 @@ function Home () {
       <Button id='search-button' variant='contained' style={buttonStyle} onClick={doSearch}>Search</Button>
       {adminIsLoggedIn()
         ? (
-        <Typography variant='h6' align='center'>Caution: You are logged in as the system administrator.</Typography>
+        <Typography variant='h6' align='center'>Caution: You are logged in as a system administrator.</Typography>
           )
         : (
         <>

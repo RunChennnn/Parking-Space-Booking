@@ -1,5 +1,6 @@
 function adminIsLoggedIn () {
-  return (localStorage.getItem('vroom-id') === 'admin');
+  return false;
+  // return (localStorage.getItem('vroom-id') === 'admin');
 }
 
 export { adminIsLoggedIn }

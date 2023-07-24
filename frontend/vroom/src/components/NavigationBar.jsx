@@ -59,7 +59,7 @@ function NavigationBar () {
       {adminIsLoggedIn() && (
         <div style={barStyle}>
           <Button id='nav-home-button' variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
-          <Button id='nav-all-spots-button' variant="contained" style={buttonStyle} onClick={() => console.log('Not yet implemented')}>All Parking Spots</Button>
+          <Button id='nav-all-spots-button' variant="contained" style={buttonStyle} onClick={pressManageParkingSpots}>All Parking Spots</Button>
           <Button id='nav-all-bookings-button' variant="contained" style={buttonStyle} onClick={() => console.log('Not yet implemented')}>All Bookings</Button>
           <Button id='nav-all-users-button' variant="contained" style={buttonStyle} onClick={() => console.log('Not yet implemented')}>All Users</Button>
           <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
