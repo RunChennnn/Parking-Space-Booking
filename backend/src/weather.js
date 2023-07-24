@@ -2,6 +2,23 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const geoRef = require('../australian_postcodes.json');
 
+const weatherMap = {
+    clear: 'Clear',
+    pcloudy: 'Partly Cloudy',
+    mcloudy: 'Cloudy',
+    cloudy: 'Cloudy',
+    humid: 'Partly Cloudy',
+    lightrain: 'Showers',
+    oshower: 'Showers',
+    ishower: 'Showers',
+    lightsnow: 'Show Showers',
+    rain: 'Rain',
+    snow: 'Snow',
+    rainsnow: 'Snow',
+    ts: 'Thunderstorm',
+    tsrain: 'Thunderstorm'
+}
+
 const getWeather = async (postcode) => {
     try {
         const targetRecords = geoRef.filter(record => record.postcode === postcode)
@@ -24,7 +41,7 @@ const getWeather = async (postcode) => {
             weatherInfo.dataseries.forEach(day => {
                 low.push(day.temp2m.min)
                 high.push(day.temp2m.max)
-                summary.push(day.weather)
+                summary.push(weatherMap[day.weather])
             });
             return {
                 status: 200,
