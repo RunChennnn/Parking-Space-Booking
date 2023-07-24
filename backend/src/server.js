@@ -7,6 +7,8 @@ import { createNewSpot, patchSpot, deleteSpot, getSpot, getRating, getReviews } 
 import { getUser, getUserBasic, patchUser } from './user.js'
 import { recommendSpot } from './search.js'
 import { confirmNewBooking, getPriceForBooking, getBooking, updateReview, deleteBooking, getUpcomingBooking, getHistoryBooking, getAllBooking } from './booking.js'
+import { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin, getSpotsForAdmin } from './admin.js'
+import { getWeather } from './weather.js'
 
 const port = 3141
 const app = express();
@@ -461,43 +463,72 @@ app.get('/spot/:spotID/reviews', async (req, res) => {
 // Returns weather for the next 7 days (today, as well as the following 6 days)
 app.get('/weather/:postcode', async (req, res) => {
   const postcode = req.params.postcode;
-
-  const response = {
-    summary: ['Rain', 'Rain', 'Snow', 'Cloud', 'Thunderstorm', 'Drizzle', 'Clear'], // categoristation (https://openweathermap.org/weather-conditions)
-    low: [12.1, 9.5, 8.0, 3.9, -1.0, 2.1, 3.8], // minimum temperature in celsius (float)
-    high: [19.7, 18.4, 19.5, 22.6, 11.1, 13.2, 13.9], // maximum temperature in celsius (float)
-    rain: [0.15, 1.21, 6.00, 0.02, 0.00, 0.00, 0.00], // rain in mm (float)
-  }
-
-  if (true) { // can find weather for this location
+  const response = await getWeather(postcode);
+  if (response.status === 200) {
     return res.status(200).json(response);
+  } else if (response.status === 404) {
+    return res.status(404).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
   } else {
-    return res.status(500).json({ error: 'unable to find weather for this location' })
+    return res.status(400).json({ error: 'other error' });
   }
 })
 
 // Return IDs of all upcoming bookings from all users
 app.get('/admin/upcoming', async (req, res) => {
-  const response = {
-    bookingIDs: ['fakeBookingID1', 'fakeBookingID2']
+  const response = await getAdminUpcomingBooking()
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 401) {
+    return res.status(401).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json(response);
 })
 
 // Return IDs of all historical bookings from all users
 app.get('/admin/history', async (req, res) => {
-  const response = {
-    bookingIDs: ['fakeBookingID3', 'fakeBookingID4']
+  const response = await getAdminHistoryBooking()
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 401) {
+    return res.status(401).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json(response);
 })
 
 // Return IDs of all users
 app.get('/admin/users', async (req, res) => {
-  const response = {
-    userIDs: ['fakeUserID1', 'fakeUserID2']
+  const response = await getUsersForAdmin()
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 401) {
+    return res.status(401).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json(response);
+})
+
+// Return IDs of all users
+app.get('/admin/spots', async (req, res) => {
+  const response = await getSpotsForAdmin()
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 401) {
+    return res.status(401).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
+  }
 })
 
 const server = app.listen(port, () => {

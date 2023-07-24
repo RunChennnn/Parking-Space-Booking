@@ -28,8 +28,36 @@ const calculatePrice = async (spotID, startTime, endTime) => {
   const spot = await db.collection('Spots').doc(spotID).get();
   const basePrice = spot.data().basePrice;
   // assuming based on hours
-  const totalPrice = basePrice * duration;
-  return parseFloat(totalPrice.toFixed(2));
+  let regularPrice = basePrice * duration;
+  let surgedPrice;
+  const surging = spot.data().demandPricing || false
+  if (surging) {
+    const postcode = spot.data().postcode
+    const street = spot.data().streetName
+    const spotsWithSamePostcode = await db.collection('Spots').where("postcode","==",postcode).get()
+    const spotsOnSameStreet = await db.collection('Spots').where("streetName","==",street).get()
+    const idChecklist = spotsOnSameStreet.docs.map(spot => spot.id)
+    let surgingFactor = 0
+    let countSpot = 0
+    await Promise.all(spotsWithSamePostcode.docs.map(async (spot) => {
+       const isAvailable = await checkSpotAvalaibility(spot.id, startTime, endTime)
+       countSpot += 1
+       if (!isAvailable) {
+        // more expensive when more spots are occupied in that postcode area when booking
+        surgingFactor += 0.5
+        if (idChecklist.includes(spot.id)){
+          // even more expensive when the spot is on the same street
+          surgingFactor += 0.3
+        }
+       }
+    }));
+    surgedPrice = regularPrice * (1 + surgingFactor/countSpot)
+  } else {
+    surgedPrice = regularPrice
+  }
+  regularPrice = parseFloat(regularPrice.toFixed(2));
+  surgedPrice = parseFloat(surgedPrice.toFixed(2));
+  return [regularPrice, surgedPrice]
 }
 
 const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber, cardName, cardCvv) => {
@@ -51,7 +79,8 @@ const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber,
     } else {
       const ownerID = (await db.collection('Spots').doc(spotID).get()).data().owner
       const currentTime = Math.floor(Date.now() / 1000)
-      const price = await calculatePrice(spotID, startTime, endTime)
+      //if demandPricing is set as false, surgedPrice will just be the same as regualrPrice
+      const [regularPrice, surgedPrice] = await calculatePrice(spotID, startTime, endTime)
       const data = {
         spotID,
         userID,
@@ -64,7 +93,7 @@ const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber,
         rating: null,
         review: null,
         bookingTime: currentTime,
-        price
+        price: surgedPrice
       }
 
       const newBooking = await db.collection('Bookings').add(data)
@@ -104,11 +133,12 @@ const getPriceForBooking = async (spotID, startTime, endTime) => {
         error: 'Spot is not availble'
       }
     } else {
-      const price = await calculatePrice(spotID, startTime, endTime);
+      const [regularPrice, surgedPrice] = await calculatePrice(spotID, startTime, endTime)
       console.log('Price retrived successfully');
       return {
         status: 200,
-        price,
+        regularPrice,
+        surgedPrice,
         message: `Price for spot ${spotID} from ${startTime} to ${endTime} retrieved!`
       };
     }
@@ -122,13 +152,13 @@ const getPriceForBooking = async (spotID, startTime, endTime) => {
   }
 };
 
-const calculateRefundAvailability = (bookingTime) => {
+const calculateRefundAvailability = (startTime) => {
   let refundAvailable;
   const currentTime = Math.floor(Date.now() / 1000)
-  const hourPast = (currentTime - bookingTime) / 3600
-  if (hourPast <= 1) {
+  const hourRemained = (startTime - currentTime) / 3600
+  if (hourRemained > 72) {
     refundAvailable = 1
-  } else if (hourPast <= 12) {
+  } else if (hourRemained > 24) {
     refundAvailable = 0.5
   } else {
     refundAvailable = 0
@@ -147,7 +177,7 @@ const getBooking = async (bookingID) => {
       }
     } else {
       const data = booking.data();
-      const refundAvailable = calculateRefundAvailability(data.bookingTime);
+      const refundAvailable = calculateRefundAvailability(data.startTime);
       console.log('Booking retrived successfully');
       return {
         status: 200,
@@ -157,7 +187,7 @@ const getBooking = async (bookingID) => {
         startTime: data.startTime,
         endTime: data.endTime,
         price: data.price,
-        refundAvailable, // 0 for not available, 1 for 100%, 0.5 for 50%
+        refundAvailable: refundAvailable, // 0 for not available, 1 for 100%, 0.5 for 50%
         rating: data.rating,
         review: data.review,
         message: `booking ${bookingID} retrieved successfully`
@@ -241,8 +271,8 @@ const getUpcomingBooking = async (userID) => {
     const asOwner = [];
     const asRenter = [];
     const currentTime = Math.floor(Date.now() / 1000)
-    const ownerBookings = await db.collection('Bookings').where('ownerID', '==', userID).where('startTime', '>', currentTime).get()
-    const renterBookings = await db.collection('Bookings').where('userID', '==', userID).where('startTime', '>', currentTime).get()
+    const ownerBookings = await db.collection('Bookings').where('ownerID', '==', userID).where('endTime', '>', currentTime).get()
+    const renterBookings = await db.collection('Bookings').where('userID', '==', userID).where('endTime', '>', currentTime).get()
     ownerBookings.forEach(booking => asOwner.push(booking.id))
     renterBookings.forEach(booking => asRenter.push(booking.id))
     return {
