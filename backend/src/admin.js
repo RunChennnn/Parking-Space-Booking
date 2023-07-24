@@ -81,6 +81,32 @@ const getUsersForAdmin = async () => {
     }
 };
 
+const getSpotsForAdmin = async () => {
+  if (!isAdmin()){
+      return {
+          status: 401,
+          error: 'User Unauthorised'
+      }
+  }
+  try {
+    let spotIDs = [];
+    const allSpots = await db.collection('Spots').get()
+    allSpots.forEach(spot => spotIDs.push(spot.id))
+    return {
+      status: 200,
+      spotIDs,
+      message: 'all spotIDs retrieved'
+    }
+  } catch (error) {
+    console.error('Error retriving spotIDs for admin:', error);
+    return {
+      status: 500,
+      message: 'spotIDs for admin retrival FAILED',
+      error: error.message
+    };
+  }
+};
 
 
-export { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin}
+
+export { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin, getSpotsForAdmin}
