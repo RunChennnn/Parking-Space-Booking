@@ -48,10 +48,12 @@ const calculateSimilarityScores = async (spotData, refSpotsData, request) => {
   const clearance = spotData.clearance;
   const basePrice = spotData.basePrice;
   const postcode = spotData.postcode;
+  const email = spotData.ownerEmail;
 
   // Search-specific stuff
   const searchableAddress = `${streetNumber} ${streetName} ${suburb} ${postcode}`
   similarityScore += longestCommonSubsequence(request.search, searchableAddress) * 50;
+  similarityScore += longestCommonSubsequence(request.search, email) * 25;
 
   // Recommendation stuff
   refSpotsData.forEach(refSpot => {
