@@ -1,7 +1,12 @@
+/* eslint-disable */
+
 import React from 'react'
 import { Alert, Button, Card, TextField, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
+import { client } from '../utilities/firebaseConfig';
+import { getAuth, getIdToken, signOut, signInWithEmailAndPassword } from 'firebase/auth';
+
 
 const pageStyle = {
   display: 'grid',
@@ -52,8 +57,17 @@ function Login () {
       email,
       password
     };
-    const response = await makeRequest('POST', 'auth/login', request);
-    if (response.error) {
+
+    const clientAuth = getAuth(client);
+    const userCredential = await signInWithEmailAndPassword(clientAuth, email, password);
+    const token = await getIdToken(userCredential.user);
+    userCredential.user.uid;
+    console.log(token);
+    console.log(userCredential);
+    // return;
+
+    // const response = await makeRequest('POST', 'auth/login', request);
+    if (false) { // response.error
       if (
         response.error === 'Firebase: Error (auth/wrong-password).' ||
         response.error === 'Firebase: Error (auth/user-not-found).' ||
@@ -69,8 +83,8 @@ function Login () {
       }
     } else {
       // Correct credentials, so log in
-      localStorage.setItem('vroom-token', response.token);
-      localStorage.setItem('vroom-id', response.userID);
+      localStorage.setItem('vroom-token', token);
+      localStorage.setItem('vroom-id', userCredential.user.uid);
       navigate('/home');
     }
   }

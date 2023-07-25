@@ -531,6 +531,30 @@ app.get('/admin/spots', async (req, res) => {
   }
 })
 
+app.get('/user/:userID/notifications', async (req, res) => {
+  const response = {
+    ids: ['sejivliuesbrvl', 'aelrbvieqawle'],
+  }
+
+  return res.status(200).json(response);
+})
+
+app.get('/notification/:notificationID', async (req, res) => {
+  const response = {
+    time: 6745976804,
+    text: 'Youre dumb',
+    viewed: false,
+  }
+
+  return res.status(200).json(response);
+})
+
+app.post('/notification/:notificationID/view', async (req, res) => {
+  // mark notification as viewed
+
+  return res.status(200).json({ status: 200 });
+})
+
 const server = app.listen(port, () => {
   console.log(`Backend is now listening on port ${port}!`);
 });

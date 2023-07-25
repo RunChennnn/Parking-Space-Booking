@@ -6,8 +6,8 @@ async function makeRequest (method, path, body) {
       'Content-type': 'application/json',
     },
   };
-  if (localStorage.getItem('token')) {
-    options.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+  if (localStorage.getItem('vroom-token')) {
+    options.headers.Authorization = `Bearer ${localStorage.getItem('vroom-token')}`;
   }
   if (method !== 'GET') {
     options.body = JSON.stringify(body);
