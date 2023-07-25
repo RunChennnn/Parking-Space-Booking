@@ -2,7 +2,8 @@ import React from 'react'
 import NavigationBar from '../components/NavigationBar';
 import { useNavigate } from 'react-router-dom';
 import makeRequest from '../utilities/makeRequest';
-import { Button, Card, Checkbox, TextField, FormControl, FormControlLabel } from '@mui/material';
+import { Alert, Button } from '@mui/material';
+import NewCard from '../components/NewCard';
 
 function NewSpot () {
   // const params = useParams()
@@ -14,9 +15,10 @@ function NewSpot () {
   const [streetName, setStreetName] = React.useState('')
   const [suburb, setSuburb] = React.useState('');
   const [postcode, setPostcode] = React.useState('');
-  const [basePrice, setBasePrice] = React.useState('');
+  const [basePrice, setBasePrice] = React.useState(0);
   const [largestVehicle, setLargestVehicle] = React.useState('');
-  const [clearance, setClearance] = React.useState('');
+  const [clearance, setClearance] = React.useState(0);
+
   const [cardNumber, setCardNumber] = React.useState('');
   const [cardName, setCardName] = React.useState('');
   const [cardCVV, setCardCVV] = React.useState('');
@@ -26,50 +28,75 @@ function NewSpot () {
   const [disabledAccess, setDisabledAccess] = React.useState(false)
   const [evCharging, setEvCharging] = React.useState(false)
 
-  // const [showError, setShowError] = React.useState(false);
+  const [error, setError] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState('')
+
+  const cardInfo = {
+    description,
+    streetNumber,
+    streetName,
+    suburb,
+    postcode,
+    basePrice,
+    largestVehicle,
+    clearance,
+    cardNumber,
+    cardName,
+    cardCVV
+  }
+
+  const cardSet = {
+    setDescription,
+    setStreetNumber,
+    setStreetName,
+    setSuburb,
+    setPostcode,
+    setBasePrice,
+    setLargestVehicle,
+    setClearance,
+    setCardNumber,
+    setCardName,
+    setCardCVV,
+    setDemandPricing,
+    setDisabledAccess,
+    setEvCharging
+  }
 
   const buttonStyle = {
     margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
     width: '100px'
   }
 
-  const inputStyle = {
-    backgroundColor: '#fff',
-    margin: '0',
-    padding: '0'
-  };
-
-  // const errorStyle = {
-  //   marginTop: '10px',
-  // };
-
-  const cardStyle = {
-    margin: '0',
-    padding: '5%',
-    backgroundColor: '#fffffa',
-    borderColor: '#ffffff',
-    borderStyle: 'solid',
-    borderWidth: '2px',
-    borderRadius: '10px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    rowGap: '15px'
-  };
-
-  const handleDemandPricingChange = (e) => {
-    setDemandPricing(e.target.checked)
-  }
-
-  const handleDisabledAccessChange = (e) => {
-    setDisabledAccess(e.target.checked)
-  }
-
-  const handleEvChargingChange = (e) => {
-    setEvCharging(e.target.checked)
+  const errorStyle = {
+    marginTop: '10px'
   }
 
   async function confirmRegister () {
+    if (isNaN(basePrice)) {
+      setErrorMessage('Please input a valid base price. A valid base price should be digit')
+      setError(true)
+      return;
+    }
+    if (isNaN(clearance)) {
+      setErrorMessage('Please input a valid clearance. A valid clearance should be digit')
+      setError(true)
+    }
+    if (cardNumber.length !== 16 || isNaN(cardNumber)) {
+      setErrorMessage('Please input a valid card number. A valid card number should contain 16 digits.');
+      setError(true);
+      return;
+    }
+    if (cardName.length === 0) {
+      setErrorMessage('Please enter a name for the card.');
+      setError(true);
+      return;
+    }
+    if (cardCVV.length !== 3 || isNaN(cardCVV)) {
+      setErrorMessage('Please input a valid CVV. A valid CVV should contain 3 digits.');
+      setError(true);
+      return;
+    }
+
     const req = {
       basePrice,
       cardCVV,
@@ -98,54 +125,10 @@ function NewSpot () {
 
   return (
         <>
-            <Card style={cardStyle}>
-                <NavigationBar />
-                <div>{'New Spot'}</div>
-                <TextField fullWidth variant='outlined' size='small' label='Description' id='description-input'
-                           placeholder='Description' style={inputStyle}
-                           value={description} onChange={(e) => setDescription(e.target.value)}></TextField>
-                <TextField width='1px' variant='outlined' size='small' label='Street Number' id='street-number-input'
-                           placeholder='42' style={inputStyle}
-                           value={streetNumber} onChange={(e) => setStreetNumber(e.target.value)}/>
-                <TextField width='5px' variant='outlined' size='small' label='Street Name' id='street-name-input'
-                           placeholder='Wallaby way' style={inputStyle}
-                           value={streetName} onChange={(e) => setStreetName(e.target.value)}></TextField>
-                <TextField width='5px' variant='outlined' size='small' label='Suburb' id='suburb-input'
-                           placeholder='Sydney' style={inputStyle}
-                           value={suburb} onChange={(e) => setSuburb(e.target.value)}/>
-                <TextField width='1px' variant='outlined' size='small' label='Postcode' id='postcode-input'
-                           placeholder='2000' style={inputStyle}
-                           value={postcode} onChange={(e) => setPostcode(e.target.value)}></TextField>
-                <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox id='surge-pricing-input' checked={demandPricing} onChange={handleDemandPricingChange} name="DemandPricing"/> }
-                      label="DemandPricing"/>
-                </FormControl>
-                <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)' id='price-input'
-                           placeholder='16' style={inputStyle}
-                           value={basePrice} onChange={(e) => setBasePrice(e.target.value)}/>
-                <TextField width='5px' variant='outlined' size='small' label='Largest Vehicle' id='vehicle-input'
-                           placeholder='Select option' style={inputStyle}
-                           value={largestVehicle} onChange={(e) => setLargestVehicle(e.target.value)}></TextField>
-                <TextField width='1px' variant='outlined' size='small' label='Clearance height' id='clearance-input'
-                           placeholder='2.2' style={inputStyle}
-                           value={clearance} onChange={(e) => setClearance(e.target.value)}></TextField>
-                <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox id='disabled-input' checked={disabledAccess} onChange={handleDisabledAccessChange} name="DisabledAccess"/> }
-                                      label="DisabledAccess"/>
-                </FormControl>
-                <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox id='ev-input' checked={evCharging} onChange={handleEvChargingChange} name="EvCharging"/> }
-                                      label="EvCharging"/>
-                </FormControl>
-                <div>{'Revenue will be paid into the following bank account'}</div>
-                <TextField fullWidth variant='outlined' size='small' label='Card Number' id='card-number-input'
-                           value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
-                <TextField width='5px' variant='outlined' size='small' label='Card Name' id='card-name-input'
-                           value={cardName} onChange={(e) => setCardName(e.target.value)}/>
-                <TextField width='1px' variant='outlined' size='small' label='CVV' id='cvv-input'
-                           value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
-            </Card>
+            <NavigationBar />
+            <NewCard cardInfo={cardInfo} cardSet={cardSet}/>
             <Button id='confirm-register-button' variant="contained" style={buttonStyle} align="center" onClick={confirmRegister}>Register</Button>
+            {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
         </>
   )
 }

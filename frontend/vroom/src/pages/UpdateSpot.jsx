@@ -1,12 +1,15 @@
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import NavigationBar from '../components/NavigationBar';
-import { Button, Card, Checkbox, FormControl, FormControlLabel, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+  Button,
+  Alert, DialogTitle, DialogContent, DialogContentText, DialogActions, Dialog
+} from '@mui/material';
 import makeRequest from '../utilities/makeRequest';
+import UpdateCard from '../components/UpdateCard';
 
 function UpdateSpot () {
   const params = useParams()
-
   const navigate = useNavigate()
 
   const [description, setDescription] = React.useState('');
@@ -14,45 +17,64 @@ function UpdateSpot () {
   const [streetName, setStreetName] = React.useState('')
   const [suburb, setSuburb] = React.useState('');
   const [postcode, setPostcode] = React.useState('');
-  const [basePrice, setBasePrice] = React.useState('');
+  const [basePrice, setBasePrice] = React.useState(0);
   const [largestVehicle, setLargestVehicle] = React.useState('');
-  const [clearance, setClearance] = React.useState('');
+  const [clearance, setClearance] = React.useState(0);
+
   const [cardNumber, setCardNumber] = React.useState('');
   const [cardName, setCardName] = React.useState('');
   const [cardCVV, setCardCVV] = React.useState('');
 
+  // variale for radio group
   const [demandPricing, setDemandPricing] = React.useState(false)
   const [disabledAccess, setDisabledAccess] = React.useState(false)
   const [evCharging, setEvCharging] = React.useState(false)
 
-  // const [showError, setShowError] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
 
-  const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState('')
+
+  const cardInfo = {
+    spotID: params.spotID,
+    description,
+    streetNumber,
+    streetName,
+    suburb,
+    postcode,
+    basePrice,
+    largestVehicle,
+    clearance,
+    cardNumber,
+    cardName,
+    cardCVV
+  }
+
+  const cardSet = {
+    setDescription,
+    setStreetNumber,
+    setStreetName,
+    setSuburb,
+    setPostcode,
+    setBasePrice,
+    setLargestVehicle,
+    setClearance,
+    setCardNumber,
+    setCardName,
+    setCardCVV,
+    setDemandPricing,
+    setDisabledAccess,
+    setEvCharging
+  }
 
   const buttonStyle = {
     margin: '20px 20px 10px 20px',
     width: '100px'
   }
 
-  const inputStyle = {
-    backgroundColor: '#fff',
-    margin: '0',
-    padding: '0'
-  };
-
-  const cardStyle = {
-    margin: '0',
-    padding: '5%',
-    backgroundColor: '#fffffa',
-    borderColor: '#ffffff',
-    borderStyle: 'solid',
-    borderWidth: '2px',
-    borderRadius: '10px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    rowGap: '15px'
-  };
+  const errorStyle = {
+    marginTop: '10px'
+  }
 
   const container = {
     display: 'flex',
@@ -65,20 +87,8 @@ function UpdateSpot () {
     setOpen(true)
   }
 
-  const handleClose = () => {
+  const handleClose = (e) => {
     setOpen(false)
-  }
-
-  const handleDemandPricingChange = (e) => {
-    setDemandPricing(e.target.checked)
-  }
-
-  const handleDisabledAccessChange = (e) => {
-    setDisabledAccess(e.target.checked)
-  }
-
-  const handleEvChargingChange = (e) => {
-    setEvCharging(e.target.checked)
   }
 
   React.useEffect(() => {
@@ -102,11 +112,36 @@ function UpdateSpot () {
       setDisabledAccess(spot.disabledAccess)
       setEvCharging(spot.evCharging)
     }
-    loadingSpotInfo()
+    loadingSpotInfo().then(r => {})
     // console.log(res)
   }, [])
 
   async function confirmUpdate () {
+    if (isNaN(basePrice)) {
+      setErrorMessage('Please input a valid base price. A valid base price should be digit')
+      setError(true)
+      return;
+    }
+    if (isNaN(clearance)) {
+      setErrorMessage('Please input a valid clearance. A valid clearance should be digit')
+      setError(true)
+    }
+    if (cardNumber.length !== 16 || isNaN(cardNumber)) {
+      setErrorMessage('Please input a valid card number. A valid card number should contain 16 digits.');
+      setError(true);
+      return;
+    }
+    if (cardName.length === 0) {
+      setErrorMessage('Please enter a name for the card.');
+      setError(true);
+      return;
+    }
+    if (cardCVV.length !== 3 || isNaN(cardCVV)) {
+      setErrorMessage('Please input a valid CVV. A valid CVV should contain 3 digits.');
+      setError(true);
+      return;
+    }
+
     const req = {
       basePrice,
       cardCVV,
@@ -147,73 +182,29 @@ function UpdateSpot () {
   return (
         <>
             <NavigationBar />
-            <Card style={cardStyle}>
-                <div>{'Update Spot'}</div>
-                <TextField fullWidth variant='outlined' size='small' label='Description' id='description-input'
-                           placeholder='Description' style={inputStyle}
-                           value={description} onChange={(e) => setDescription(e.target.value)}></TextField>
-                <TextField width='1px' variant='outlined' size='small' label='Street Number' id='street-number-input'
-                           placeholder='42' style={inputStyle}
-                           value={streetNumber} onChange={(e) => setStreetNumber(e.target.value)}/>
-                <TextField width='5px' variant='outlined' size='small' label='Street Name' id='street-name-input'
-                           placeholder='Wallaby way' style={inputStyle}
-                           value={streetName} onChange={(e) => setStreetName(e.target.value)}></TextField>
-                <TextField width='5px' variant='outlined' size='small' label='Suburb' id='suburb-input'
-                           placeholder='Sydney' style={inputStyle}
-                           value={suburb} onChange={(e) => setSuburb(e.target.value)}/>
-                <TextField width='1px' variant='outlined' size='small' label='Postcode' id='postcode-input'
-                           placeholder='2000' style={inputStyle}
-                           value={postcode} onChange={(e) => setPostcode(e.target.value)}></TextField>
-                <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox id='surge-pricing-checkbox' checked={demandPricing} onChange={handleDemandPricingChange} name="DemandPricing"/> }
-                                      label="DemandPricing"/>
-                </FormControl>
-                <TextField width='1px' variant='outlined' size='small' label='Base price per hour(AUD)' id='price-input'
-                           placeholder='16' style={inputStyle}
-                           value={basePrice} onChange={(e) => setBasePrice(e.target.value)}/>
-                <TextField width='5px' variant='outlined' size='small' label='Largest Vehicle' id='vehicle-input'
-                           placeholder='Select option' style={inputStyle}
-                           value={largestVehicle} onChange={(e) => setLargestVehicle(e.target.value)}></TextField>
-                <TextField width='1px' variant='outlined' size='small' label='Clearance height' id='clearance-input'
-                           placeholder='2.2' style={inputStyle}
-                           value={clearance} onChange={(e) => setClearance(e.target.value)}></TextField>
-                <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox id='disabled-checkbox' checked={disabledAccess} onChange={handleDisabledAccessChange} name="DisabledAccess"/> }
-                                      label="DisabledAccess"/>
-                </FormControl>
-                <FormControl variant="standard">
-                    <FormControlLabel control={<Checkbox id='ev-checkbox' checked={evCharging} onChange={handleEvChargingChange} name="EvCharging"/> }
-                                      label="EvCharging"/>
-                </FormControl>
-                <div>{'Revenue will be paid into the following bank account'}</div>
-                <TextField fullWidth variant='outlined' size='small' label='Card Number' id='card-number-input'
-                           value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}></TextField>
-                <TextField width='5px' variant='outlined' size='small' label='Card Name' id='card-name-input'
-                           value={cardName} onChange={(e) => setCardName(e.target.value)}/>
-                <TextField width='1px' variant='outlined' size='small' label='CVV' id='cvv-input'
-                           value={cardCVV} onChange={(e) => setCardCVV(e.target.value)}></TextField>
-            </Card>
+            <UpdateCard cardInfo={cardInfo} cardSet={cardSet} dialogOpen={open} setOpen={setOpen}/>
             <div style={container}>
                  <Button id='update-button' variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
                  <Button id='delete-button' variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">Delete</Button>
             </div>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{'Delete Spot confirmation'}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Make sure you confirm to remove this parking spot
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button id='cancel-button' onClick={handleClose} color="primary">Cancel</Button>
-                    <Button id='confirm-button' onClick={confirmDelete} color="error" autoFocus>Confirm</Button>
-                </DialogActions>
-            </Dialog>
+          {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
+          <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{'Delete Spot confirmation'}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Make sure you confirm to remove this parking spot
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button id='cancel-button' onClick={handleClose} color="primary">Cancel</Button>
+              <Button id='confirm-button' onClick={confirmDelete} color="error" autoFocus>Confirm</Button>
+            </DialogActions>
+          </Dialog>
         </>
   )
 }
