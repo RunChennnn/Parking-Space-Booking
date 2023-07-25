@@ -1,7 +1,8 @@
 import React from 'react'
 import { Alert, Button, Card, TextField, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import makeRequest from '../utilities/makeRequest';
+import { client } from '../utilities/firebaseConfig';
+import { getAuth, getIdToken, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const pageStyle = {
   display: 'grid',
@@ -48,6 +49,15 @@ function Register () {
 
   const navigate = useNavigate();
 
+  function checkPassword (pwdstr) {
+    const hasUppercase = /[A-Z]/.test(pwdstr) ? 1 : 0;
+    const hasLowercase = /[a-z]/.test(pwdstr) ? 1 : 0;
+    const hasNumbers = /\d/.test(pwdstr) ? 1 : 0;
+
+    const hasCount = hasUppercase + hasLowercase + hasNumbers;
+    return (pwdstr.length >= 8 && hasCount >= 2);
+  }
+
   function validPassword () {
     // Unmatched passwords
     if (password !== confirmPassword) {
@@ -56,40 +66,38 @@ function Register () {
       return false;
     }
 
+    if (!checkPassword(password)) {
+      setErrorMessage('Please choose a different password and try again. Passwords must contain at least 8 characters, and contain at least 2 of the following: lowercase characters, uppercase characters, numbers.')
+      setShowError(true);
+      return false;
+    }
     return true;
   }
 
   async function pressRegister () {
-    // Check passwords equal
-    if (!validPassword()) {
-      return;
-    }
+    // Check passwords valid
+    if (!validPassword()) { return; }
 
-    const request = {
-      email,
-      password
-    };
-    const response = await makeRequest('POST', 'auth/register', request);
-    if (response.error) {
-      if (response.error === 'Firebase: Error (auth/email-already-in-use).' || response.error === 'The email address is already in use by another account.') {
+    try {
+      const clientAuth = getAuth(client);
+      const userCredential = await createUserWithEmailAndPassword(clientAuth, email, password);
+      const token = await getIdToken(userCredential.user);
+
+      localStorage.setItem('vroom-token', token);
+      localStorage.setItem('vroom-id', userCredential.user.uid);
+      navigate('/home');
+    } catch (error) {
+      if (error.message === 'Firebase: Error (auth/email-already-in-use).' || error.message === 'The email address is already in use by another account.') {
         setErrorMessage('This email address is already used for an account. Please select a different email address and try again.');
         setShowError(true)
-      } else if (response.error === 'Weak Password') {
-        setErrorMessage('Please choose a different password and try again. Passwords must contain at least 8 characters, and contain at least 2 of the following: lowercase characters, uppercase characters, numbers.');
-        setShowError(true)
-      } else if (response.error === 'Firebase: Error (auth/invalid-email).' || response.error === 'The email address is improperly formatted.') {
+      } else if (error.message === 'Firebase: Error (auth/invalid-email).' || error.message === 'The email address is improperly formatted.') {
         setErrorMessage('Please choose a valid email address.');
         setShowError(true)
       } else {
-        console.log(`Unknown error: ${response.error}`);
-        setErrorMessage(response.error)
+        console.log(`Unknown error: ${error.message}`);
+        setErrorMessage(error.message)
         setShowError(true);
       }
-    } else {
-      // Correct credentials, so log in
-      localStorage.setItem('vroom-token', response.token);
-      localStorage.setItem('vroom-id', response.userID);
-      navigate('/home');
     }
   }
 

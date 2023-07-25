@@ -1,12 +1,8 @@
-/* eslint-disable */
-
 import React from 'react'
 import { Alert, Button, Card, TextField, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import makeRequest from '../utilities/makeRequest';
 import { client } from '../utilities/firebaseConfig';
-import { getAuth, getIdToken, signOut, signInWithEmailAndPassword } from 'firebase/auth';
-
+import { getAuth, getIdToken, signInWithEmailAndPassword } from 'firebase/auth';
 
 const pageStyle = {
   display: 'grid',
@@ -53,39 +49,29 @@ function Login () {
   const navigate = useNavigate();
 
   async function pressLogin () {
-    const request = {
-      email,
-      password
-    };
+    setShowError(false);
+    try {
+      const clientAuth = getAuth(client);
+      const userCredential = await signInWithEmailAndPassword(clientAuth, email, password);
+      const token = await getIdToken(userCredential.user);
 
-    const clientAuth = getAuth(client);
-    const userCredential = await signInWithEmailAndPassword(clientAuth, email, password);
-    const token = await getIdToken(userCredential.user);
-    userCredential.user.uid;
-    console.log(token);
-    console.log(userCredential);
-    // return;
-
-    // const response = await makeRequest('POST', 'auth/login', request);
-    if (false) { // response.error
-      if (
-        response.error === 'Firebase: Error (auth/wrong-password).' ||
-        response.error === 'Firebase: Error (auth/user-not-found).' ||
-        response.error === 'Firebase: Error (auth/invalid-email).'
-      ) {
-        setShowError(true)
-        setErrorText('Invalid username or password, please try again.');
-      } else if (response.error === 'Firebase: Error (auth/missing-password).') {
-        setShowError(true)
-        setErrorText('Please enter a password and try again.');
-      } else {
-        console.log(`Unknown error: ${response.error}`);
-      }
-    } else {
-      // Correct credentials, so log in
       localStorage.setItem('vroom-token', token);
       localStorage.setItem('vroom-id', userCredential.user.uid);
       navigate('/home');
+    } catch (error) {
+      if (
+        error.message === 'Firebase: Error (auth/wrong-password).' ||
+        error.message === 'Firebase: Error (auth/user-not-found).' ||
+        error.message === 'Firebase: Error (auth/invalid-email).'
+      ) {
+        setShowError(true)
+        setErrorText('Invalid username or password, please try again.');
+      } else if (error.message === 'Firebase: Error (auth/missing-password).') {
+        setShowError(true)
+        setErrorText('Please enter a password and try again.');
+      } else {
+        console.log(`Unknown error: ${error.message}`);
+      }
     }
   }
 
