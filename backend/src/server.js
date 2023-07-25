@@ -551,8 +551,15 @@ app.get('/notification/:notificationID', async (req, res) => {
 
 app.post('/notification/:notificationID/view', async (req, res) => {
   // mark notification as viewed
+  const notificationID = req.params.notificationID;
 
   return res.status(200).json({ status: 200 });
+})
+
+app.get('admin/:userID/check', async (req, res) => {
+  const userID = req.params.userID;
+
+  return res.status(200).json({ isAdmin: false })
 })
 
 const server = app.listen(port, () => {
