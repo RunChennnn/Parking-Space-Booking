@@ -85,6 +85,7 @@ function Register () {
 
       localStorage.setItem('vroom-token', token);
       localStorage.setItem('vroom-id', userCredential.user.uid);
+      localStorage.setItem('vroom-admin', false) // won't be admin if we're making a new account
       navigate('/home');
     } catch (error) {
       if (error.message === 'Firebase: Error (auth/email-already-in-use).' || error.message === 'The email address is already in use by another account.') {

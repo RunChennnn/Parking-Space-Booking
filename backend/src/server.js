@@ -556,7 +556,7 @@ app.post('/notification/:notificationID/view', async (req, res) => {
   return res.status(200).json({ status: 200 });
 })
 
-app.get('admin/:userID/check', async (req, res) => {
+app.get('/admin/:userID/check', async (req, res) => {
   const userID = req.params.userID;
 
   return res.status(200).json({ isAdmin: false })

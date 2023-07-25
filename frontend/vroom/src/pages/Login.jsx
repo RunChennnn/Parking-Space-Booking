@@ -3,6 +3,7 @@ import { Alert, Button, Card, TextField, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { client } from '../utilities/firebaseConfig';
 import { getAuth, getIdToken, signInWithEmailAndPassword } from 'firebase/auth';
+import { doLogin } from '../utilities/admin';
 
 const pageStyle = {
   display: 'grid',
@@ -55,8 +56,7 @@ function Login () {
       const userCredential = await signInWithEmailAndPassword(clientAuth, email, password);
       const token = await getIdToken(userCredential.user);
 
-      localStorage.setItem('vroom-token', token);
-      localStorage.setItem('vroom-id', userCredential.user.uid);
+      await doLogin(userCredential.user.uid, token);
       navigate('/home');
     } catch (error) {
       if (
