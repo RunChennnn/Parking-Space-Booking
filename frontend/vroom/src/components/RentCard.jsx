@@ -78,7 +78,7 @@ function RentCard (props) {
 
   async function confirmRenting () {
     // Basic data validation
-    if (cardNumber.length !== 16 || isNaN(cardNumber)) {
+    if (cardNumber.length !== 16 || isNaN(Number(cardNumber))) {
       setErrorMessage('Please input a valid card number. A valid card number should contain 16 digits.');
       setError(true);
       return;
@@ -88,7 +88,7 @@ function RentCard (props) {
       setError(true);
       return;
     }
-    if (cardCvv.length !== 3 || isNaN(cardCvv)) {
+    if (cardCvv.length !== 3 || isNaN(Number(cardCvv))) {
       setErrorMessage('Please input a valid CVV. A valid CVV should contain 3 digits.');
       setError(true);
       return;
