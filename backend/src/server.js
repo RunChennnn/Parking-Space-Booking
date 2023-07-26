@@ -7,7 +7,8 @@ import { createNewSpot, patchSpot, deleteSpot, getSpot, getRating, getReviews } 
 import { getUser, getUserBasic, patchUser } from './user.js'
 import { recommendSpot } from './search.js'
 import { confirmNewBooking, getPriceForBooking, getBooking, updateReview, deleteBooking, getUpcomingBooking, getHistoryBooking, getAllBooking } from './booking.js'
-import { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin, getSpotsForAdmin } from './admin.js'
+import { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin, getSpotsForAdmin, checkAdminAccountID } from './admin.js'
+import { getNotificationsForUser, getNotification, viewNotification } from './notification.js'
 import { getWeather } from './weather.js'
 
 const port = 3141
@@ -532,34 +533,58 @@ app.get('/admin/spots', async (req, res) => {
 })
 
 app.get('/user/:userID/notifications', async (req, res) => {
-  const response = {
-    ids: ['sejivliuesbrvl', 'aelrbvieqawle'],
+  const userID = req.params.userID;
+  const response = await getNotificationsForUser(userID)
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 401) {
+    return res.status(401).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-
-  return res.status(200).json(response);
 })
 
 app.get('/notification/:notificationID', async (req, res) => {
-  const response = {
-    time: 6745976804,
-    text: 'Youre dumb',
-    viewed: false,
+  const notificationID = req.params.notificationID;
+  const response = await getNotification(notificationID)
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 404) {
+    return res.status(404).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-
-  return res.status(200).json(response);
 })
 
 app.post('/notification/:notificationID/view', async (req, res) => {
   // mark notification as viewed
   const notificationID = req.params.notificationID;
-
-  return res.status(200).json({ status: 200 });
+  const response = await viewNotification(notificationID)
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 404) {
+    return res.status(404).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
+  }
 })
 
 app.get('/admin/:userID/check', async (req, res) => {
   const userID = req.params.userID;
-
-  return res.status(200).json({ isAdmin: false })
+  const response = await checkAdminAccountID(userID)
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
+  }
 })
 
 const server = app.listen(port, () => {

@@ -22,7 +22,7 @@ const checkSpotAvalaibility = async (spotID, startTime, endTime) => {
   return available
 }
 
-// later we will implement surging price
+//implement surging price
 const calculatePrice = async (spotID, startTime, endTime) => {
   const duration = (endTime - startTime) / 3600;
   const spot = await db.collection('Spots').doc(spotID).get();
@@ -59,6 +59,58 @@ const calculatePrice = async (spotID, startTime, endTime) => {
   surgedPrice = parseFloat(surgedPrice.toFixed(2));
   return [regularPrice, surgedPrice]
 }
+
+const getSpotWithSamePostCode = async (spotID) => {
+  const thisSpot = await db.collection('Spots').doc(spotID).get();
+  let spotList = []
+  const spotsWithSamePostcode = await db.collection('Spots').where("postcode","==",thisSpot.data().postcode).get()
+  spotsWithSamePostcode.forEach(spot=>{
+    if (spot.id.toString() !== spotID && spot.data().demandPricing === false) {
+      spotList.push(spot)
+    }
+  })
+  return spotList
+}
+
+//Note this is queried spot object, not spot id
+const isInDemand = async (spot, startTime, endTime) => {
+  let occupied = false;
+  const postcode = spot.data().postcode
+  const spotsWithSamePostcode = await db.collection('Spots').where("postcode","==",postcode).get()
+  let countBookedSpot = 0
+  let countSpot = 0
+  await Promise.all(spotsWithSamePostcode.docs.map(async (s) => {
+    const isAvailable = await checkSpotAvalaibility(s.id, startTime, endTime)
+    countSpot += 1
+    if (!isAvailable) {
+      countBookedSpot += 1
+      if (s.id === spot.id) {
+        occupied = true
+      }
+    }
+  }));
+  const inDemand = ((countBookedSpot/countSpot) >= 0.5 && !occupied) ? true:false
+  return inDemand
+}
+
+const pushNotification = async (spotID, startTime, endTime) => {
+  const checkList = await getSpotWithSamePostCode(spotID)
+  await Promise.all(checkList.map(async (spot) => {
+    if(await isInDemand(spot, startTime, endTime)){
+      const noteData = {
+        spotID: spot.id,
+        postcode: spot.data().postcode,
+        owner: spot.data().owner,
+        time: Math.floor(Date.now() / 1000),
+        text: `Your spot is in high demand. Turn on surging price!`,
+        viewed: false
+      }
+      const newNotification = await db.collection('Notifications').add(noteData)
+      console.log(`A new notification ${newNotification.id} has been added to the database`)
+    }
+  }))
+}
+
 
 const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber, cardName, cardCvv) => {
   try {
@@ -98,6 +150,7 @@ const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber,
 
       const newBooking = await db.collection('Bookings').add(data)
       const bid = newBooking.id
+      await pushNotification(spotID, startTime, endTime)
 
       console.log('New Booking added to database');
       return {

@@ -107,6 +107,25 @@ const getSpotsForAdmin = async () => {
   }
 };
 
+const checkAdminAccountID = async (userID) => {
+  try {
+    const queryResult = await db.collection('Admins').where("uid","==",userID).get()
+    const isAdminAccount = queryResult.empty ? false:true
+    return {
+      status: 200,
+      isAdmin: isAdminAccount,
+      message: `admin account checked for user ${userID}`
+    }
+  } catch (error) {
+    console.error('Error checking admin account ID:', error);
+    return {
+      status: 500,
+      message: 'admin account check FAILED',
+      error: error.message
+    };
+  }
+}
 
 
-export { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin, getSpotsForAdmin}
+
+export { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin, getSpotsForAdmin, checkAdminAccountID }

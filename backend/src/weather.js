@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const geoRef = require('../australian_postcodes.json');
+const geoRef = require('../postcodes.json');
 
 const weatherMap = {
     clear: 'Clear',
@@ -28,8 +28,8 @@ const getWeather = async (postcode) => {
                 message: `weather information is not available for ${postcode}`      
             }
         } else {
-            const { lat, long } = targetRecords[0]
-            const url = `http://www.7timer.info/bin/api.pl?lon=${long}&lat=${lat}&product=civillight&output=json`
+            const { Lat_precise, Long_precise } = targetRecords[0]
+            const url = `http://www.7timer.info/bin/api.pl?lon=${Long_precise}&lat=${Lat_precise}&product=civillight&output=json`
             const weatherInfo = await (await fetch(url, {
                 method: "GET",
                 headers: {"Content-Type": "application/json"},
