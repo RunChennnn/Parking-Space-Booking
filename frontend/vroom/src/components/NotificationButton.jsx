@@ -4,4 +4,4 @@ function NotificationButton () {
   return (<>Notification</>)
 }
 
-export default NotificationButton
+export default NotificationButton;
