@@ -32,7 +32,7 @@ function OwnedSpots () {
       setSpots([...spots])
     }
     loadingSpots().then(r => {})
-  }, [])
+  }, [spots])
   function toRegisterSpot () {
     navigate('/spots/new')
   }
