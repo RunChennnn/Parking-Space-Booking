@@ -22,7 +22,7 @@ const checkSpotAvalaibility = async (spotID, startTime, endTime) => {
   return available
 }
 
-//implement surging price
+// implement surging price
 const calculatePrice = async (spotID, startTime, endTime) => {
   const duration = (endTime - startTime) / 3600;
   const spot = await db.collection('Spots').doc(spotID).get();
@@ -34,24 +34,24 @@ const calculatePrice = async (spotID, startTime, endTime) => {
   if (surging) {
     const postcode = spot.data().postcode
     const street = spot.data().streetName
-    const spotsWithSamePostcode = await db.collection('Spots').where("postcode","==",postcode).get()
-    const spotsOnSameStreet = await db.collection('Spots').where("streetName","==",street).get()
+    const spotsWithSamePostcode = await db.collection('Spots').where('postcode', '==', postcode).get()
+    const spotsOnSameStreet = await db.collection('Spots').where('streetName', '==', street).get()
     const idChecklist = spotsOnSameStreet.docs.map(spot => spot.id)
     let surgingFactor = 0
     let countSpot = 0
     await Promise.all(spotsWithSamePostcode.docs.map(async (spot) => {
-       const isAvailable = await checkSpotAvalaibility(spot.id, startTime, endTime)
-       countSpot += 1
-       if (!isAvailable) {
+      const isAvailable = await checkSpotAvalaibility(spot.id, startTime, endTime)
+      countSpot += 1
+      if (!isAvailable) {
         // more expensive when more spots are occupied in that postcode area when booking
         surgingFactor += 0.5
-        if (idChecklist.includes(spot.id)){
+        if (idChecklist.includes(spot.id)) {
           // even more expensive when the spot is on the same street
           surgingFactor += 0.3
         }
-       }
+      }
     }));
-    surgedPrice = regularPrice * (1 + surgingFactor/countSpot)
+    surgedPrice = regularPrice * (1 + surgingFactor / countSpot)
   } else {
     surgedPrice = regularPrice
   }
@@ -62,9 +62,9 @@ const calculatePrice = async (spotID, startTime, endTime) => {
 
 const getSpotWithSamePostCode = async (spotID) => {
   const thisSpot = await db.collection('Spots').doc(spotID).get();
-  let spotList = []
-  const spotsWithSamePostcode = await db.collection('Spots').where("postcode","==",thisSpot.data().postcode).get()
-  spotsWithSamePostcode.forEach(spot=>{
+  const spotList = []
+  const spotsWithSamePostcode = await db.collection('Spots').where('postcode', '==', thisSpot.data().postcode).get()
+  spotsWithSamePostcode.forEach(spot => {
     if (spot.id.toString() !== spotID && spot.data().demandPricing === false) {
       spotList.push(spot)
     }
@@ -72,11 +72,11 @@ const getSpotWithSamePostCode = async (spotID) => {
   return spotList
 }
 
-//Note this is queried spot object, not spot id
+// Note this is queried spot object, not spot id
 const isInDemand = async (spot, startTime, endTime) => {
   let occupied = false;
   const postcode = spot.data().postcode
-  const spotsWithSamePostcode = await db.collection('Spots').where("postcode","==",postcode).get()
+  const spotsWithSamePostcode = await db.collection('Spots').where('postcode', '==', postcode).get()
   let countBookedSpot = 0
   let countSpot = 0
   await Promise.all(spotsWithSamePostcode.docs.map(async (s) => {
@@ -89,20 +89,20 @@ const isInDemand = async (spot, startTime, endTime) => {
       }
     }
   }));
-  const inDemand = ((countBookedSpot/countSpot) >= 0.5 && !occupied) ? true:false
+  const inDemand = !!(((countBookedSpot / countSpot) >= 0.5 && !occupied))
   return inDemand
 }
 
 const pushNotification = async (spotID, startTime, endTime) => {
   const checkList = await getSpotWithSamePostCode(spotID)
   await Promise.all(checkList.map(async (spot) => {
-    if(await isInDemand(spot, startTime, endTime)){
+    if (await isInDemand(spot, startTime, endTime)) {
       const noteData = {
         spotID: spot.id,
         postcode: spot.data().postcode,
         owner: spot.data().owner,
         time: Math.floor(Date.now() / 1000),
-        text: `Your spot is in high demand. Turn on surging price!`,
+        text: 'Your spot is in high demand. Turn on surging price!',
         viewed: false
       }
       const newNotification = await db.collection('Notifications').add(noteData)
@@ -110,7 +110,6 @@ const pushNotification = async (spotID, startTime, endTime) => {
     }
   }))
 }
-
 
 const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber, cardName, cardCvv) => {
   try {
@@ -131,7 +130,7 @@ const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber,
     } else {
       const ownerID = (await db.collection('Spots').doc(spotID).get()).data().owner
       const currentTime = Math.floor(Date.now() / 1000)
-      //if demandPricing is set as false, surgedPrice will just be the same as regualrPrice
+      // if demandPricing is set as false, surgedPrice will just be the same as regualrPrice
       const [regularPrice, surgedPrice] = await calculatePrice(spotID, startTime, endTime)
       const data = {
         spotID,
@@ -240,7 +239,7 @@ const getBooking = async (bookingID) => {
         startTime: data.startTime,
         endTime: data.endTime,
         price: data.price,
-        refundAvailable: refundAvailable, // 0 for not available, 1 for 100%, 0.5 for 50%
+        refundAvailable, // 0 for not available, 1 for 100%, 0.5 for 50%
         rating: data.rating,
         review: data.review,
         message: `booking ${bookingID} retrieved successfully`

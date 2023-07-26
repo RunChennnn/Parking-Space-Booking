@@ -3,8 +3,8 @@ import { auth, db } from './firebaseConfig.js'
 const createNewSpot = async (data) => {
   try {
     const ownerEmail = (await auth.getUser(data.owner)).email
-    if (data.postcode) {data.postcode = parseInt(data.postcode)} 
-    data = {ownerEmail:ownerEmail, ...data }
+    if (data.postcode) { data.postcode = parseInt(data.postcode) }
+    data = { ownerEmail, ...data }
     const newSpot = await db.collection('Spots').add(data)
     const sid = newSpot.id
 
