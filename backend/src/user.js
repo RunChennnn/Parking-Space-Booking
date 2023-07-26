@@ -113,7 +113,7 @@ const patchUser = async (userId, data) => {
       const newEmail = data.email;
       await auth.updateUser(userId, { email: newEmail });
       const ownedSpots = await db.collection('Spots').where('owner', '==', userId).get()
-      ownedSpots.forEach( async spot => await db.collection('Spots').doc(spot.id).update({ownerEmail:newEmail}))
+      ownedSpots.forEach(async spot => await db.collection('Spots').doc(spot.id).update({ ownerEmail: newEmail }))
     }
     console.log(`User ${userId} infomation updated in database`);
     delete usersEmail[userId]

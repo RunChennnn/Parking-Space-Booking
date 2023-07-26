@@ -1,9 +1,9 @@
 const isAuthorized = () => {
-    return true;
+  return true;
 }
 
 const isAdmin = () => {
-    return true
+  return true
 }
 
 export { isAuthorized, isAdmin }
