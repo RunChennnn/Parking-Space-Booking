@@ -69,6 +69,9 @@ function Login () {
       } else if (error.message === 'Firebase: Error (auth/missing-password).') {
         setShowError(true)
         setErrorText('Please enter a password and try again.');
+      } else if (error.message === 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).') {
+        setShowError(true)
+        setErrorText('Too many failed login attempts. Please try again later.');
       } else {
         console.log(`Unknown error: ${error.message}`);
       }
