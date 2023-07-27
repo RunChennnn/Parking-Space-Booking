@@ -1,12 +1,12 @@
 import React from 'react'
 import NavigationBar from '../components/NavigationBar'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
 import RentCard from '../components/RentCard';
 
 function RentSpot () {
   const params = useParams();
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [description, setDescription] = React.useState('')
   const [address, setAddress] = React.useState('')
@@ -15,6 +15,8 @@ function RentSpot () {
   const [evCharging, setEvCharging] = React.useState(false)
   const [disabledAccess, setDisabledAccess] = React.useState(false)
   const [basePrice, setBasePrice] = React.useState(0)
+
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
   const rentCardReq = {
     userID: localStorage.getItem('vroom-id'),

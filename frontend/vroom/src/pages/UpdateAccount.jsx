@@ -14,6 +14,8 @@ function UpdateAccount () {
   const [showUpdatePopup, setShowUpdatePopup] = React.useState(false);
   const [showDeletePopup, setShowDeletePopup] = React.useState(false);
 
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
+
   const instructionStyle = {
     marginTop: '30px',
     marginLeft: 'calc(25vw - 30px)',

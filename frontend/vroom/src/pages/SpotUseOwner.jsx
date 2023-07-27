@@ -1,6 +1,6 @@
 import React from 'react'
 import NavigationBar from '../components/NavigationBar'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
 import dayjs from 'dayjs';
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
@@ -8,6 +8,10 @@ import ReviewBoxOwner from '../components/ReviewBoxOwner';
 
 function SpotUseOwner () {
   const params = useParams();
+
+  const navigate = useNavigate()
+
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
   const [address, setAddress] = React.useState('')
   const [startTime, setStartTime] = React.useState('')

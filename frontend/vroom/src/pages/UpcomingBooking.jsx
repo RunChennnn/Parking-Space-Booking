@@ -19,6 +19,8 @@ function UpcomingBooking () {
   const params = useParams()
   const navigate = useNavigate()
 
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
+
   // spot address
   const [address, setAddress] = React.useState('')
   // renting price
