@@ -26,7 +26,7 @@ function AllUsers () {
         const user = await makeRequest('GET', `user/${id}/basic`);
         const props = {
           email: user.email,
-          id: id,
+          id,
           doView: () => navigate(`/account/${id}/update`)
         }
         return UserStub(props);
