@@ -13,6 +13,7 @@ function UpdateAccount () {
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [showUpdatePopup, setShowUpdatePopup] = React.useState(false);
   const [showDeletePopup, setShowDeletePopup] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
@@ -84,6 +85,7 @@ function UpdateAccount () {
       setEmail(response.email);
       setPassword('');
       setConfirmPassword('');
+      setLoading(false);
     }
 
     getData();
@@ -91,7 +93,7 @@ function UpdateAccount () {
 
   return (
     <>
-      <NavigationBar />
+      <NavigationBar loading={loading} />
       <Typography style={instructionStyle} align='center'>
         Fill in any fields you&apos;d like to change. If you leave any blank, they&apos;ll remain unchanged. You&apos;ll be prompted for your old password to make any changes.
       </Typography>

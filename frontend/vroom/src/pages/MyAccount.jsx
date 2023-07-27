@@ -10,6 +10,8 @@ import { adminIsLoggedIn } from '../utilities/admin';
 function MyAccount () {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = React.useState(true);
+
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
   const params = useParams();
@@ -58,6 +60,7 @@ function MyAccount () {
       setBookings(tmp.map((elem) => {
         return BookingStub(elem);
       }))
+      setLoading(false);
     }
     getData();
     getBookings();
@@ -73,7 +76,7 @@ function MyAccount () {
 
   return (
     <>
-      <NavigationBar />
+      <NavigationBar loading={loading} />
       <div style={{ height: '20px' }}></div>
       {!adminIsLoggedIn() && (
         <>
@@ -85,8 +88,8 @@ function MyAccount () {
         </>
       )}
       {adminIsLoggedIn() && (<Button id='view-history-button' variant="contained" style={adminButtonStyle} onClick={pressViewHistory}>View History</Button>)}
-      {bookings.length === 0 && (<Typography variant='h6' align='center'>No Upcoming Bookings</Typography>)}
-      {bookings.length > 0 && (<Typography variant='h3' align='center'>Upcoming Bookings</Typography>)}
+      {(bookings.length === 0 && !loading) && (<Typography variant='h6' align='center'>No Upcoming Bookings</Typography>)}
+      {(bookings.length > 0 || loading) && (<Typography variant='h3' align='center'>Upcoming Bookings</Typography>)}
       {bookings}
     </>
   )

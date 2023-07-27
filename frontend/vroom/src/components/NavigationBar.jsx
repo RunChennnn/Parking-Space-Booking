@@ -1,9 +1,9 @@
 import React from 'react'
-import { Button } from '@mui/material'
+import { Button, LinearProgress } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import { adminIsLoggedIn } from '../utilities/admin';
 
-function NavigationBar () {
+function NavigationBar (props) {
   const navigate = useNavigate();
 
   const height = '60px';
@@ -30,6 +30,11 @@ function NavigationBar () {
     margin: '12px',
     // width: '100px',
   };
+
+  const loadingStyle = {
+    margin: '-2px',
+    zIndex: 200,
+  }
 
   function pressManageParkingSpots () {
     if (localStorage.getItem('vroom-token')) {
@@ -73,6 +78,7 @@ function NavigationBar () {
           <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
         </div>
       )}
+      {props.loading && (<LinearProgress style={loadingStyle} />)}
     </>
   )
 }

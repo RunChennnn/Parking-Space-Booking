@@ -2,25 +2,20 @@ import React from 'react'
 import NavigationBar from '../components/NavigationBar'
 import { useNavigate, useParams } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
-import { Button, LinearProgress, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import BookingStub from '../components/BookingStub';
 import { adminIsLoggedIn } from '../utilities/admin';
 
 function BookingHistory () {
   const params = useParams();
   const navigate = useNavigate();
-  const [loaded, setLoaded] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [bookingArray, setBookingArray] = React.useState([])
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
   const spacerStyle = {
     height: '20px',
-  }
-
-  const progressStyle = {
-    marginTop: '-3px',
-    zIndex: 200,
   }
 
   const buttonStyle = {
@@ -31,9 +26,6 @@ function BookingHistory () {
 
   React.useEffect(() => {
     async function getData () {
-      // Get all booking IDs
-      // const response = adminIsLoggedIn() ? await makeRequest('GET', 'admin/upcoming', {}) : await makeRequest('GET', `user/${params.userID}`, {});
-      // const upcoming = adminIsLoggedIn() ? response.bookingIDs : response.upcoming;
       const initialResponse = adminIsLoggedIn() ? await makeRequest('GET', 'admin/history', {}) : await makeRequest('GET', `history/${params.userID}`);
       const bookingIDs = adminIsLoggedIn() ? initialResponse.bookingIDs : initialResponse.asOwner.concat(initialResponse.asRenter);
       console.log(bookingIDs);
@@ -55,10 +47,9 @@ function BookingHistory () {
       setBookingArray(bookings.map((elem) => {
         return BookingStub(elem);
       }))
-      setLoaded(true);
+      setLoading(false);
     }
     getData();
-    setLoaded(false);
   }, [])
 
   function pressViewUpcoming () {
@@ -67,13 +58,12 @@ function BookingHistory () {
 
   return (
     <>
-      <NavigationBar />
-      {!loaded && (<LinearProgress style={progressStyle} />)}
+      <NavigationBar loading={loading} />
       <div style={spacerStyle} />
       {adminIsLoggedIn() && (<Button id='view-upcoming-button' variant="contained" style={buttonStyle} onClick={pressViewUpcoming}>View Upcoming</Button>)}
       {/* {!loaded && (<Typography align='center' variant='h6'>Loading bookings...</Typography>)} */}
-      {loaded && (bookingArray.length > 0) && (<Typography align='center' variant='h3'>Booking History</Typography>)}
-      {loaded && (bookingArray.length === 0) && (<Typography align='center' variant='h6'>No previous bookings to show</Typography>)}
+      {!loading && (bookingArray.length > 0) && (<Typography align='center' variant='h3'>Booking History</Typography>)}
+      {!loading && (bookingArray.length === 0) && (<Typography align='center' variant='h6'>No previous bookings to show</Typography>)}
       {bookingArray}
     </>
   )

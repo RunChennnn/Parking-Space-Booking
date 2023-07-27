@@ -11,6 +11,7 @@ function Home () {
 
   const [search, setSearch] = React.useState('');
   const [recommended, setRecommended] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     async function getData () {
@@ -30,6 +31,7 @@ function Home () {
         tmp.push(SearchStub(prop.data));
       }
       setRecommended(tmp);
+      setLoading(false);
     }
 
     getData();
@@ -53,7 +55,7 @@ function Home () {
 
   return (
     <>
-      <NavigationBar />
+      <NavigationBar loading={loading} />
       <TextField id='search-input' variant='outlined' placeholder="Find a spot..." style={inputStyle} value={search} onChange={(e) => setSearch(e.target.value)} />
       <Button id='search-button' variant='contained' style={buttonStyle} onClick={doSearch}>Search</Button>
       {adminIsLoggedIn()
