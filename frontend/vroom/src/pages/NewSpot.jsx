@@ -10,6 +10,8 @@ function NewSpot () {
 
   const navigate = useNavigate()
 
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
+
   const [description, setDescription] = React.useState('');
   const [streetNumber, setStreetNumber] = React.useState('')
   const [streetName, setStreetName] = React.useState('')

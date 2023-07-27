@@ -12,6 +12,8 @@ function BookingHistory () {
   const [loaded, setLoaded] = React.useState(false);
   const [bookingArray, setBookingArray] = React.useState([])
 
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
+
   const spacerStyle = {
     height: '20px',
   }

@@ -15,6 +15,8 @@ function OwnedSpots () {
 
   const navigate = useNavigate()
 
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
+
   const buttonStyle = {
     margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
     width: '200px'

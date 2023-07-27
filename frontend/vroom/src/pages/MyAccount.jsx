@@ -10,6 +10,8 @@ import { adminIsLoggedIn } from '../utilities/admin';
 function MyAccount () {
   const navigate = useNavigate();
 
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
+
   const params = useParams();
 
   const [email, setEmail] = React.useState('');
