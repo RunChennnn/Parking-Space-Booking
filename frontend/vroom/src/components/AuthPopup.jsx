@@ -1,10 +1,11 @@
 import React from 'react';
-import { Alert, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@mui/material';
+import { Alert, Button, CircularProgress, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@mui/material';
 import makeRequest from '../utilities/makeRequest';
 
 function AuthPopup (props) {
   const [password, setPassword] = React.useState('');
   const [showError, setShowError] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const textFieldStyle = {
     width: '100%',
@@ -19,13 +20,16 @@ function AuthPopup (props) {
   };
 
   async function onConfirm () {
+    setLoading(true);
+    setShowError(false);
     const preresponse = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}/basic`, {});
     const response = await makeRequest('POST', `auth/${localStorage.getItem('vroom-id')}`, { email: preresponse.email, password });
     if (!response.error) {
-      props.onConfirm();
+      await props.onConfirm();
     } else {
       setShowError(true);
     }
+    setLoading(false);
   }
 
   function onBack () {
@@ -48,6 +52,7 @@ function AuthPopup (props) {
         </DialogContent>
         {showError && (<Alert severity="error" style={errorStyle}>Incorrect password, please try again.</Alert>)}
         <DialogActions>
+          {loading && (<CircularProgress style={{ marginRight: '10px' }} />)}
           <Button id='auth-back-button' variant="outlined" onClick={onBack}>Back</Button>
           <Button id='auth-confirm-button' variant="contained" onClick={onConfirm}>Confirm</Button>
         </DialogActions>
