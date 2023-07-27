@@ -18,10 +18,10 @@ import RentSpot from './pages/RentSpot';
 import BookingHistory from './pages/BookingHistory';
 
 function App () {
-  window.onbeforeunload = () => {
-    // Clear local storage (remove tokens etc) when window closed
-    localStorage.clear();
-  }
+  // window.onbeforeunload = () => {
+  //   // Clear local storage (remove tokens etc) when window closed
+  //   localStorage.clear();
+  // }
 
   return (
     <>

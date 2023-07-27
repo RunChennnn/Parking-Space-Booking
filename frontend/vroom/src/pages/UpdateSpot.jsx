@@ -25,7 +25,7 @@ function UpdateSpot () {
   const [cardName, setCardName] = React.useState('');
   const [cardCVV, setCardCVV] = React.useState('');
 
-  // variale for radio group
+  // variale for checkbox group
   const [demandPricing, setDemandPricing] = React.useState(false)
   const [disabledAccess, setDisabledAccess] = React.useState(false)
   const [evCharging, setEvCharging] = React.useState(false)
@@ -47,7 +47,10 @@ function UpdateSpot () {
     clearance,
     cardNumber,
     cardName,
-    cardCVV
+    cardCVV,
+    demandPricing,
+    disabledAccess,
+    evCharging
   }
 
   const cardSet = {
