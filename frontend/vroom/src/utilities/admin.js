@@ -18,8 +18,11 @@ async function doCheckLogin () {
 }
 
 function adminIsLoggedIn () {
-  // console.log(`Returning ${(localStorage.getItem('vroom-admin') === 'true')} (${localStorage.getItem('vroom-admin')})`)
   return (localStorage.getItem('vroom-admin') === 'true');
 }
 
-export { adminIsLoggedIn, doCheckLogin, doLogin, doLogout }
+function userIsLoggedIn () {
+  return (localStorage.getItem('vroom-id') !== null)
+}
+
+export { adminIsLoggedIn, doCheckLogin, doLogin, doLogout, userIsLoggedIn }

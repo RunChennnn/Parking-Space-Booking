@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, LinearProgress } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
-import { adminIsLoggedIn } from '../utilities/admin';
+import { adminIsLoggedIn, userIsLoggedIn, doLogout } from '../utilities/admin';
 
 function NavigationBar (props) {
   const navigate = useNavigate();
@@ -57,8 +57,11 @@ function NavigationBar (props) {
   }
 
   function pressLogout () {
-    localStorage.removeItem('vroom-token');
-    localStorage.removeItem('vroom-id');
+    doLogout();
+    navigate('/login');
+  }
+
+  function pressLogin () {
     navigate('/login');
   }
 
@@ -79,7 +82,8 @@ function NavigationBar (props) {
           <Button id='nav-home-button' variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
           <Button id='nav-manage-spots-button' variant="contained" style={buttonStyle} onClick={pressManageParkingSpots}>Manage Parking Spots</Button>
           <Button id='nav-my-account-button' variant="contained" style={buttonStyle} onClick={pressMyAccount}>My Account</Button>
-          <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
+          {userIsLoggedIn() && (<Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>)}
+          {!userIsLoggedIn() && (<Button id='nav-logout-button' variant="contained" color="success" style={buttonStyle} onClick={pressLogin}>Login</Button>)}
         </div>
       )}
       {props.loading && (<LinearProgress style={loadingStyle} />)}
