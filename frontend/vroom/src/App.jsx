@@ -16,13 +16,9 @@ import SpotSearch from './pages/SpotSearch';
 import SpotDetails from './pages/SpotDetails';
 import RentSpot from './pages/RentSpot';
 import BookingHistory from './pages/BookingHistory';
+import AllUsers from './pages/AllUsers';
 
 function App () {
-  // window.onbeforeunload = () => {
-  //   // Clear local storage (remove tokens etc) when window closed
-  //   localStorage.clear();
-  // }
-
   return (
     <>
       <BrowserRouter>
@@ -43,6 +39,7 @@ function App () {
           <Route path="spot/:spotID" element={<SpotDetails />} />
           <Route path="spot/:spotID/rent" element={<RentSpot />} />
           <Route path="history/:userID" element={<BookingHistory />} />
+          <Route path="users" element={<AllUsers />} />
           {/* Add more Routes as needed */}
           <Route path = "*" element={<>Page not found</>} /> {/* Catch all */}
         </Routes>
