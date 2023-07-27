@@ -2,8 +2,9 @@ import React from 'react'
 import NavigationBar from '../components/NavigationBar'
 import { useNavigate, useParams } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
-import { Typography } from '@mui/material';
+import { Button, LinearProgress, Typography } from '@mui/material';
 import BookingStub from '../components/BookingStub';
+import { adminIsLoggedIn } from '../utilities/admin';
 
 function BookingHistory () {
   const params = useParams();
@@ -15,20 +16,26 @@ function BookingHistory () {
     height: '20px',
   }
 
+  const progressStyle = {
+    marginTop: '-3px',
+    zIndex: 200,
+  }
+
+  const buttonStyle = {
+    margin: '12px',
+    width: '200px',
+    marginLeft: 'calc(50% - 100px)',
+  };
+
   React.useEffect(() => {
     async function getData () {
       // Get all booking IDs
-      const initialResponse = await makeRequest('GET', `history/${params.userID}`);
-      const bookingIDs = initialResponse.asOwner.concat(initialResponse.asRenter);
+      // const response = adminIsLoggedIn() ? await makeRequest('GET', 'admin/upcoming', {}) : await makeRequest('GET', `user/${params.userID}`, {});
+      // const upcoming = adminIsLoggedIn() ? response.bookingIDs : response.upcoming;
+      const initialResponse = adminIsLoggedIn() ? await makeRequest('GET', 'admin/history', {}) : await makeRequest('GET', `history/${params.userID}`);
+      const bookingIDs = adminIsLoggedIn() ? initialResponse.bookingIDs : initialResponse.asOwner.concat(initialResponse.asRenter);
       console.log(bookingIDs);
 
-      // Get details of all bookings
-      // const bookings = [];
-      // for (const id of bookingIDs) {
-      //   const booking = await makeRequest('GET', `booking/${id}`);
-      //   const spot = await makeRequest('')
-      //   bookings.push(response);
-      // }
       const bookings = await Promise.all(bookingIDs.map(async (id) => {
         const booking = await makeRequest('GET', `booking/${id}`);
         const spot = await makeRequest('GET', `spot/${booking.spotID}`);
@@ -52,11 +59,17 @@ function BookingHistory () {
     setLoaded(false);
   }, [])
 
+  function pressViewUpcoming () {
+    navigate(`/account/${params.userID}`);
+  }
+
   return (
     <>
       <NavigationBar />
+      {!loaded && (<LinearProgress style={progressStyle} />)}
       <div style={spacerStyle} />
-      {!loaded && (<Typography align='center' variant='h6'>Loading bookings...</Typography>)}
+      {adminIsLoggedIn() && (<Button id='view-upcoming-button' variant="contained" style={buttonStyle} onClick={pressViewUpcoming}>View Upcoming</Button>)}
+      {/* {!loaded && (<Typography align='center' variant='h6'>Loading bookings...</Typography>)} */}
       {loaded && (bookingArray.length > 0) && (<Typography align='center' variant='h3'>Booking History</Typography>)}
       {loaded && (bookingArray.length === 0) && (<Typography align='center' variant='h6'>No previous bookings to show</Typography>)}
       {bookingArray}

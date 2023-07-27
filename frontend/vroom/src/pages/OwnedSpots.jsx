@@ -5,9 +5,10 @@ import NavigationBar from '../components/NavigationBar';
 // import { adminIsLoggedIn } from '../utilities/admin';
 import OwnedList from '../components/OwnedList';
 import { Button } from '@mui/material';
+import { adminIsLoggedIn } from '../utilities/admin';
 
 function OwnedSpots () {
-  const [spotsID, setSpotsID] = React.useState([])
+  // const [spotsID, setSpotsID] = React.useState([])
   const [spots, setSpots] = React.useState([])
 
   // const params = useParams()
@@ -21,18 +22,20 @@ function OwnedSpots () {
 
   React.useEffect(() => {
     async function loadingSpots () {
-      const idRes = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
-      setSpotsID(idRes.spots)
-      console.log(spotsID)
-      const spots = await Promise.all(spotsID.map(async (spotID) => {
+      const idRes = adminIsLoggedIn() ? await makeRequest('GET', 'admin/spots', {}) : await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}`, {})
+      const spotsID = adminIsLoggedIn() ? idRes.spotIDs : idRes.spots;
+      console.log(idRes)
+      // setSpotsID(idRes.spots)
+      const tmp = await Promise.all(spotsID.map(async (spotID) => {
         const spot = await makeRequest('GET', `spot/${spotID}`, {})
         spot.data.demandPricing = `${spot.data.demandPricing}`
         return spot
       }))
-      setSpots([...spots])
+      console.log(tmp)
+      setSpots(tmp)
     }
     loadingSpots().then(r => {})
-  }, [spots])
+  }, [])
   function toRegisterSpot () {
     navigate('/spots/new')
   }

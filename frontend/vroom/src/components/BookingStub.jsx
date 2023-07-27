@@ -28,6 +28,7 @@ function BookingStub (props) {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
+    year: 'numeric',
   }
   const start = new Date(props.startTime * 1000).toLocaleDateString('en-UK', options);
   const end = new Date(props.endTime * 1000).toLocaleDateString('en-UK', options);
