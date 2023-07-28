@@ -11,7 +11,7 @@ const weatherMap = {
   lightrain: 'Showers',
   oshower: 'Showers',
   ishower: 'Showers',
-  lightsnow: 'Show Showers',
+  lightsnow: 'Snow Showers',
   rain: 'Rain',
   snow: 'Snow',
   rainsnow: 'Snow',
