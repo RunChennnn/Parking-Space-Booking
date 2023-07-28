@@ -77,13 +77,18 @@ function NavigationBar (props) {
           <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
         </div>
       )}
-      {!adminIsLoggedIn() && (
+      {!adminIsLoggedIn() && userIsLoggedIn() && (
         <div style={barStyle}>
           <Button id='nav-home-button' variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
           <Button id='nav-manage-spots-button' variant="contained" style={buttonStyle} onClick={pressManageParkingSpots}>Manage Parking Spots</Button>
           <Button id='nav-my-account-button' variant="contained" style={buttonStyle} onClick={pressMyAccount}>My Account</Button>
-          {userIsLoggedIn() && (<Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>)}
-          {!userIsLoggedIn() && (<Button id='nav-logout-button' variant="contained" color="success" style={buttonStyle} onClick={pressLogin}>Login</Button>)}
+          <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
+        </div>
+      )}
+      {!userIsLoggedIn() && (
+        <div style={barStyle}>
+          <Button id='nav-home-button' variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
+          <Button id='nav-logout-button' variant="contained" color="success" style={buttonStyle} onClick={pressLogin}>Login</Button>
         </div>
       )}
       {props.loading && (<LinearProgress style={loadingStyle} />)}
