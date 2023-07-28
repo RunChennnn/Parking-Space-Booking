@@ -6,6 +6,7 @@ const getUser = async (userId) => {
     // auth.getUser() is a different thing!
     const userRecord = await auth.getUser(userId)
     const email = userRecord.email
+    const displayName = userRecord.displayName
     let upcoming = []
     let history = []
     const spots = []
@@ -36,6 +37,7 @@ const getUser = async (userId) => {
       status: 200,
       message: 'User information retrieval successfully',
       email,
+      displayName,
       upcoming,
       history,
       spots
@@ -114,6 +116,10 @@ const patchUser = async (userId, data) => {
       await auth.updateUser(userId, { email: newEmail });
       const ownedSpots = await db.collection('Spots').where('owner', '==', userId).get()
       ownedSpots.forEach(async spot => await db.collection('Spots').doc(spot.id).update({ ownerEmail: newEmail }))
+    }
+    if (data.displayName) {
+      const newDisplayName = data.displayName;
+      await auth.updateUser(userId, { displayName: newDisplayName });
     }
     console.log(`User ${userId} infomation updated in database`);
     delete usersEmail[userId]
