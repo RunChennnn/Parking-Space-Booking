@@ -65,7 +65,7 @@ const getSpotWithSamePostCode = async (spotID) => {
   const spotList = []
   const spotsWithSamePostcode = await db.collection('Spots').where('postcode', '==', thisSpot.data().postcode).get()
   spotsWithSamePostcode.forEach(spot => {
-    if (spot.id.toString() !== spotID && spot.data().demandPricing === false) {
+    if (spot.id.toString() !== spotID) {
       spotList.push(spot)
     }
   })
@@ -102,7 +102,7 @@ const pushNotification = async (spotID, startTime, endTime) => {
         postcode: spot.data().postcode,
         owner: spot.data().owner,
         time: Math.floor(Date.now() / 1000),
-        text: 'Your spot is in high demand. Turn on surging price!',
+        text: `Spots in the postcode ${postcode} are in high demand. Consider raising your price or turning on surge pricing, if you haven't already.`,
         viewed: false
       }
       const newNotification = await db.collection('Notifications').add(noteData)
