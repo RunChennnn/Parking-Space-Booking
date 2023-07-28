@@ -587,6 +587,40 @@ app.get('/admin/:userID/check', async (req, res) => {
   }
 })
 
+// Getters and setters for images
+
+app.get('/user/:userID/image', async (req, res) => {
+  const userID = req.params.userID;
+  const response = {
+    image: 'aehurouogfenceo' // it's just a string
+  }
+  return res.status(200).json(response);
+})
+
+app.post('/user/:userID/image/set', async (req, res) => {
+  const userID = req.params.userID;
+  const requestLooksLikeThis = {
+    image: 'aehurouogfenceo' // it's just a string
+  }
+  return res.status(200).json({ status: 'whatever' });
+})
+
+app.get('/spot/:spotID/image', async (req, res) => {
+  const spotID = req.params.spotID;
+  const response = {
+    image: 'aehurouogfenceo' // it's just a string
+  }
+  return res.status(200).json(response);
+})
+
+app.post('/user/:spotID/image/set', async (req, res) => {
+  const spotID = req.params.spotID;
+  const requestLooksLikeThis = {
+    image: 'aehurouogfenceo' // it's just a string
+  }
+  return res.status(200).json({ status: 'whatever' });
+})
+
 const server = app.listen(port, () => {
   console.log(`Backend is now listening on port ${port}!`);
 });
