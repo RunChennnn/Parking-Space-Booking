@@ -9,6 +9,7 @@ function SpotSearch () {
   const urlParams = new URLSearchParams(window.location.search);
   const [search, setSearch] = React.useState(urlParams.get('search') ? urlParams.get('search') : '');
   const [recommended, setRecommended] = React.useState([])
+  const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
 
   function getParamString () {
@@ -25,6 +26,7 @@ function SpotSearch () {
 
   React.useEffect(() => {
     async function getData () {
+      setLoading(true);
       const request = {
         num: 10,
         alreadyReceived: [],
@@ -48,6 +50,7 @@ function SpotSearch () {
         tmp.push(SearchStub(prop.data));
       }
       setRecommended(tmp);
+      setLoading(false);
     }
 
     getData();
@@ -147,7 +150,7 @@ function SpotSearch () {
 
   return (
     <>
-      <NavigationBar />
+      <NavigationBar loading={loading} />
       <TextField id='search-input' variant='outlined' placeholder="Find a spot..." style={inputStyle} value={search} onChange={(e) => { setSearch(e.target.value) }} />
       <div style={filterBarStyle}>
         <div>

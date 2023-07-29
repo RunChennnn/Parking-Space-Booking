@@ -65,6 +65,10 @@ function NavigationBar (props) {
     navigate('/login');
   }
 
+  function pressNotifications () {
+    navigate(`/account/${localStorage.getItem('vroom-id')}/notifications`)
+  }
+
   return (
     <>
       <div style={spacerStyle}></div>
@@ -82,6 +86,7 @@ function NavigationBar (props) {
           <Button id='nav-home-button' variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
           <Button id='nav-manage-spots-button' variant="contained" style={buttonStyle} onClick={pressManageParkingSpots}>Manage Parking Spots</Button>
           <Button id='nav-my-account-button' variant="contained" style={buttonStyle} onClick={pressMyAccount}>My Account</Button>
+          <Button id='nav-notifications-button' variant="contained" style={buttonStyle} onClick={pressNotifications}>Notifications</Button>
           <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
         </div>
       )}
