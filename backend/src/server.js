@@ -10,6 +10,7 @@ import { confirmNewBooking, getPriceForBooking, getBooking, updateReview, delete
 import { getAdminUpcomingBooking, getAdminHistoryBooking, getUsersForAdmin, getSpotsForAdmin, checkAdminAccountID } from './admin.js'
 import { getNotificationsForUser, getNotification, viewNotification } from './notification.js'
 import { getWeather } from './weather.js'
+import { setUserImage, getUserImage, setSpotImage, getSpotImage } from './image.js'
 
 const port = 3141
 const app = express();
@@ -591,34 +592,56 @@ app.get('/admin/:userID/check', async (req, res) => {
 
 app.get('/user/:userID/image', async (req, res) => {
   const userID = req.params.userID;
-  const response = {
-    image: 'aehurouogfenceo' // it's just a string
+  const response = await getUserImage(userID);
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json(response);
 })
 
 app.post('/user/:userID/image/set', async (req, res) => {
   const userID = req.params.userID;
-  const requestLooksLikeThis = {
-    image: 'aehurouogfenceo' // it's just a string
+  const { image } = req.body;
+  const response = await setUserImage(userID,image);
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 404) {
+    return res.status(404).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json({ status: 'whatever' });
 })
 
 app.get('/spot/:spotID/image', async (req, res) => {
   const spotID = req.params.spotID;
-  const response = {
-    image: 'aehurouogfenceo' // it's just a string
+  const response = await getSpotImage(spotID);
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json(response);
 })
 
-app.post('/user/:spotID/image/set', async (req, res) => {
+app.post('/spot/:spotID/image/set', async (req, res) => {
   const spotID = req.params.spotID;
-  const requestLooksLikeThis = {
-    image: 'aehurouogfenceo' // it's just a string
+  const { image } = req.body;
+  const response = await setSpotImage(spotID,image);
+  if (response.status === 200) {
+    return res.status(200).json(response);
+  } else if (response.status === 404) {
+    return res.status(404).json(response);
+  } else if (response.status === 500) {
+    return res.status(500).json(response);
+  } else {
+    return res.status(400).json({ error: 'other error' });
   }
-  return res.status(200).json({ status: 'whatever' });
 })
 
 const server = app.listen(port, () => {
