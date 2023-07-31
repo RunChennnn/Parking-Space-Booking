@@ -8,6 +8,7 @@ import makeRequest from '../utilities/makeRequest'
 function UpdateAccount () {
   const navigate = useNavigate();
   const params = useParams();
+  const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
@@ -66,11 +67,9 @@ function UpdateAccount () {
     if (password !== '' && password === confirmPassword) {
       request.password = password;
     }
-
-    console.log(request);
+    request.displayName = name;
 
     await makeRequest('PATCH', `user/${params.userID}/update`, request);
-    // console.log('Not implemented yet (not for sprint 1)');
     navigate(`/account/${params.userID}`)
   }
 
@@ -81,10 +80,12 @@ function UpdateAccount () {
 
   React.useEffect(() => {
     async function getData () {
-      const response = await makeRequest('GET', `user/${params.userID}/basic`, {});
+      const response = await makeRequest('GET', `user/${params.userID}`, {});
+      console.log(response);
       setEmail(response.email);
       setPassword('');
       setConfirmPassword('');
+      if (response.displayName) { setName(response.displayName) }
       setLoading(false);
     }
 
@@ -95,10 +96,11 @@ function UpdateAccount () {
     <>
       <NavigationBar loading={loading} />
       <Typography style={instructionStyle} align='center'>
-        Fill in any fields you&apos;d like to change. If you leave any blank, they&apos;ll remain unchanged. You&apos;ll be prompted for your old password to make any changes.
+        Fill in any fields you&apos;d like to change. If you leave the password section blank, it&apos;ll remain unchanged. You&apos;ll be prompted for your old password to make any changes.
       </Typography>
       <div style={formStyle}>
-        <TextField id='email-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='New Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
+        <TextField id='name-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='Username' placeholder="Jane Citizen" style={inputStyle} value={name} onChange={(e) => setName(e.target.value)}></TextField>
+        <TextField id='email-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
         <TextField id='password-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='New Password' type='password' style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)}></TextField>
         <TextField id='confirm-password-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='Confirm New Password' type='password' style={inputStyle} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}></TextField>
       </div>
