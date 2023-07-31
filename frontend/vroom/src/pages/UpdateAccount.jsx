@@ -18,6 +18,8 @@ function UpdateAccount () {
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
+  if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
+
   const instructionStyle = {
     marginTop: '30px',
     marginLeft: 'calc(25vw - 30px)',
