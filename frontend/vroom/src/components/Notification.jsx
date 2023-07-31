@@ -28,6 +28,11 @@ function Notification (props) {
     year: 'numeric',
   }
 
+  function doView () {
+    props.doView();
+    props.viewed = true;
+  }
+
   const date = new Date(props.timestamp * 1000).toLocaleDateString('en-UK', options);
 
   return (
@@ -37,7 +42,7 @@ function Notification (props) {
         <Typography variant='h6'>{props.text}</Typography>
         <Typography>{date}</Typography>
       </div>
-      <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>Mark as Read</Button>
+      {!props.viewed && <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={doView}>Mark as Read</Button>}
 
     </Card>
   )

@@ -21,15 +21,18 @@ function Notifications () {
       const response = await makeRequest('GET', `user/${localStorage.getItem('vroom-id')}/notifications`, {})
       // console.log(response);
 
-      const tmp = await Promise.all(response.ids.map(async (id) => {
+      const tmp = await Promise.all(response.ids.map(async (id, index) => {
         const notification = await makeRequest('GET', `notification/${id}`, {});
         console.log(notification);
         const props = {
           text: notification.text,
           timestamp: notification.time,
           id,
-          viewed: true,
-          doView: async () => { await makeRequest('POST', `notification/${id}/view`, {}); }
+          viewed: notification.viewed,
+          doView: async () => {
+            await makeRequest('POST', `notification/${id}/view`, {})
+            window.location.reload(false);
+          }
         }
         return Notification(props);
       }));
