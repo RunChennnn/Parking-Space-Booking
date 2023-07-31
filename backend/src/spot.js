@@ -56,6 +56,7 @@ const deleteSpot = async (spotId) => {
     const targetSpotRef = db.collection('Spots').doc(spotId)
     if ((await targetSpotRef.get()).exists) {
       await targetSpotRef.delete();
+      await db.collection('SpotImages').doc(spotId).delete();
       console.log(`Spot ${spotId} removed in the database`);
       return {
         status: 200,
