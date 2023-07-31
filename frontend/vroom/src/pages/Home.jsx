@@ -4,7 +4,7 @@ import { Button, TextField, Typography } from '@mui/material';
 import makeRequest from '../utilities/makeRequest';
 import SearchStub from '../components/SearchStub';
 import { useNavigate } from 'react-router-dom';
-import { adminIsLoggedIn } from '../utilities/admin';
+import { adminIsLoggedIn, userIsLoggedIn } from '../utilities/admin';
 
 function Home () {
   const navigate = useNavigate();
@@ -15,22 +15,21 @@ function Home () {
 
   React.useEffect(() => {
     async function getData () {
-      const request = {
-        num: 5,
-        alreadyReceived: [],
-      };
-      const response = await makeRequest('POST', `recommend/${localStorage.getItem('vroom-id')}`, request);
-
-      const tmp = []
-
-      // app.get('/spot/:spotId'
-      for (const id of response.ids) {
-        const prop = await makeRequest('GET', `spot/${id}`, {});
-        prop.data.id = id;
-        prop.data.doView = () => navigate(`/spot/${id}`);
-        tmp.push(SearchStub(prop.data));
+      if (!adminIsLoggedIn() && userIsLoggedIn()) {
+        const request = {
+          num: 5,
+          alreadyReceived: [],
+        };
+        const response = await makeRequest('POST', `recommend/${localStorage.getItem('vroom-id')}`, request);
+        const tmp = []
+        for (const id of response.ids) {
+          const prop = await makeRequest('GET', `spot/${id}`, {});
+          prop.data.id = id;
+          prop.data.doView = () => navigate(`/spot/${id}`);
+          tmp.push(SearchStub(prop.data));
+        }
+        setRecommended(tmp);
       }
-      setRecommended(tmp);
       setLoading(false);
     }
 
@@ -64,7 +63,7 @@ function Home () {
           )
         : (
         <>
-          <Typography align='center' variant='h2'>Recommended for you</Typography>
+          {userIsLoggedIn() && <Typography align='center' variant='h2'>Recommended for you</Typography>}
           {recommended}
         </>
           )}

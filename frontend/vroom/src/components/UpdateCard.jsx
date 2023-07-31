@@ -52,7 +52,7 @@ function UpdateCard (props) {
   return (
         <>
             <Card style={cardStyle}>
-                <div>{'New Spot'}</div>
+                <div>{'Update Spot'}</div>
                 <TextField fullWidth variant='outlined' size='small' label='Description' id='description-input'
                            placeholder='Description' style={inputStyle}
                            value={props.cardInfo.description} onChange={(e) => props.cardSet.setDescription(e.target.value)}></TextField>

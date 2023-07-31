@@ -17,6 +17,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { purple500 } from 'mui/source/styles/colors';
 import StarIcon from '@mui/icons-material/Star';
+import UpComingWeather from './UpComingWeather';
 
 function SpotCard (props) {
   const [expand, setExpand] = React.useState(false)
@@ -84,6 +85,8 @@ function SpotCard (props) {
                 <Typography paragraph>EV charging available: {props.cardInfo.evCharging ? 'Yes' : 'No'}</Typography>
                 <Typography paragraph>Disabled Access: {props.cardInfo.disabledAccess ? 'Yes' : 'No'}</Typography>
                 <Typography paragraph>Regular Price per hour: {formatPrice(props.cardInfo.basePrice)}</Typography>
+                <Typography paragraph>Upcoming Weather(The next 7 days): </Typography>
+                <UpComingWeather weathers={props.cardInfo.weathers}/>
                 <Typography paragraph>Average rate: {props.cardInfo.averRate}/5</Typography>
                 <Box sx={{
                   width: 600,
@@ -97,6 +100,9 @@ function SpotCard (props) {
                         precision={0.5}
                         emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit"/>}
                     />
+                    {props.cardInfo.averRate !== null && (
+                        <Box sx={{ ml: 1 }}>{rateLabels[props.cardInfo.averRate]}</Box>
+                    )}
                 </Box>
             </CardContent>
             <CardActions>
@@ -117,7 +123,6 @@ function SpotCard (props) {
                         {props.cardInfo.reviews.map((rev) =>
                             <>
                                <ListItem key={keyCount}>
-                                {console.log(rev)}
                                    <ListItemAvatar>
                                        <Avatar sx={{ bgcolor: purple500 }} aria-label="recipe">R</Avatar>
                                    </ListItemAvatar>

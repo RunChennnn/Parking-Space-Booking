@@ -17,6 +17,7 @@ import SpotDetails from './pages/SpotDetails';
 import RentSpot from './pages/RentSpot';
 import BookingHistory from './pages/BookingHistory';
 import AllUsers from './pages/AllUsers';
+import Notifications from './pages/Notifications';
 
 function App () {
   return (
@@ -29,6 +30,7 @@ function App () {
           <Route path="home" element={<Home />} />
           <Route path="account/:userID" element={<MyAccount />} />
           <Route path="account/:userID/update" element={<UpdateAccount />} />
+          <Route path="account/:userID/notifications" element={<Notifications />} />
           <Route path="spots/:userID" element={<OwnedSpots />} />
           <Route path="spots/new" element={<NewSpot />} />
           <Route path="spots/update/:spotID" element={<UpdateSpot />} />

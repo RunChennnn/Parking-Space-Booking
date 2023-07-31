@@ -22,6 +22,8 @@ function SpotDetails () {
   const [averRate, setAverRate] = React.useState(0)
   const [reviews, setReviews] = React.useState([])
 
+  const [weathers, setWeathers] = React.useState(null)
+
   const buttonStyle = {
     margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
     width: '100px'
@@ -37,7 +39,8 @@ function SpotDetails () {
     disabledAccess,
     basePrice,
     averRate,
-    reviews
+    reviews,
+    weathers
   }
 
   function toRentPage () {
@@ -51,6 +54,8 @@ function SpotDetails () {
   async function loadingSpotDetails () {
     const res = await makeRequest('GET', `spot/${params.spotID}`, {})
     const spot = res.data
+
+    await loadingUpcomingWeather(spot.postcode)
 
     setDescription(spot.description)
 
@@ -70,11 +75,16 @@ function SpotDetails () {
     const reviewsRes = await makeRequest('GET', `spot/${params.spotID}/reviews?num=10`, {})
     setReviews(reviewsRes.reviews)
   }
+  async function loadingUpcomingWeather (postcode) {
+    const weatherRes = await makeRequest('GET', `weather/${postcode}`, {})
+    console.log(weatherRes)
+    setWeathers(weatherRes)
+  }
 
   return (
     <>
       <NavigationBar />
-      <SpotCard cardInfo={cardInfo}/>
+      {weathers !== null && <SpotCard cardInfo={cardInfo}/>}
       <Button id='rent-button' variant="contained" style={buttonStyle} onClick={toRentPage}>Rent</Button>
     </>
   )
