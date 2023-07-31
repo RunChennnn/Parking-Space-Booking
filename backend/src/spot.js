@@ -83,7 +83,7 @@ const getSpot = async (spotId) => {
     const targetSpot = await db.collection('Spots').doc(spotId).get()
     if (targetSpot.exists) {
       const spotData = targetSpot.data();
-      console.log(`Spot ${spotId} infomation retrived from the database`, spotData);
+      console.log(`Spot ${spotId} infomation retrived from the database`);
       return {
         status: 200,
         message: 'Spot retrieved successfully',

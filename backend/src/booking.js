@@ -89,12 +89,13 @@ const isInDemand = async (spot, startTime, endTime) => {
       }
     }
   }));
-  const inDemand = !!(((countBookedSpot / countSpot) >= 0.5 && !occupied))
+  const inDemand = (countBookedSpot / countSpot) >= 0.5 && !occupied
   return inDemand
 }
 
 const pushNotification = async (spotID, startTime, endTime) => {
   const checkList = await getSpotWithSamePostCode(spotID)
+  const NotificationRef = db.collection('Notifications');
   await Promise.all(checkList.map(async (spot) => {
     if (await isInDemand(spot, startTime, endTime)) {
       const noteData = {
@@ -102,10 +103,10 @@ const pushNotification = async (spotID, startTime, endTime) => {
         postcode: spot.data().postcode,
         owner: spot.data().owner,
         time: Math.floor(Date.now() / 1000),
-        text: `Spots in the postcode ${postcode} are in high demand. Consider raising your price or turning on surge pricing, if you haven't already.`,
+        text: `Spots in the postcode ${spot.data().postcode} are in high demand. Consider raising your price or turning on surge pricing, if you haven't already.`,
         viewed: false
       }
-      const newNotification = await db.collection('Notifications').add(noteData)
+      const newNotification = await NotificationRef.add(noteData)
       console.log(`A new notification ${newNotification.id} has been added to the database`)
     }
   }))
