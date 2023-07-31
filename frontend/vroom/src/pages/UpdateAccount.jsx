@@ -80,11 +80,15 @@ function UpdateAccount () {
     navigate('/');
   }
 
+  let emailSet = false;
   React.useEffect(() => {
     async function getData () {
       const response = await makeRequest('GET', `user/${params.userID}`, {});
       console.log(response);
-      setEmail(response.email);
+      if (!emailSet) {
+        setEmail(response.email);
+        emailSet = true;
+      }
       setPassword('');
       setConfirmPassword('');
       if (response.displayName) { setName(response.displayName) }
