@@ -30,6 +30,8 @@ function UpcomingBooking () {
   const [startTime, setStartTime] = React.useState('')
   const [endTime, setEndTime] = React.useState('')
 
+  const [refundAvailable, setRefundAvailable] = React.useState(0)
+
   const [dialogVisible, setDialogVisible] = React.useState(false)
 
   const buttonStyle = {
@@ -52,7 +54,7 @@ function UpcomingBooking () {
     // console.log(spotRes)
 
     const spot = spotRes.data
-    console.log(spot)
+    // console.log(spot)
 
     const address = spot.streetNumber + ' ' + spot.streetName + ' ' + spot.suburb + ' ' + spot.postcode
     setAddress(address)
@@ -63,6 +65,7 @@ function UpcomingBooking () {
     setStartTime(startTime)
     setEndTime(endTime)
     setPrice(booking.price)
+    setRefundAvailable(booking.refundAvailable)
   }
 
   React.useEffect(() => {
@@ -115,7 +118,7 @@ function UpcomingBooking () {
                 <DialogTitle id="alert-dialog-title">{'Cancel booking confirmation'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Make sure you wanna to cancel this booking
+                        The refund is {refundAvailable * price}, Make sure you wanna to cancel this booking
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
