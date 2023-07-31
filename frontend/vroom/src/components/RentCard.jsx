@@ -31,7 +31,8 @@ function RentCard (props) {
   const [cardName, setCardName] = React.useState('')
   const [cardCvv, setCardCvv] = React.useState('')
 
-  const [price, setPrice] = React.useState(0)
+  const [regularPrice, setRegularPrice] = React.useState(0)
+  const [surgedPrice, setSurgedPrice] = React.useState(0)
 
   const dialogReq = {
     userID: localStorage.getItem('vroom-id'),
@@ -102,7 +103,8 @@ function RentCard (props) {
     await makeRequest('POST', `book/${props.rentReq.spotID}/price`, timeReq).then((res) => {
       console.log(res)
       if (res.status === 200) {
-        setPrice(res.price);
+        setRegularPrice(res.regularPrice);
+        setSurgedPrice(res.surgedPrice);
         setOpen(true);
         setError(false);
       } else if (res.status === 409) {
@@ -161,7 +163,7 @@ function RentCard (props) {
                 {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
                 <Button id='go-to-confirm-button' variant="contained" style={buttonStyle} align="center" onClick={confirmRenting}>Go to Confirmation</Button>
             </Card>
-            <ConfirmBookingDialog confirmReq={dialogReq} price={price} open={open} setOpen={setOpen} spotID={props.rentReq.spotID}/>
+            {open && <ConfirmBookingDialog id='go-to-confirm-button' confirmReq={dialogReq} surgedPrice={surgedPrice} regularPrice={regularPrice} setOpen={setOpen} open={open} spotID={props.rentReq.spotID}/>}
         </>
   )
 }

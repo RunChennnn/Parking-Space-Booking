@@ -22,7 +22,7 @@ function BookingStub (props) {
 
   const buttonStyle = {
     margin: 'auto',
-    width: '100px',
+    width: '150px',
     height: '36.5px',
   };
   const spot = props.spot.data;
@@ -52,7 +52,7 @@ function BookingStub (props) {
         <Typography variant='h6'>{address} {isOwner() && '(as owner)'}</Typography>
         <Typography>{date}</Typography>
       </div>
-      <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>View</Button>
+      <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>View Booking</Button>
 
     </Card>
   )

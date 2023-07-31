@@ -54,7 +54,6 @@ function OwnedList (props) {
                         {(rowsPerPage > 0
                           ? props.spots.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           : props.spots).map((spot) =>
-                            <>
                                 <TableRow
                                     key={spot.id}
                                     sx={{ '&:last-child td, &:last-child `qth': { border: 0 } }}
@@ -72,7 +71,6 @@ function OwnedList (props) {
                                                 }}>Edit</Button>
                                     </TableCell>
                                 </TableRow>
-                            </>
                         )}
                     </TableBody>
                     <TableFooter>
