@@ -21,22 +21,7 @@ function UpComingWeather (props) {
     Thunderstorm: thunderstorm
   }
 
-  const indexOfTemp = (tmp) => {
-    return props.weathers.summary.indexOf(tmp)
-  }
-
-  const loadLowTemp = (tmp) => {
-    return props.weathers.low[indexOfTemp(tmp)]
-  }
-
-  const loadHighTemp = (tmp) => {
-    return props.weathers.high[indexOfTemp(tmp)]
-  }
-
-  const loadUpcomingDates = (tmp) => {
-    const idx = indexOfTemp(tmp)
-    return dayjs().add(idx, 'day').format('MMM D, YYYY')
-  }
+  const weather = props.weathers
 
   return (
         <>
@@ -50,14 +35,14 @@ function UpComingWeather (props) {
             borderRadius: 2.5,
             margin: '0 0 50px 0 '
           }}>
-            {props.weathers.summary.map((tmp) =>
-                <ImageListItem key={tmp} sx={{ height: 80 }}>
-                  <img src={weatherIcons[tmp]} />
+            {props.weathers.summary.map((_, index) =>
+                <ImageListItem key={`weather-${index}`} sx={{ height: 80 }}>
+                  <img src={weatherIcons[weather.summary[index]]} />
                   <ImageListItemBar
-                    title={`${loadLowTemp(tmp)}°C/${loadHighTemp(tmp)}°C`}
-                    subtitle={loadUpcomingDates(tmp)}
-                    position="below"
-                    align="center"
+                      title={`${weather.low[index]}°C/${weather.high[index]}°C`}
+                      subtitle={dayjs().add(index, 'day').format('MMM D, YYYY')}
+                      position="below"
+                      align="center"
                   />
                 </ImageListItem>
             )}

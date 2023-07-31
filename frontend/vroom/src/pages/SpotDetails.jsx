@@ -22,7 +22,7 @@ function SpotDetails () {
   const [averRate, setAverRate] = React.useState(0)
   const [reviews, setReviews] = React.useState([])
 
-  const [weathers, setWeathers] = React.useState([])
+  const [weathers, setWeathers] = React.useState(null)
 
   const buttonStyle = {
     margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
@@ -84,7 +84,7 @@ function SpotDetails () {
   return (
     <>
       <NavigationBar />
-      <SpotCard cardInfo={cardInfo}/>
+      {weathers !== null && <SpotCard cardInfo={cardInfo}/>}
       <Button id='rent-button' variant="contained" style={buttonStyle} onClick={toRentPage}>Rent</Button>
     </>
   )
