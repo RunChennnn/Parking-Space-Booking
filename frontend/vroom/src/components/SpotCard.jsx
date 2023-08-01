@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import {
   Avatar, Box,
@@ -22,9 +21,6 @@ import UpComingWeather from './UpComingWeather';
 
 function SpotCard (props) {
   const [expand, setExpand] = React.useState(false)
-  const [image, setImage] = React.useState(props.image)
-  const [name, setName] = React.useState(props.name);
-  const [email, setEmail] = React.useState('')
 
   const rateLabels = {
     0.5: 'Useless',

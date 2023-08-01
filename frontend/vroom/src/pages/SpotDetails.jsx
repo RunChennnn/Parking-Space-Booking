@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import NavigationBar from '../components/NavigationBar'
 import { useParams, useNavigate } from 'react-router-dom'
