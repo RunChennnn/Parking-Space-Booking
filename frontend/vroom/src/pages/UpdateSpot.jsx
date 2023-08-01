@@ -121,31 +121,62 @@ function UpdateSpot () {
     // console.log(res)
   }, [])
 
-  async function confirmUpdate () {
-    if (isNaN(basePrice)) {
-      setErrorMessage('Please input a valid base price. A valid base price should be digit')
+  function validate () {
+    if (streetNumber !== '' && isNaN(streetNumber)) {
+      setErrorMessage('Please input a valid street number, or omit it.')
       setError(true)
-      return;
+      return false;
+    }
+    if (streetName === '') {
+      setErrorMessage('Please input a street name.')
+      setError(true)
+      return false;
+    }
+    if (suburb === '') {
+      setErrorMessage('Please input a suburb.')
+      setError(true)
+      return false;
+    }
+    if (`${postcode}`.length !== 4 || isNaN(postcode)) {
+      setErrorMessage('Please input a valid 4-digit Australian postcode.')
+      setError(true)
+      return false;
+    }
+    if (largestVehicle === '') {
+      setErrorMessage('Please select the largest vehicle type that can fit in your spot.')
+      setError(true)
+      return false;
+    }
+    if (isNaN(basePrice)) {
+      setErrorMessage('Please input a valid price.')
+      setError(true)
+      return false;
     }
     if (isNaN(clearance)) {
-      setErrorMessage('Please input a valid clearance. A valid clearance should be digit')
+      setErrorMessage('Please input a valid clearance height.')
       setError(true)
+      return false
     }
     if (cardNumber.length !== 16 || isNaN(cardNumber)) {
       setErrorMessage('Please input a valid card number. A valid card number should contain 16 digits.');
       setError(true);
-      return;
+      return false;
     }
     if (cardName.length === 0) {
       setErrorMessage('Please enter a name for the card.');
       setError(true);
-      return;
+      return false;
     }
     if (cardCVV.length !== 3 || isNaN(cardCVV)) {
       setErrorMessage('Please input a valid CVV. A valid CVV should contain 3 digits.');
       setError(true);
-      return;
+      return false;
     }
+    return true;
+  }
+
+  async function confirmUpdate () {
+    if (!validate()) { return }
 
     const req = {
       basePrice,
@@ -188,11 +219,11 @@ function UpdateSpot () {
         <>
             <NavigationBar />
             <UpdateCard cardInfo={cardInfo} cardSet={cardSet} dialogOpen={open} setOpen={setOpen}/>
+            {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
             <div style={container}>
                  <Button id='update-button' variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
                  <Button id='delete-button' variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">Delete</Button>
             </div>
-          {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
           <Dialog
               open={open}
               onClose={handleClose}
