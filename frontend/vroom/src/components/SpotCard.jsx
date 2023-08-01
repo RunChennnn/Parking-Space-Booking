@@ -61,9 +61,7 @@ function SpotCard (props) {
         <Card sx={{ maxWidth: 1200 }}>
             <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} src={props.cardInfo.image} aria-label="recipe">
-                        ...
-                    </Avatar>
+                    <Avatar sx={{ bgcolor: red[500] }} src={props.cardInfo.image} aria-label="recipe" />
                 }
                 action={
                     <IconButton aria-label="settings">
