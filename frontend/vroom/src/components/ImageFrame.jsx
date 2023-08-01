@@ -1,6 +1,5 @@
-/* eslint-disable */
 import React from 'react';
-import { Avatar, Typography } from '@mui/material';
+import { Avatar } from '@mui/material';
 
 function ImageFrame (props) {
   if (!props.size) { props.size = 100; }
