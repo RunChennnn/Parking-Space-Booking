@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import NavigationBar from '../components/NavigationBar'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -24,6 +25,10 @@ function SpotDetails () {
 
   const [weathers, setWeathers] = React.useState(null)
 
+  const [name, setName] = React.useState('')
+  const [image, setImage] = React.useState('')
+  const [email, setEmail] = React.useState('')
+
   const buttonStyle = {
     margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
     width: '100px'
@@ -40,7 +45,10 @@ function SpotDetails () {
     basePrice,
     averRate,
     reviews,
-    weathers
+    weathers,
+    name,
+    image,
+    email,
   }
 
   function toRentPage () {
@@ -74,10 +82,19 @@ function SpotDetails () {
 
     const reviewsRes = await makeRequest('GET', `spot/${params.spotID}/reviews?num=10`, {})
     setReviews(reviewsRes.reviews)
+
+    const user = await makeRequest('GET', `user/${res.data.owner}`)
+    const imgRes = await makeRequest('GET', `user/${res.data.owner}/image`)
+    if (user.displayName) {
+      setName(user.displayName)
+    } else {
+      setName('No display name');
+    }
+    setEmail(user.email);
+    if (imgRes.image) { setImage(imgRes.image) }
   }
   async function loadingUpcomingWeather (postcode) {
     const weatherRes = await makeRequest('GET', `weather/${postcode}`, {})
-    console.log(weatherRes)
     setWeathers(weatherRes)
   }
 
