@@ -1,4 +1,4 @@
-// NOTE: this file was provided in COMP6080, with explicit permission given to 
+// NOTE: this file was provided in COMP6080, with explicit permission given to
 // use it without alteration.
 
 /**
