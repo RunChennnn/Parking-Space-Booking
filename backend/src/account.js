@@ -84,9 +84,12 @@ const deleteAccount = async (uid) => {
       const renterBooking = await db.collection('Bookings').where('userID', '==', uid).get()
       const ownerBooking = await db.collection('Bookings').where('ownerID', '==', uid).get()
       const ownedSpot = await db.collection('Spots').where('owner', '==', uid).get()
+      const ownedNotifictaion = await db.collection('Notifications').where('owner', '==', uid).get()
       renterBooking.forEach(doc => doc.ref.delete())
       ownerBooking.forEach(doc => doc.ref.delete())
       ownedSpot.forEach(doc => doc.ref.delete())
+      ownedNotifictaion.forEach(doc => doc.ref.delete())
+      await db.collection('UserImages').doc(uid).delete();
       await auth.deleteUser(uid);
       console.log('Account Deleted: ', uid);
       return {
