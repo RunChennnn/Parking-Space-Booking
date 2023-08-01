@@ -27,7 +27,6 @@ function BookingStub (props) {
   };
   const spot = props.spot.data;
   const address = `${spot.streetNumber} ${spot.streetName} ${spot.suburb} ${spot.postcode}`;
-  console.log(props);
 
   const options = {
     weekday: 'long',

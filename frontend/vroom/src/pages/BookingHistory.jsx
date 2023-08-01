@@ -28,11 +28,11 @@ function BookingHistory () {
     async function getData () {
       const initialResponse = adminIsLoggedIn() ? await makeRequest('GET', 'admin/history', {}) : await makeRequest('GET', `history/${params.userID}`);
       const bookingIDs = adminIsLoggedIn() ? initialResponse.bookingIDs : initialResponse.asOwner.concat(initialResponse.asRenter);
-      console.log(bookingIDs);
 
       const bookings = await Promise.all(bookingIDs.map(async (id) => {
         const booking = await makeRequest('GET', `booking/${id}`);
         const spot = await makeRequest('GET', `spot/${booking.spotID}`);
+        if (!spot.data.owner) { console.log(spot.data.owner, spot); }
         if (spot.data.owner === params.userID) {
           booking.doView = () => navigate(`/booking/view/${id}`);
         } else {
