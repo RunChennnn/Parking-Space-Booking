@@ -83,11 +83,11 @@ function UpdateCard (props) {
                         value={props.cardInfo.largestVehicle}
                         onChange={handleLargestVehicleSelected}
                     >
-                        <MenuItem value={largestVehicleOptions[0]}>Motorbike</MenuItem>
-                        <MenuItem value={largestVehicleOptions[1]}>Sedan</MenuItem>
-                        <MenuItem value={largestVehicleOptions[2]}>4WD</MenuItem>
-                        <MenuItem value={largestVehicleOptions[3]}>Van</MenuItem>
-                        <MenuItem value={largestVehicleOptions[4]}>Truck</MenuItem>
+                        <MenuItem id={largestVehicleOptions[1]} value={largestVehicleOptions[0]}>Motorbike</MenuItem>
+                        <MenuItem id={largestVehicleOptions[2]} value={largestVehicleOptions[1]}>Sedan</MenuItem>
+                        <MenuItem id={largestVehicleOptions[3]} value={largestVehicleOptions[2]}>4WD</MenuItem>
+                        <MenuItem id={largestVehicleOptions[4]} value={largestVehicleOptions[3]}>Van</MenuItem>
+                        <MenuItem id={largestVehicleOptions[5]} value={largestVehicleOptions[4]}>Truck</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField width='1px' variant='outlined' size='small' label='Clearance height' id='clearance-input'

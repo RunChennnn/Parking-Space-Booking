@@ -157,7 +157,7 @@ function UpdateSpot () {
       setError(true)
       return false
     }
-    if (cardNumber.length !== 16 || isNaN(cardNumber)) {
+    if (`${cardNumber}`.length !== 16 || isNaN(cardNumber)) {
       setErrorMessage('Please input a valid card number. A valid card number should contain 16 digits.');
       setError(true);
       return false;
@@ -167,7 +167,7 @@ function UpdateSpot () {
       setError(true);
       return false;
     }
-    if (cardCVV.length !== 3 || isNaN(cardCVV)) {
+    if (`${cardCVV}`.length !== 3 || isNaN(cardCVV)) {
       setErrorMessage('Please input a valid CVV. A valid CVV should contain 3 digits.');
       setError(true);
       return false;

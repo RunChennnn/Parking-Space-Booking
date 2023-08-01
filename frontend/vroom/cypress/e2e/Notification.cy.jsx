@@ -24,6 +24,8 @@ describe('Notification', () => {
     cy.get('#card-number-input').type('1234123412341234');
     cy.get('#card-name-input').type('John Howard');
     cy.get('#cvv-input').type('123');
+    cy.get('#largest-vehicle-select').click();
+    cy.get('#truck').click();
     cy.get('#confirm-register-button').click();
     cy.contains('1 Parliament Drive Canberra')
 
@@ -41,6 +43,8 @@ describe('Notification', () => {
     cy.get('#card-number-input').type('1234123412341234');
     cy.get('#card-name-input').type('John Howard');
     cy.get('#cvv-input').type('123');
+    cy.get('#largest-vehicle-select').click();
+    cy.get('#truck').click();
     cy.get('#confirm-register-button').click();
     cy.contains('1 Parliament Drive Canberra');
 
