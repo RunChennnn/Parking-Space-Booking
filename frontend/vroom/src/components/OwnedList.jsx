@@ -45,7 +45,7 @@ function OwnedList (props) {
                         <TableRow>
                             <TableCell align="center">Description</TableCell>
                             <TableCell align="center">Address</TableCell>
-                            <TableCell align="center">Average Price per hour($)</TableCell>
+                            <TableCell align="center">Base Price per hour (AUD)</TableCell>
                             <TableCell align="center">Demand-driven pricing</TableCell>
                             <TableCell align="center">Edit</TableCell>
                         </TableRow>

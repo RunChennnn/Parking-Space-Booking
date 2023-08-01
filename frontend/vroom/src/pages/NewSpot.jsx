@@ -64,6 +64,60 @@ function NewSpot () {
     setEvCharging
   }
 
+  function validate () {
+    if (streetNumber !== '' && isNaN(streetNumber)) {
+      setErrorMessage('Please input a valid street number, or omit it.')
+      setError(true)
+      return false;
+    }
+    if (streetName === '') {
+      setErrorMessage('Please input a street name.')
+      setError(true)
+      return false;
+    }
+    if (suburb === '') {
+      setErrorMessage('Please input a suburb.')
+      setError(true)
+      return false;
+    }
+    if (`${postcode}`.length !== 4 || isNaN(postcode)) {
+      setErrorMessage('Please input a valid 4-digit Australian postcode.')
+      setError(true)
+      return false;
+    }
+    if (largestVehicle === '') {
+      setErrorMessage('Please select the largest vehicle type that can fit in your spot.')
+      setError(true)
+      return false;
+    }
+    if (isNaN(basePrice)) {
+      setErrorMessage('Please input a valid price.')
+      setError(true)
+      return false;
+    }
+    if (isNaN(clearance)) {
+      setErrorMessage('Please input a valid clearance height.')
+      setError(true)
+      return false
+    }
+    if (`${cardNumber}`.length !== 16 || isNaN(cardNumber)) {
+      setErrorMessage('Please input a valid card number. A valid card number should contain 16 digits.');
+      setError(true);
+      return false;
+    }
+    if (cardName.length === 0) {
+      setErrorMessage('Please enter a name for the card.');
+      setError(true);
+      return false;
+    }
+    if (`${cardCVV}`.length !== 3 || isNaN(cardCVV)) {
+      setErrorMessage('Please input a valid CVV. A valid CVV should contain 3 digits.');
+      setError(true);
+      return false;
+    }
+    return true;
+  }
+
   const buttonStyle = {
     margin: '20px calc(50% - 100px) 10px calc(50% - 100px)',
     width: '100px'
@@ -74,30 +128,7 @@ function NewSpot () {
   }
 
   async function confirmRegister () {
-    if (isNaN(basePrice)) {
-      setErrorMessage('Please input a valid base price. A valid base price should be digit')
-      setError(true)
-      return;
-    }
-    if (isNaN(clearance)) {
-      setErrorMessage('Please input a valid clearance. A valid clearance should be digit')
-      setError(true)
-    }
-    if (cardNumber.length !== 16 || isNaN(cardNumber)) {
-      setErrorMessage('Please input a valid card number. A valid card number should contain 16 digits.');
-      setError(true);
-      return;
-    }
-    if (cardName.length === 0) {
-      setErrorMessage('Please enter a name for the card.');
-      setError(true);
-      return;
-    }
-    if (cardCVV.length !== 3 || isNaN(cardCVV)) {
-      setErrorMessage('Please input a valid CVV. A valid CVV should contain 3 digits.');
-      setError(true);
-      return;
-    }
+    if (!validate()) { return }
 
     const req = {
       basePrice,
@@ -129,8 +160,8 @@ function NewSpot () {
         <>
             <NavigationBar />
             <NewCard cardInfo={cardInfo} cardSet={cardSet}/>
-            <Button id='confirm-register-button' variant="contained" style={buttonStyle} align="center" onClick={confirmRegister}>Register</Button>
             {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
+            <Button id='confirm-register-button' variant="contained" style={buttonStyle} align="center" onClick={confirmRegister}>Register</Button>
         </>
   )
 }

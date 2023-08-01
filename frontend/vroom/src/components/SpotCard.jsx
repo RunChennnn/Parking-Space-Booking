@@ -54,22 +54,22 @@ function SpotCard (props) {
     return `$${Number(price).toFixed(2)}`
   }
 
+  console.log(props.cardInfo.image);
+
   const keyCount = 0;
   return (
         <Card sx={{ maxWidth: 1200 }}>
             <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        P
-                    </Avatar>
+                    <Avatar sx={{ bgcolor: red[500] }} src={props.cardInfo.image} aria-label="recipe" />
                 }
                 action={
                     <IconButton aria-label="settings">
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title="Perfect parking spot for you"
-                subheader="Run Chen"
+                title={props.cardInfo.name}
+                subheader={props.cardInfo.email}
             />
             <CardMedia
                 component="img"

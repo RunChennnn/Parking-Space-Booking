@@ -35,6 +35,15 @@ function longestCommonSubsequence (a, b) {
   }
 }
 
+const vehicleSize = (s) => {
+  if (s === 'Motorbike') return 1;
+  if (s === 'Sedan') return 2;
+  if (s === '4WD') return 3;
+  if (s === 'Van') return 4;
+  if (s === 'Truck') return 5;
+  return 0;
+}
+
 const calculateSimilarityScores = async (spotData, refSpotsData, request) => {
   let similarityScore = 0
   // I declare all fields explicitly here on purpose to make it clear what is used in recommend criteria
@@ -106,6 +115,10 @@ const calculateSimilarityScores = async (spotData, refSpotsData, request) => {
 
   if (request.maxPrice) {
     if (request.maxPrice < basePrice) { similarityScore = -1; }
+  }
+  console.log(request);
+  if (request.vehicleType) {
+    if (vehicleSize(request.vehicleType) > vehicleSize(largestVehicle)) { similarityScore = -1; }
   }
 
   return similarityScore

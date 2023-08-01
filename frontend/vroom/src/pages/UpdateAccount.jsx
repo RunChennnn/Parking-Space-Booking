@@ -7,6 +7,7 @@ import { Button, TextField, Typography } from '@mui/material'
 import makeRequest from '../utilities/makeRequest'
 import ImageFrame from '../components/ImageFrame'
 import { fileToDataUrl } from '../utilities/readImage'
+import { adminIsLoggedIn, doLogout } from '../utilities/admin'
 
 function UpdateAccount () {
   const navigate = useNavigate();
@@ -97,13 +98,22 @@ function UpdateAccount () {
     request.displayName = name;
 
     await makeRequest('PATCH', `user/${params.userID}/update`, request);
-    await makeRequest('POST', `user/${params.userID}/image/set`, {image: image})
-    navigate(`/account/${params.userID}`)
+    await makeRequest('POST', `user/${params.userID}/image/set`, { image });
+    if (adminIsLoggedIn()) {
+      navigate('/users')
+    } else {
+      navigate(`/account/${params.userID}`)
+    }
   }
 
   async function doDelete () {
     await makeRequest('DELETE', `user/${params.userID}/delete`);
-    navigate('/');
+    if (adminIsLoggedIn()) {
+      navigate('/users')
+    } else {
+      doLogout();
+      navigate('/')
+    }
   }
 
   let emailSet = false;
