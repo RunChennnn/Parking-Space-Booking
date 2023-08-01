@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import NavigationBar from '../components/NavigationBar'
@@ -97,7 +96,7 @@ function UpdateAccount () {
     request.displayName = name;
 
     await makeRequest('PATCH', `user/${params.userID}/update`, request);
-    await makeRequest('POST', `user/${params.userID}/image/set`, {image: image})
+    await makeRequest('POST', `user/${params.userID}/image/set`, { image })
     navigate(`/account/${params.userID}`)
   }
 
