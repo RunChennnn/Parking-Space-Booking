@@ -1,13 +1,17 @@
+/* eslint-disable */
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import NavigationBar from '../components/NavigationBar'
 import AuthPopup from '../components/AuthPopup'
 import { Button, TextField, Typography } from '@mui/material'
 import makeRequest from '../utilities/makeRequest'
+import ImageFrame from '../components/ImageFrame'
+import { fileToDataUrl } from '../utilities/readImage'
 
 function UpdateAccount () {
   const navigate = useNavigate();
   const params = useParams();
+  const [image, setImage] = React.useState('');
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -15,6 +19,8 @@ function UpdateAccount () {
   const [showUpdatePopup, setShowUpdatePopup] = React.useState(false);
   const [showDeletePopup, setShowDeletePopup] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+
+  const imageRef = React.useRef(null);
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
@@ -53,12 +59,31 @@ function UpdateAccount () {
     width: '200px',
   };
 
+  const imageButtonStyle = {
+    width: '250px',
+    margin: '0px calc(50% - 125px)'
+  }
+
   function pressUpdate () {
     setShowUpdatePopup(true);
   }
 
   function pressDeleteAccount () {
     setShowDeletePopup(true);
+  }
+
+  function clickAddPicture () {
+    imageRef.current.click()
+  }
+
+  function clickRemovePicture () {
+    setImage('');
+  }
+
+  async function doAddImage (e) {
+    const img = await fileToDataUrl(e.target.files[0]);
+    setImage(img);
+    e.target.value = null;
   }
 
   async function doUpdate () {
@@ -72,6 +97,7 @@ function UpdateAccount () {
     request.displayName = name;
 
     await makeRequest('PATCH', `user/${params.userID}/update`, request);
+    await makeRequest('POST', `user/${params.userID}/image/set`, {image: image})
     navigate(`/account/${params.userID}`)
   }
 
@@ -84,7 +110,6 @@ function UpdateAccount () {
   React.useEffect(() => {
     async function getData () {
       const response = await makeRequest('GET', `user/${params.userID}`, {});
-      console.log(response);
       if (!emailSet) {
         setEmail(response.email);
         emailSet = true;
@@ -92,6 +117,11 @@ function UpdateAccount () {
       setPassword('');
       setConfirmPassword('');
       if (response.displayName) { setName(response.displayName) }
+      const imgResponse = await makeRequest('GET', `user/${params.userID}/image`, {});
+      console.log('Image response', imgResponse);
+      if (imgResponse.image) {
+        setImage(imgResponse.image);
+      }
       setLoading(false);
     }
 
@@ -105,6 +135,12 @@ function UpdateAccount () {
         Fill in any fields you&apos;d like to change. If you leave the password section blank, it&apos;ll remain unchanged. You&apos;ll be prompted for your old password to make any changes.
       </Typography>
       <div style={formStyle}>
+        <Button id='image-button' variant='outlined' style={imageButtonStyle} onClick={clickAddPicture}>
+          Add Profile Picture
+          <input ref={imageRef} type="file" accept="image/png, image/jpg, image/jpeg" onChange={doAddImage} hidden />
+        </Button>
+        <ImageFrame size={200} image={image} />
+        {image !== '' && <Button id='delete-image-button' variant='outlined' color='error' style={imageButtonStyle} onClick={clickRemovePicture}>Remove Profile Picture</Button>}
         <TextField id='name-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='Username' placeholder="Jane Citizen" style={inputStyle} value={name} onChange={(e) => setName(e.target.value)}></TextField>
         <TextField id='email-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>
         <TextField id='password-input' variant='outlined' disabled={showUpdatePopup || showDeletePopup} size='small' autoComplete="off" label='New Password' type='password' style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)}></TextField>

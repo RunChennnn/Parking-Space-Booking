@@ -79,6 +79,7 @@ function NavigationBar (props) {
           <Button id='nav-all-bookings-button' variant="contained" style={buttonStyle} onClick={pressMyAccount}>All Bookings</Button>
           <Button id='nav-all-users-button' variant="contained" style={buttonStyle} onClick={pressAllUsers}>All Users</Button>
           <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
+          {props.loading && (<LinearProgress style={loadingStyle} />)}
         </div>
       )}
       {!adminIsLoggedIn() && userIsLoggedIn() && (
@@ -88,15 +89,16 @@ function NavigationBar (props) {
           <Button id='nav-my-account-button' variant="contained" style={buttonStyle} onClick={pressMyAccount}>My Account</Button>
           <Button id='nav-notifications-button' variant="contained" style={buttonStyle} onClick={pressNotifications}>Notifications</Button>
           <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
+          {props.loading && (<LinearProgress style={loadingStyle} />)}
         </div>
       )}
       {!userIsLoggedIn() && (
         <div style={barStyle}>
           <Button id='nav-home-button' variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
           <Button id='nav-logout-button' variant="contained" color="success" style={buttonStyle} onClick={pressLogin}>Login</Button>
+          {props.loading && (<LinearProgress style={loadingStyle} />)}
         </div>
       )}
-      {props.loading && (<LinearProgress style={loadingStyle} />)}
     </>
   )
 }
