@@ -45,8 +45,16 @@ function NavigationBar (props) {
   }
 
   function pressMyAccount () {
-    if (localStorage.getItem('vroom-token')) {
+    if (userIsLoggedIn()) {
       navigate(`/account/${localStorage.getItem('vroom-id')}`);
+    } else {
+      navigate('/login');
+    }
+  }
+
+  function pressMyAccountAdmin () {
+    if (adminIsLoggedIn()) {
+      navigate(`/account/${localStorage.getItem('vroom-id')}/update`);
     } else {
       navigate('/login');
     }
@@ -75,9 +83,10 @@ function NavigationBar (props) {
       {adminIsLoggedIn() && (
         <div style={barStyle}>
           <Button id='nav-home-button' variant="contained" style={buttonStyle} onClick={() => navigate('/home')}>Home</Button>
-          <Button id='nav-all-spots-button' variant="contained" style={buttonStyle} onClick={pressManageParkingSpots}>All Parking Spots</Button>
-          <Button id='nav-all-bookings-button' variant="contained" style={buttonStyle} onClick={pressMyAccount}>All Bookings</Button>
-          <Button id='nav-all-users-button' variant="contained" style={buttonStyle} onClick={pressAllUsers}>All Users</Button>
+          <Button id='nav-all-spots-button' variant="contained" style={buttonStyle} onClick={pressManageParkingSpots}>Parking Spots</Button>
+          <Button id='nav-all-bookings-button' variant="contained" style={buttonStyle} onClick={pressMyAccount}>Bookings</Button>
+          <Button id='nav-all-users-button' variant="contained" style={buttonStyle} onClick={pressAllUsers}>Users</Button>
+          <Button id='nav-my-account-button' variant="contained" style={buttonStyle} onClick={pressMyAccountAdmin}>My Account</Button>
           <Button id='nav-logout-button' variant="contained" color="error" style={buttonStyle} onClick={pressLogout}>Logout</Button>
           {props.loading && (<LinearProgress style={loadingStyle} />)}
         </div>

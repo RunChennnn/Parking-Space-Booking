@@ -33,8 +33,8 @@ function SpotUseRenter () {
 
   async function loadingSpotUseDetails () {
     const booking = await makeRequest('GET', `booking/${params.bookingID}`, {})
-    setRating(booking.rating)
-    setReview(booking.review)
+    setRating(booking.rating === null ? 0 : booking.rating)
+    setReview(booking.review === null ? '' : booking.review)
     setRevenue(booking.price)
 
     const spotRes = await makeRequest('GET', `spot/${booking.spotID}`, {})
@@ -51,7 +51,8 @@ function SpotUseRenter () {
       rating,
       review
     }
-    await makeRequest('POST', `booking/${params.bookingID}/review`, reviewReq)
+    await makeRequest('POST', `booking/${params.bookingID}/review`, reviewReq);
+    navigate(`/history/${localStorage.getItem('vroom-id')}`)
   }
 
   React.useEffect(() => {
