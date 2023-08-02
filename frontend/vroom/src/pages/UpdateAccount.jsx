@@ -97,7 +97,14 @@ function UpdateAccount () {
     request.displayName = name;
 
     await makeRequest('PATCH', `user/${params.userID}/update`, request);
-    await makeRequest('POST', `user/${params.userID}/image/set`, { image });
+    try {
+      await makeRequest('POST', `user/${params.userID}/image/set`, { image });
+    } catch {
+      setShowUpdatePopup(false)
+      alert('The image you\'ve uploaded is too large, please select a different image.')
+      return;
+    }
+
     if (adminIsLoggedIn()) {
       navigate('/users')
     } else {
