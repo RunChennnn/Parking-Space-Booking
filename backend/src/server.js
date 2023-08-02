@@ -235,7 +235,7 @@ app.get('/user/:userID/basic', async (req, res) => {
 
 // Update User profile
 app.patch('/user/:userID/update', async (req, res) => {
-  const data = req.body;
+  const data = req.body
   const uid = req.params.userID
   console.log('Patching user with following information');
   console.log(data);

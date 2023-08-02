@@ -26,6 +26,9 @@ const createNewSpot = async (data) => {
 
 const patchSpot = async (spotId, data) => {
   try {
+    if (data.owner){
+      delete data.owner
+    }
     const targetSpotRef = db.collection('Spots').doc(spotId)
     if ((await targetSpotRef.get()).exists) {
       await targetSpotRef.update(data);
