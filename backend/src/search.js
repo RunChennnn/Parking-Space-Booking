@@ -90,14 +90,6 @@ const calculateSimilarityScores = async (spotData, refSpotsData, request) => {
     if (clearance >= refSpot.clearance) {
       similarityScore += 3
     }
-    if (basePrice >= refSpot.basePrice) {
-      const priceSimilarity = Math.pow(refSpot.basePrice / basePrice, 2) * 2
-      similarityScore += priceSimilarity
-    }
-    if (basePrice < refSpot.basePrice) {
-      const priceSimilarity = Math.pow(basePrice / refSpot.basePrice, 4) * 2
-      similarityScore += priceSimilarity
-    }
   })
 
   // Set to zero if unusable
@@ -116,7 +108,7 @@ const calculateSimilarityScores = async (spotData, refSpotsData, request) => {
   if (request.maxPrice) {
     if (request.maxPrice < basePrice) { similarityScore = -1; }
   }
-  console.log(request);
+
   if (request.vehicleType) {
     if (vehicleSize(request.vehicleType) > vehicleSize(largestVehicle)) { similarityScore = -1; }
   }
@@ -126,19 +118,20 @@ const calculateSimilarityScores = async (spotData, refSpotsData, request) => {
 
 const evaluateAndSort = async (potentialSpots, previousSpotsData, request) => {
   const spotScores = [];
-  potentialSpots.forEach(async spot => {
+  await potentialSpots.forEach(async spot => {
     const score = await calculateSimilarityScores(spot.data(), previousSpotsData, request);
     if (score === -1) return;
     spotScores.push({ id: spot.id, score })
-    spotScores.sort((a, b) => b.score - a.score)
   })
+  spotScores.sort((a, b) => b.score - a.score)
+  console.log(spotScores);
   return spotScores;
 }
 
 const recommendSpot = async (request) => {
   try {
-    console.log('REQUEST');
-    console.log(request)
+    // console.log('REQUEST');
+    // console.log(request)
 
     const uid = request.uid
     const num = request.num;
