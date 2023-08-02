@@ -20,6 +20,7 @@ function UpcomingBooking () {
   const params = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = React.useState(true);
+  const [spotID, setSpotID] = React.useState('');
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
@@ -71,6 +72,7 @@ function UpcomingBooking () {
     const res = await makeRequest('GET', `booking/${params.bookingID}`, {})
     console.log(res)
     const booking = res
+    setSpotID(booking.spotID);
 
     const spotRes = await makeRequest('GET', `spot/${booking.spotID}`, {})
     console.log(spotRes)
@@ -115,6 +117,10 @@ function UpcomingBooking () {
     }
   }
 
+  function clickViewSpot () {
+    navigate(`/spot/${spotID}`)
+  }
+
   return (
         <>
             <NavigationBar loading={loading} />
@@ -126,7 +132,7 @@ function UpcomingBooking () {
                     alt="Book1"
                 />
                 <CardContent>
-                    <Typography paragraph>Address: {address}</Typography>
+                    <Typography paragraph>Address: {address} <Button id='view-spot-button' onClick={clickViewSpot}>View</Button></Typography>
                     <Typography paragraph>StartFrom: {startTime}</Typography>
                     <Typography paragraph>EndAt: {endTime}</Typography>
                     <Typography paragraph>Price: ${price}</Typography>

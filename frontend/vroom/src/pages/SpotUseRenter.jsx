@@ -10,6 +10,7 @@ function SpotUseRenter () {
   const params = useParams();
 
   const [loading, setLoading] = React.useState(true);
+  const [spotID, setSpotID] = React.useState('');
 
   const navigate = useNavigate()
 
@@ -38,6 +39,7 @@ function SpotUseRenter () {
     setRating(booking.rating === null ? 0 : booking.rating)
     setReview(booking.review === null ? '' : booking.review)
     setRevenue(booking.price)
+    setSpotID(booking.spotID);
 
     const spotRes = await makeRequest('GET', `spot/${booking.spotID}`, {})
     const spot = spotRes.data
@@ -62,6 +64,10 @@ function SpotUseRenter () {
     loadingSpotUseDetails().then(r => {})
   }, [])
 
+  function clickViewSpot () {
+    navigate(`/spot/${spotID}`)
+  }
+
   return (
     <>
       <NavigationBar loading={loading} />
@@ -70,7 +76,7 @@ function SpotUseRenter () {
           <Typography paragraph variant="h5">Booking Details</Typography>
         </CardHeader>
         <CardContent>
-          <Typography paragraph>Address: {address}</Typography>
+          <Typography paragraph>Address: {address} <Button id='view-spot-button' onClick={clickViewSpot}>View</Button></Typography>
           <Typography paragraph>StartTime: {startTime}</Typography>
           <Typography paragraph>EndTime: {endTime}</Typography>
           <Typography paragraph>Revenue:${revenue}</Typography>

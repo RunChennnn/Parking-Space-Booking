@@ -157,7 +157,7 @@ function UpdateAccount () {
       </div>
       <div style={buttonRowStyle}>
         <Button id='update-account-button' variant="contained" style={buttonStyle} onClick={pressUpdate}>Update</Button>
-        <Button id='delete-account-button' variant="contained" color='error' style={buttonStyle} onClick={pressDeleteAccount}>Delete Account</Button>
+        {(!adminIsLoggedIn() || params.userID !== localStorage.getItem('vroom-id')) && <Button id='delete-account-button' variant="contained" color='error' style={buttonStyle} onClick={pressDeleteAccount}>Delete Account</Button>}
       </div>
       <AuthPopup show={showUpdatePopup} onConfirm={doUpdate} onBack={() => setShowUpdatePopup(false)} />
       <AuthPopup show={showDeletePopup} onConfirm={doDelete} onBack={() => setShowDeletePopup(false)} />

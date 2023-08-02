@@ -3,13 +3,14 @@ import NavigationBar from '../components/NavigationBar'
 import { useParams, useNavigate } from 'react-router-dom'
 import makeRequest from '../utilities/makeRequest';
 import dayjs from 'dayjs';
-import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Typography } from '@mui/material';
 import ReviewBoxOwner from '../components/ReviewBoxOwner';
 
 function SpotUseOwner () {
   const params = useParams();
 
   const [loading, setLoading] = React.useState(true);
+  const [spotID, setSpotID] = React.useState('')
 
   const navigate = useNavigate()
 
@@ -33,6 +34,7 @@ function SpotUseOwner () {
     setRating(booking.rating)
     setReview(booking.review)
     setRevenue(booking.price)
+    setSpotID(booking.spotID);
 
     const spotRes = await makeRequest('GET', `spot/${booking.spotID}`, {})
     const spot = spotRes.data
@@ -48,6 +50,10 @@ function SpotUseOwner () {
     loadingSpotUseDetails().then(r => {})
   }, [])
 
+  function clickViewSpot () {
+    navigate(`/spot/${spotID}`)
+  }
+
   return (
     <>
       <NavigationBar loading={loading} />
@@ -56,7 +62,7 @@ function SpotUseOwner () {
               <Typography paragraph variant="h5">Booking Details</Typography>
           </CardHeader>
           <CardContent>
-              <Typography paragraph>Address: {address}</Typography>
+              <Typography paragraph>Address: {address} <Button id='view-spot-button' onClick={clickViewSpot}>View</Button></Typography>
               <Typography paragraph>StartTime: {startTime}</Typography>
               <Typography paragraph>EndTime: {endTime}</Typography>
               <Typography paragraph>Revenue:${revenue}</Typography>
