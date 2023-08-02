@@ -62,7 +62,7 @@ function UpcomingBooking () {
     } else if (refAv === 1) {
       return `If you cancel this booking now, you will receive a full refund of ${formatPrice(price)}. Please confirm you wish to proceed.`
     } else if (refAv === 0.5) {
-      return `If you cancel this booking now, you will receive a 50% refund of ${formatPrice(price)}. Please confirm you wish to proceed.`
+      return `If you cancel this booking now, you will receive a 50% refund of ${formatPrice(price * 0.5)}. Please confirm you wish to proceed.`
     } else {
       return 'If you cancel this booking now, you will not receive a refund. Please confirm you wish to proceed.'
     }
