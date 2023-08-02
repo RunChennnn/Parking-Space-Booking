@@ -14,10 +14,12 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs'
 import img from '../static/booking1.jpg'
+import { adminIsLoggedIn } from '../utilities/admin';
 
 function UpcomingBooking () {
   const params = useParams()
   const navigate = useNavigate()
+  const [loading, setLoading] = React.useState(true);
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
@@ -30,7 +32,9 @@ function UpcomingBooking () {
   const [startTime, setStartTime] = React.useState('')
   const [endTime, setEndTime] = React.useState('')
 
-  const [refundAvailable, setRefundAvailable] = React.useState(0)
+  // const [refundAvailable, setRefundAvailable] = React.useState(0)
+
+  const [popupText, setPopupText] = React.useState('');
 
   const [dialogVisible, setDialogVisible] = React.useState(false)
 
@@ -44,14 +48,32 @@ function UpcomingBooking () {
     return date
   }
 
+  function formatPrice (price) {
+    return `$${Number(price).toFixed(2)}`
+  }
+
+  function makePopupText (price, refAv, owner) {
+    if (adminIsLoggedIn()) {
+      // Give full refund if refunded by admin
+      return `Cancelling this booking as the system administrator will trigger a full refund of ${formatPrice(price)}. Please confirm you wish to proceed.`
+    } else if (localStorage.getItem('vroom-id') === owner) {
+      return `Cancelling this booking as the spot's owner will trigger a full refund of ${formatPrice(price)}. Please confirm you wish to proceed.`
+    } else if (refAv === 1) {
+      return `If you cancel this booking now, you will receive a full refund of ${formatPrice(price)}. Please confirm you wish to proceed.`
+    } else if (refAv === 0.5) {
+      return `If you cancel this booking now, you will receive a 50% refund of ${formatPrice(price)}. Please confirm you wish to proceed.`
+    } else {
+      return 'If you cancel this booking now, you will not receive a refund. Please confirm you wish to proceed.'
+    }
+  }
+
   async function loadingBookingDetails () {
     const res = await makeRequest('GET', `booking/${params.bookingID}`, {})
+    console.log(res)
     const booking = res
 
-    console.log(booking)
-
     const spotRes = await makeRequest('GET', `spot/${booking.spotID}`, {})
-    // console.log(spotRes)
+    console.log(spotRes)
 
     const spot = spotRes.data
     // console.log(spot)
@@ -65,7 +87,9 @@ function UpcomingBooking () {
     setStartTime(startTime)
     setEndTime(endTime)
     setPrice(booking.price)
-    setRefundAvailable(booking.refundAvailable)
+    // setRefundAvailable(booking.refundAvailable)
+    setPopupText(makePopupText(booking.price, booking.refundAvailable, spot.owner))
+    setLoading(false);
   }
 
   React.useEffect(() => {
@@ -93,7 +117,7 @@ function UpcomingBooking () {
 
   return (
         <>
-            <NavigationBar/>
+            <NavigationBar loading={loading} />
             <Card sx={{ maxWidth: 600 }}>
                 <CardMedia
                     component="img"
@@ -118,7 +142,8 @@ function UpcomingBooking () {
                 <DialogTitle id="alert-dialog-title">{'Cancel booking confirmation'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        The refund is {refundAvailable * price}, Make sure you wanna to cancel this booking
+                        {/* The refund is {refundAvailable * price}, Make sure you wanna to cancel this booking */}
+                        {popupText}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

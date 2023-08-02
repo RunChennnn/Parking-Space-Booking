@@ -37,6 +37,8 @@ function UpdateSpot () {
   const [error, setError] = React.useState(false)
   const [errorMessage, setErrorMessage] = React.useState('')
 
+  const [loading, setLoading] = React.useState(true);
+
   const cardInfo = {
     spotID: params.spotID,
     description,
@@ -116,6 +118,8 @@ function UpdateSpot () {
       setDemandPricing(spot.demandPricing)
       setDisabledAccess(spot.disabledAccess)
       setEvCharging(spot.evCharging)
+
+      setLoading(false);
     }
     loadingSpotInfo().then(r => {})
     // console.log(res)
@@ -217,7 +221,7 @@ function UpdateSpot () {
 
   return (
         <>
-            <NavigationBar />
+            <NavigationBar loading={loading} />
             <UpdateCard cardInfo={cardInfo} cardSet={cardSet} dialogOpen={open} setOpen={setOpen}/>
             {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
             <div style={container}>

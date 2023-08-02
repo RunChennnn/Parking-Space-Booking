@@ -6,7 +6,7 @@ import {
   CardContent,
   CardHeader,
   CardMedia, Collapse,
-  IconButton, List, ListItem, ListItemAvatar, ListItemText, Rating,
+  IconButton, List, ListItem, ListItemText, Rating,
   Typography
 } from '@mui/material';
 import { red } from '@mui/material/colors';
@@ -15,7 +15,6 @@ import img from '../static/spot1.jpg';
 import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { purple500 } from 'mui/source/styles/colors';
 import StarIcon from '@mui/icons-material/Star';
 import UpComingWeather from './UpComingWeather';
 
@@ -54,9 +53,8 @@ function SpotCard (props) {
     return `$${Number(price).toFixed(2)}`
   }
 
-  console.log(props.cardInfo.image);
+  console.log(props.cardInfo.reviews);
 
-  const keyCount = 0;
   return (
         <Card sx={{ maxWidth: 1200 }}>
             <CardHeader
@@ -120,30 +118,15 @@ function SpotCard (props) {
             <Collapse in={expand} timeout="auto" unmountOnExit>
                 <CardContent>
                     <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}>
-                        {props.cardInfo.reviews.map((rev) =>
-                            <>
-                               <ListItem key={keyCount}>
-                                   <ListItemAvatar>
-                                       <Avatar sx={{ bgcolor: purple500 }} aria-label="recipe">R</Avatar>
-                                   </ListItemAvatar>
-                                   <ListItemText
-                                       primary="COMP9900 Vroom Renter"
-                                       secondary={
-                                           <React.Fragment>
-                                               <Typography
-                                                   sx={{ display: 'inline' }}
-                                                   component="span"
-                                                   variant="body2"
-                                                   color="text.primary"
-                                               >
-                                                   {rateLabels[rev.rating]}
-                                               </Typography>
-                                               {' ' + rev.review}
-                                           </React.Fragment>
-                                       }
-                                   />
-                               </ListItem>
-                            </>
+                        {props.cardInfo.reviews.map((rev, index) =>
+                            <ListItem key={`review-${index}`} >
+                                <Rating size='small'
+                                    value={rev.rating} readOnly precision={0.5}
+                                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit"/>}
+                                    style={{ marginRight: '15px' }}
+                                />
+                                <ListItemText primary={rev.review} />
+                            </ListItem>
                         )}
                     </List>
                 </CardContent>

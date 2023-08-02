@@ -9,6 +9,8 @@ function SpotDetails () {
   const params = useParams();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = React.useState(true);
+
   const [description, setDescription] = React.useState('')
 
   const [address, setAddress] = React.useState('')
@@ -91,6 +93,7 @@ function SpotDetails () {
     }
     setEmail(user.email);
     if (imgRes.image) { setImage(imgRes.image) }
+    setLoading(false);
   }
   async function loadingUpcomingWeather (postcode) {
     const weatherRes = await makeRequest('GET', `weather/${postcode}`, {})
@@ -99,7 +102,7 @@ function SpotDetails () {
 
   return (
     <>
-      <NavigationBar />
+      <NavigationBar loading={loading} />
       {weathers !== null && <SpotCard cardInfo={cardInfo}/>}
       <Button id='rent-button' variant="contained" style={buttonStyle} onClick={toRentPage}>Rent</Button>
     </>

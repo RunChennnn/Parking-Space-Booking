@@ -8,13 +8,14 @@ function RentSpot () {
   const params = useParams();
   const navigate = useNavigate()
 
-  const [description, setDescription] = React.useState('')
-  const [address, setAddress] = React.useState('')
-  const [largestVehicle, setLargestVehicle] = React.useState('')
-  const [clearance, setClearance] = React.useState(0)
-  const [evCharging, setEvCharging] = React.useState(false)
-  const [disabledAccess, setDisabledAccess] = React.useState(false)
-  const [basePrice, setBasePrice] = React.useState(0)
+  const [description, setDescription] = React.useState('');
+  const [address, setAddress] = React.useState('');
+  const [largestVehicle, setLargestVehicle] = React.useState('');
+  const [clearance, setClearance] = React.useState(0);
+  const [evCharging, setEvCharging] = React.useState(false);
+  const [disabledAccess, setDisabledAccess] = React.useState(false);
+  const [basePrice, setBasePrice] = React.useState(0);
+  const [loading, setLoading] = React.useState(true);
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
@@ -44,13 +45,14 @@ function RentSpot () {
 
       const address = spot.streetNumber + ' ' + spot.streetName + ' ' + spot.suburb + ' ' + spot.postcode
       setAddress(address)
+      setLoading(false);
     }
     loadingRentDetails().then(r => {})
   }, [])
 
   return (
     <>
-        <NavigationBar />
+        <NavigationBar loading={loading} />
         <RentCard rentReq={rentCardReq}/>
     </>
   )

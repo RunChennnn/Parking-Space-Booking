@@ -9,6 +9,8 @@ import ReviewBoxOwner from '../components/ReviewBoxOwner';
 function SpotUseOwner () {
   const params = useParams();
 
+  const [loading, setLoading] = React.useState(true);
+
   const navigate = useNavigate()
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
@@ -39,6 +41,7 @@ function SpotUseOwner () {
 
     setStartTime(timeStampToDate(booking.startTime))
     setEndTime(timeStampToDate(booking.endTime))
+    setLoading(false);
   }
 
   React.useEffect(() => {
@@ -47,7 +50,7 @@ function SpotUseOwner () {
 
   return (
     <>
-      <NavigationBar />
+      <NavigationBar loading={loading} />
       <Card >
           <CardHeader >
               <Typography paragraph variant="h5">Booking Details</Typography>

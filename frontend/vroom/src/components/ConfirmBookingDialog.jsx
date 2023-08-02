@@ -31,7 +31,7 @@ function ConfirmBookingDialog (props) {
             <DialogTitle id="alert-dialog-title">{'Confirming Booking'}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    This booking will cost {formatPrice(props.surgedPrice)}. {props.surgedPrice === props.regularPrice && <>This has been increased by {formatPrice(props.surgedPrice - props.regularPrice)} by surge pricing. </>} Do you wish to confirm this booking?
+                    This booking will cost {formatPrice(props.surgedPrice)}. {props.surgedPrice !== props.regularPrice && <>This has been increased by {formatPrice(props.surgedPrice - props.regularPrice)} by surge pricing. </>} Do you wish to confirm this booking?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

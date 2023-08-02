@@ -9,6 +9,8 @@ import ReviewBoxRenter from '../components/ReviewBoxRenter';
 function SpotUseRenter () {
   const params = useParams();
 
+  const [loading, setLoading] = React.useState(true);
+
   const navigate = useNavigate()
 
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
@@ -44,6 +46,7 @@ function SpotUseRenter () {
 
     setStartTime(timeStampToDate(booking.startTime))
     setEndTime(timeStampToDate(booking.endTime))
+    setLoading(false);
   }
 
   async function uploadReviews () {
@@ -61,7 +64,7 @@ function SpotUseRenter () {
 
   return (
     <>
-      <NavigationBar />
+      <NavigationBar loading={loading} />
       <Card >
         <CardHeader >
           <Typography paragraph variant="h5">Booking Details</Typography>

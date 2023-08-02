@@ -8,10 +8,8 @@ import { Button } from '@mui/material';
 import { adminIsLoggedIn } from '../utilities/admin';
 
 function OwnedSpots () {
-  // const [spotsID, setSpotsID] = React.useState([])
   const [spots, setSpots] = React.useState([])
-
-  // const params = useParams()
+  const [loading, setLoading] = React.useState(true);
 
   const navigate = useNavigate()
 
@@ -35,8 +33,9 @@ function OwnedSpots () {
       }))
       console.log(tmp)
       setSpots(tmp)
+      setLoading(false);
     }
-    loadingSpots().then(r => {})
+    loadingSpots();
   }, [])
   function toRegisterSpot () {
     navigate('/spots/new')
@@ -45,7 +44,7 @@ function OwnedSpots () {
   return (
         <>
             <div>
-                <NavigationBar />
+                <NavigationBar loading={loading} />
                 <OwnedList spots={spots}/>
                 <Button id='new-spot-button' variant="contained" style={buttonStyle} onClick={toRegisterSpot} >Register new spot</Button>
             </div>
