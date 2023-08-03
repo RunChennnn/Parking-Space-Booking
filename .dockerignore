@@ -11,6 +11,7 @@
 
 # production
 /build
+/diaries
 
 # misc
 .DS_Store
@@ -19,9 +20,11 @@
 .env.test.local
 .env.production.local
 
+# other
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# don't upload the zip file
-*.zip
+*/cypress
+package*.json
+README.md
+*/.gitignore
