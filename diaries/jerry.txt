@@ -1,23 +1,44 @@
 Week 1:
-        What I have done:
-        ->
-        ->
-        ->
+        -> Setting up the Jira account
+        -> Setting up a communication tools for the team
+        -> Go through all the materials provided by the course
+        -> Decide the topic we are going to do in this term
 
 Week 2:
+        -> Writing the user stories
+        -> Brainstorming the system architecture of the parking rental system
 
 Week 3:
-
+        -> Start writing the proposal report
+        -> Finishing up the user stories and acceptance criteria
+        -> Drew they system architecture graph and decided the language we are going to use for frontend/backend/database
+        -> Decide what to finish in Sprint 1
 Week 4:
-
+        -> Finished and submitted the proposal report
+        -> Fine adjustment of the user stories
+        -> Formed a frontend an backend team, Nick and me will be in the backend team
+        -> Start working on the backend side for the week 5 demo
 Week 5:
-
+        -> Finished the demo during the tutorial
+        -> Find adjustment for the work of Sprint 1 if needed
+        -> Finish up the Retro A due on Friday
+        -> Decide what to do in Sprint 2
 Week 6:
-
+        -> Working on the Firebase database
+        -> Face-to-face coding meeting
 Week 7:
-
+        -> Prepare for Sprint 2 demo
+        -> Finalise the Sprint 2 user stories 
 Week 8:
-
+        -> Finished the demo during the tutorial
+        -> Retro B meeting after the meeting
+        -> Working on search API
 Week 9:
-
+        -> Search API
+        -> Start working on Project report
+        -> Prepare for final presentation
 Week 10:
+        -> Cleans up the code
+        -> Setting up docker for submission
+        -> Finished the final demo in the tutorial
+        -> Finish the project report
