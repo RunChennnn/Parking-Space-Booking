@@ -3,11 +3,9 @@ Week 1:
         -> Setting up a communication tools for the team
         -> Go through all the materials provided by the course
         -> Decide the topic we are going to do in this term
-
 Week 2:
         -> Writing the user stories
         -> Brainstorming the system architecture of the parking rental system
-
 Week 3:
         -> Start writing the proposal report
         -> Finishing up the user stories and acceptance criteria
