@@ -55,6 +55,7 @@ function NavigationBar (props) {
   function pressMyAccountAdmin () {
     if (adminIsLoggedIn()) {
       navigate(`/account/${localStorage.getItem('vroom-id')}/update`);
+      window.location.reload(false);
     } else {
       navigate('/login');
     }

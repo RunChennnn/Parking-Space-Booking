@@ -28,24 +28,32 @@ function BookingHistory () {
     async function getData () {
       const initialResponse = adminIsLoggedIn() ? await makeRequest('GET', 'admin/history', {}) : await makeRequest('GET', `history/${params.userID}`);
       const bookingIDs = adminIsLoggedIn() ? initialResponse.bookingIDs : initialResponse.asOwner.concat(initialResponse.asRenter);
-
       const bookings = await Promise.all(bookingIDs.map(async (id) => {
-        const booking = await makeRequest('GET', `booking/${id}`);
-        const spot = await makeRequest('GET', `spot/${booking.spotID}`);
-        if (!spot.data.owner) { console.log(spot.data.owner, spot); }
-        if (spot.data.owner === params.userID) {
-          booking.doView = () => navigate(`/booking/view/${id}`);
-        } else {
-          booking.doView = () => navigate(`/booking/review/${id}`);
+        try {
+          const booking = await makeRequest('GET', `booking/${id}`);
+          const spot = await makeRequest('GET', `spot/${booking.spotID}`);
+          if (!spot.data.owner) { console.log(spot.data.owner, spot); }
+          if (spot.data.owner === params.userID) {
+            booking.doView = () => navigate(`/booking/view/${id}`);
+          } else {
+            booking.doView = () => navigate(`/booking/review/${id}`);
+          }
+          booking.spot = spot;
+          booking.id = id;
+          booking.currentUserID = params.userID;
+          return booking;
+        } catch (error) {
+          // Doesn't have a spot or user, so skip it
         }
-        booking.spot = spot;
-        booking.id = id;
-        booking.currentUserID = params.userID;
-        return booking;
       }));
       bookings.sort((a, b) => b.startTime - a.startTime);
       setBookingArray(bookings.map((elem) => {
-        return BookingStub(elem);
+        try {
+          return BookingStub(elem);
+        } catch (error) {
+          // Doesn't have a spot or user, so skip it
+          return <></>
+        }
       }))
       setLoading(false);
     }
