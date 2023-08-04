@@ -28,8 +28,10 @@ const getWeather = async (postcode) => {
         message: `weather information is not available for ${postcode}`
       }
     } else {
-      const { Lat_precise, Long_precise } = targetRecords[0]
-      const url = `http://www.7timer.info/bin/api.pl?lon=${Long_precise}&lat=${Lat_precise}&product=civillight&output=json`
+      // Note: following lines have camelcase rule disabled, variables need to
+      // be in the same form as in the response
+      const { Lat_precise, Long_precise } = targetRecords[0] // eslint-disable-line camelcase
+      const url = `http://www.7timer.info/bin/api.pl?lon=${Long_precise}&lat=${Lat_precise}&product=civillight&output=json` // eslint-disable-line camelcase
       const weatherInfo = await (await fetch(url, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },

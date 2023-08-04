@@ -188,20 +188,6 @@ app.get('/spot/:spotId', async (req, res) => {
   }
 });
 
-app.get('/spot/:spotId/bookings', async (req, res) => {
-  const response = {
-    upcoming: ['this1SafAKeID', 'aN01theR_0ne'],
-    history: ['historyID1', 'historyID2', 'historyID3']
-  }
-
-  return res.status(200).json(response);
-  // if (true) { // if valid user ID
-  //   return res.status(200).json(response);
-  // } else {
-  //   return res.status(500).json({ error: 'invalid user ID' })
-  // }
-});
-
 // Get user profile
 app.get('/user/:userID', async (req, res) => {
   const sid = req.params.userID
@@ -261,13 +247,9 @@ app.patch('/user/:userID/update', async (req, res) => {
 // Recommend unreceived spot
 // It gives first num spots at the moment, will implement the real recommendation later
 app.post('/recommend/:userID', async (req, res) => {
-  // const uid = req.params.userID
-  // const num = req.body.num;
-  // const alreadyReceived = req.body.alreadyReceived;
   const request = req.body;
   request.uid = req.params.userID;
   const respond = await recommendSpot(request);
-  // const respond = await recommendSpot(uid, num, alreadyReceived);
 
   if (respond.status === 200) {
     return res.status(200).json(respond);
@@ -277,24 +259,6 @@ app.post('/recommend/:userID', async (req, res) => {
     return res.status(400).json({ message: 'Unknown Error' })
   }
 });
-
-// Search spots
-// It gives first num spots at the moment, will implement the real search later
-// app.post('/search', async (req, res) => {
-//   console.log('searching');
-//   const response = await searchBackup(req);
-//   return res.status(200).json(response);
-//   const { num, alreadyReceived, ...conditions} = req.body;
-//   const respond = await searchSpot(num, alreadyReceived,conditions);
-
-//   if (respond.status === 200) {
-//       return res.status(200).json(respond);
-//   } else if (respond.status === 404) {
-//       return res.status(404).json(respond);
-//   } else {
-//       return res.status(400).json({ message: 'Unknown Error' })
-//   }
-// });
 
 // get totalPrice of a spot
 app.post('/book/:spotID/price', async (req, res) => {
@@ -605,7 +569,7 @@ app.get('/user/:userID/image', async (req, res) => {
 app.post('/user/:userID/image/set', async (req, res) => {
   const userID = req.params.userID;
   const { image } = req.body;
-  const response = await setUserImage(userID,image);
+  const response = await setUserImage(userID, image);
   if (response.status === 200) {
     return res.status(200).json(response);
   } else if (response.status === 404) {
@@ -632,7 +596,7 @@ app.get('/spot/:spotID/image', async (req, res) => {
 app.post('/spot/:spotID/image/set', async (req, res) => {
   const spotID = req.params.spotID;
   const { image } = req.body;
-  const response = await setSpotImage(spotID,image);
+  const response = await setSpotImage(spotID, image);
   if (response.status === 200) {
     return res.status(200).json(response);
   } else if (response.status === 404) {

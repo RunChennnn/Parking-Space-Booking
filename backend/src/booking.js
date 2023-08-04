@@ -132,7 +132,7 @@ const confirmNewBooking = async (spotID, userID, startTime, endTime, cardNumber,
       const ownerID = (await db.collection('Spots').doc(spotID).get()).data().owner
       const currentTime = Math.floor(Date.now() / 1000)
       // if demandPricing is set as false, surgedPrice will just be the same as regualrPrice
-      const [regularPrice, surgedPrice] = await calculatePrice(spotID, startTime, endTime)
+      const [_, surgedPrice] = await calculatePrice(spotID, startTime, endTime) // eslint-disable-line no-unused-vars
       const data = {
         spotID,
         userID,
