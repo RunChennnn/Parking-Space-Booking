@@ -1,0 +1,49 @@
+Week 1
+- create Jira accounts and join team group
+- read project guide and proposal guide 
+
+Week 2
+- help replenish user stories
+- learn javascript coding and react framework for future frontend development works
+
+Week 3
+- go on learning javascript coding and react framework
+- implement the owned spots page for user
+- join in group github and create my branch for sprint1
+
+Week 4
+- fix bugs and data loading problem of the owed spots list.
+- working on the new spot registeration function
+- working on the spot update function
+
+Week 5
+- implement the full page of owned spots/new spot/update spot 
+- have a meeting/group coding session
+- attend the presentation of sprint1
+- create my new branch for sprint2
+
+Week 6
+- go on studying the use state hooks and components of react framework
+- working on spot renting parts 
+- working on spot details page 
+
+Week 7
+- various meetings and coding sessions
+- implement the full spot details page
+- update the spot renting page a datetime picker with compilation of time data format conversion function
+
+Week 8
+- implement the spot details/spot renting/spot use pages, updating them with rating and review compoents
+- attend the presentation of sprint2
+- create a new branch for sprint3 
+
+Week 9
+- update selected box for spot registeration page as for filter system. 
+- implement adding the upcoming weather components of spot details page
+- rewrite the code generated in sprint1 and sprint2, try to componentize page functions
+- fix some bugs of my responsible code 
+
+Week 10
+- help fixing all the bugs of front-end parts code
+- prepare for final presentation
+- attend the final demo presentation
