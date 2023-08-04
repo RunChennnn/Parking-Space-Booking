@@ -117,17 +117,15 @@ function RentCard (props) {
       <Card sx={{ maxWidth: 1200 }}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              P
-            </Avatar>
+            <Avatar sx={{ bgcolor: red[500] }} src={props.rentReq.image} aria-label="recipe" />
           }
           action={
             <IconButton aria-label="settings">
               <MoreVertIcon />
             </IconButton>
           }
-          title="Perfect parking spot for you"
-          subheader="Run Chen"
+          title={props.rentReq.name}
+          subheader={props.rentReq.email}
         />
         <CardMedia
           component="img"

@@ -17,6 +17,10 @@ function RentSpot () {
   const [basePrice, setBasePrice] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
 
+  const [name, setName] = React.useState('')
+  const [image, setImage] = React.useState('')
+  const [email, setEmail] = React.useState('')
+
   if (!localStorage.getItem('vroom-id')) { navigate('/login'); }
 
   const rentCardReq = {
@@ -28,7 +32,10 @@ function RentSpot () {
     evCharging,
     disabledAccess,
     largestVehicle,
-    basePrice
+    basePrice,
+    name,
+    image,
+    email
   }
 
   React.useEffect(() => {
@@ -45,6 +52,17 @@ function RentSpot () {
 
       const address = spot.streetNumber + ' ' + spot.streetName + ' ' + spot.suburb + ' ' + spot.postcode
       setAddress(address)
+
+      const user = await makeRequest('GET', `user/${res.data.owner}`)
+      const imgRes = await makeRequest('GET', `user/${res.data.owner}/image`)
+      if (user.displayName) {
+        setName(user.displayName)
+      } else {
+        setName('No display name');
+      }
+      setEmail(user.email);
+      if (imgRes.image) { setImage(imgRes.image) }
+
       setLoading(false);
     }
     loadingRentDetails().then(r => {})
