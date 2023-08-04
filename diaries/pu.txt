@@ -1,0 +1,24 @@
+Week 3:
+- Because my old team was dissloved, I joined this new team.
+- Met 4 other members.
+- studied the proposal report and user stories.
+Week 4:
+- joined the github
+- learned how to use java and jsx to make webpages from zero.
+Week 5:
+- made the design of NewSpot page
+- made the design of UpdateSpot page
+Week 6:
+- deep learned java for next step of project.
+Week 7:
+- Caught a cold caused schedule delayed.
+- made the star rating system
+Week 8:
+- Join a meeting  coding seesion
+- Bug fixed.
+Week 9:
+- Help Chen to complete the weather system and dropdown list.
+- Add more background for webpages.
+Week 10:
+- Prepared for the final presentation.
+- Complete the introduction of the function about Login, update and logout on Lab.
