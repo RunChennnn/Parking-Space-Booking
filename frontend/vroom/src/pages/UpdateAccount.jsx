@@ -134,7 +134,6 @@ function UpdateAccount () {
       setConfirmPassword('');
       if (response.displayName) { setName(response.displayName) }
       const imgResponse = await makeRequest('GET', `user/${params.userID}/image`, {});
-      console.log('Image response', imgResponse);
       if (imgResponse.image) {
         setImage(imgResponse.image);
       }

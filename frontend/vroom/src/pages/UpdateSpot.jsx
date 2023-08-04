@@ -122,7 +122,6 @@ function UpdateSpot () {
       setLoading(false);
     }
     loadingSpotInfo().then(r => {})
-    // console.log(res)
   }, [])
 
   function validate () {
@@ -201,8 +200,8 @@ function UpdateSpot () {
     }
     const res = await makeRequest('PATCH', `spot/${params.spotID}/update`, req)
     if (res.error) {
-      // setShowError(true)
-      console.log('invalid input')
+      setErrorMessage(res.error);
+      setError(true);
     } else {
       navigate(`/spots/${localStorage.getItem('vroom-id')}`)
     }
@@ -220,32 +219,32 @@ function UpdateSpot () {
   }
 
   return (
-        <>
-            <NavigationBar loading={loading} />
-            <UpdateCard cardInfo={cardInfo} cardSet={cardSet} dialogOpen={open} setOpen={setOpen}/>
-            {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
-            <div style={container}>
-                 <Button id='update-button' variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
-                 <Button id='delete-button' variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">Delete</Button>
-            </div>
-          <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">{'Delete Spot confirmation'}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Make sure you confirm to remove this parking spot
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button id='cancel-button' onClick={handleClose} color="primary">Cancel</Button>
-              <Button id='confirm-button' onClick={confirmDelete} color="error" autoFocus>Confirm</Button>
-            </DialogActions>
-          </Dialog>
-        </>
+    <>
+      <NavigationBar loading={loading} />
+      <UpdateCard cardInfo={cardInfo} cardSet={cardSet} dialogOpen={open} setOpen={setOpen}/>
+      {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
+      <div style={container}>
+        <Button id='update-button' variant="contained" style={buttonStyle} onClick={confirmUpdate}>Update</Button>
+        <Button id='delete-button' variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">Delete</Button>
+      </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Delete Spot confirmation'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Make sure you confirm to remove this parking spot
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button id='cancel-button' onClick={handleClose} color="primary">Cancel</Button>
+          <Button id='confirm-button' onClick={confirmDelete} color="error" autoFocus>Confirm</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 

@@ -28,7 +28,6 @@ function NavigationBar (props) {
 
   const buttonStyle = {
     margin: '12px',
-    // width: '100px',
   };
 
   const loadingStyle = {

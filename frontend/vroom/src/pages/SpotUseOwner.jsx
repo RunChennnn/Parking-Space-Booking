@@ -58,16 +58,16 @@ function SpotUseOwner () {
     <>
       <NavigationBar loading={loading} />
       <Card >
-          <CardHeader >
-              <Typography paragraph variant="h5">Booking Details</Typography>
-          </CardHeader>
-          <CardContent>
-              <Typography paragraph>Address: {address} <Button id='view-spot-button' onClick={clickViewSpot}>View</Button></Typography>
-              <Typography paragraph>StartTime: {startTime}</Typography>
-              <Typography paragraph>EndTime: {endTime}</Typography>
-              <Typography paragraph>Revenue:${revenue}</Typography>
-              <ReviewBoxOwner rating={rating} review={review}/>
-          </CardContent>
+        <CardHeader >
+          <Typography paragraph variant="h5">Booking Details</Typography>
+        </CardHeader>
+        <CardContent>
+          <Typography paragraph>Address: {address} <Button id='view-spot-button' onClick={clickViewSpot}>View</Button></Typography>
+          <Typography paragraph>StartTime: {startTime}</Typography>
+          <Typography paragraph>EndTime: {endTime}</Typography>
+          <Typography paragraph>Revenue:${revenue}</Typography>
+          <ReviewBoxOwner rating={rating} review={review}/>
+        </CardContent>
       </Card>
     </>
   )

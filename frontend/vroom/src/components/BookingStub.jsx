@@ -47,7 +47,6 @@ function BookingStub (props) {
   return (
     <Card key={props.id} style={cardStyle}>
       <div>
-        {/* <Typography variant='h6'>Address: (address for ID {props.spotID})</Typography> */}
         <Typography variant='h6'>{address} {isOwner() && '(as owner)'}</Typography>
         <Typography>{date}</Typography>
       </div>

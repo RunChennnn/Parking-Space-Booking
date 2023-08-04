@@ -53,85 +53,83 @@ function SpotCard (props) {
     return `$${Number(price).toFixed(2)}`
   }
 
-  console.log(props.cardInfo.reviews);
-
   return (
-        <Card sx={{ maxWidth: 1200 }}>
-            <CardHeader
-                avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} src={props.cardInfo.image} aria-label="recipe" />
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
-                }
-                title={props.cardInfo.name}
-                subheader={props.cardInfo.email}
-            />
-            <CardMedia
-                component="img"
-                height="500"
-                image={img}
-                alt="Spot1"
-            />
-            <CardContent >
-                <Typography paragraph>Description: {props.cardInfo.description}</Typography>
-                <Typography paragraph>Address: {props.cardInfo.address}</Typography>
-                <Typography paragraph>LargestVehicle: {props.cardInfo.largestVehicle}</Typography>
-                <Typography paragraph>Clearance: {props.cardInfo.clearance}m</Typography>
-                <Typography paragraph>EV charging available: {props.cardInfo.evCharging ? 'Yes' : 'No'}</Typography>
-                <Typography paragraph>Disabled Access: {props.cardInfo.disabledAccess ? 'Yes' : 'No'}</Typography>
-                <Typography paragraph>Regular Price per hour: {formatPrice(props.cardInfo.basePrice)}</Typography>
-                <Typography paragraph>Upcoming Weather(The next 7 days): </Typography>
-                <UpComingWeather weathers={props.cardInfo.weathers}/>
-                <Typography paragraph>Average rate: {props.cardInfo.averRate}/5</Typography>
-                <Box sx={{
-                  width: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                }}>
-                    <Rating
-                        name="average rating"
-                        value={props.cardInfo.averRate}
-                        readOnly
-                        precision={0.5}
-                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit"/>}
-                    />
-                    {props.cardInfo.averRate !== null && (
-                        <Box sx={{ ml: 1 }}>{rateLabels[props.cardInfo.averRate]}</Box>
-                    )}
-                </Box>
-            </CardContent>
-            <CardActions>
-                <Typography variant="button" display="block" gutterBottom>Recent Reviews</Typography>
-                <ExpandMore
-                    id='expand-reviews-button'
-                    expand={expand}
-                    onClick={handleExpandClick}
-                    aria-expanded={expand}
-                    aria-label="Recent reviews"
-                >
-                    <ExpandMoreIcon />
-                </ExpandMore>
-            </CardActions>
-            <Collapse in={expand} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}>
-                        {props.cardInfo.reviews.map((rev, index) =>
-                            <ListItem key={`review-${index}`} >
-                                <Rating size='small'
-                                    value={rev.rating} readOnly precision={0.5}
-                                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit"/>}
-                                    style={{ marginRight: '15px' }}
-                                />
-                                <ListItemText primary={rev.review} />
-                            </ListItem>
-                        )}
-                    </List>
-                </CardContent>
-            </Collapse>
-        </Card>
+    <Card sx={{ maxWidth: 1200 }}>
+      <CardHeader
+        avatar={
+          <Avatar sx={{ bgcolor: red[500] }} src={props.cardInfo.image} aria-label="recipe" />
+        }
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
+        }
+        title={props.cardInfo.name}
+        subheader={props.cardInfo.email}
+      />
+      <CardMedia
+        component="img"
+        height="500"
+        image={img}
+        alt="Spot1"
+      />
+      <CardContent >
+        <Typography paragraph>Description: {props.cardInfo.description}</Typography>
+        <Typography paragraph>Address: {props.cardInfo.address}</Typography>
+        <Typography paragraph>LargestVehicle: {props.cardInfo.largestVehicle}</Typography>
+        <Typography paragraph>Clearance: {props.cardInfo.clearance}m</Typography>
+        <Typography paragraph>EV charging available: {props.cardInfo.evCharging ? 'Yes' : 'No'}</Typography>
+        <Typography paragraph>Disabled Access: {props.cardInfo.disabledAccess ? 'Yes' : 'No'}</Typography>
+        <Typography paragraph>Regular Price per hour: {formatPrice(props.cardInfo.basePrice)}</Typography>
+        <Typography paragraph>Upcoming Weather(The next 7 days): </Typography>
+        <UpComingWeather weathers={props.cardInfo.weathers}/>
+        <Typography paragraph>Average rate: {props.cardInfo.averRate}/5</Typography>
+        <Box sx={{
+          width: 600,
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+          <Rating
+            name="average rating"
+            value={props.cardInfo.averRate}
+            readOnly
+            precision={0.5}
+            emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit"/>}
+          />
+          {props.cardInfo.averRate !== null && (
+            <Box sx={{ ml: 1 }}>{rateLabels[props.cardInfo.averRate]}</Box>
+          )}
+        </Box>
+      </CardContent>
+      <CardActions>
+        <Typography variant="button" display="block" gutterBottom>Recent Reviews</Typography>
+        <ExpandMore
+          id='expand-reviews-button'
+          expand={expand}
+          onClick={handleExpandClick}
+          aria-expanded={expand}
+          aria-label="Recent reviews"
+        >
+          <ExpandMoreIcon />
+        </ExpandMore>
+      </CardActions>
+      <Collapse in={expand} timeout="auto" unmountOnExit>
+        <CardContent>
+          <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}>
+            {props.cardInfo.reviews.map((rev, index) =>
+              <ListItem key={`review-${index}`} >
+                <Rating size='small'
+                  value={rev.rating} readOnly precision={0.5}
+                  emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit"/>}
+                  style={{ marginRight: '15px' }}
+                />
+                <ListItemText primary={rev.review} />
+              </ListItem>
+            )}
+          </List>
+        </CardContent>
+      </Collapse>
+    </Card>
   )
 }
 export default SpotCard

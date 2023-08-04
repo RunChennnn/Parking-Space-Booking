@@ -95,7 +95,6 @@ function Register () {
         setErrorMessage('Please choose a valid email address.');
         setShowError(true)
       } else {
-        console.log(`Unknown error: ${error.message}`);
         setErrorMessage(error.message)
         setShowError(true);
       }
@@ -108,7 +107,6 @@ function Register () {
 
   return (
     <>
-
       <div style={pageStyle}>
         <Card style={cardStyle}>
           <TextField id='email-input' variant='outlined' size='small' label='Email' placeholder="example@email.com" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)}></TextField>

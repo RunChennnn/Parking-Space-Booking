@@ -46,7 +46,6 @@ function MyAccount () {
     async function getBookings () {
       const response = adminIsLoggedIn() ? await makeRequest('GET', 'admin/upcoming', {}) : await makeRequest('GET', `user/${params.userID}`, {});
       const upcoming = adminIsLoggedIn() ? response.bookingIDs : response.upcoming;
-      // console.log(response);
 
       const tmp = await Promise.all(upcoming.map(async (id) => {
         const booking = await makeRequest('GET', `booking/${id}`);
@@ -56,7 +55,6 @@ function MyAccount () {
         booking.id = id;
         return booking;
       }));
-      // setBookings(tmp);
       setBookings(tmp.map((elem) => {
         return BookingStub(elem);
       }))

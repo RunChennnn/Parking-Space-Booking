@@ -149,20 +149,20 @@ function NewSpot () {
     }
     const res = await makeRequest('POST', 'spot/new', req)
     if (res.error) {
-      // setShowError(true)
-      console.log('invalid input')
+      setErrorMessage(res.error);
+      setError(true);
     } else {
       navigate(`/spots/${localStorage.getItem('vroom-id')}`)
     }
   }
 
   return (
-        <>
-            <NavigationBar />
-            <NewCard cardInfo={cardInfo} cardSet={cardSet}/>
-            {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
-            <Button id='confirm-register-button' variant="contained" style={buttonStyle} align="center" onClick={confirmRegister}>Register</Button>
-        </>
+    <>
+      <NavigationBar />
+      <NewCard cardInfo={cardInfo} cardSet={cardSet}/>
+      {error && (<Alert severity="error" style={errorStyle}>{errorMessage}</Alert>)}
+      <Button id='confirm-register-button' variant="contained" style={buttonStyle} align="center" onClick={confirmRegister}>Register</Button>
+    </>
   )
 }
 

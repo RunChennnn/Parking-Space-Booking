@@ -66,7 +66,8 @@ function Home () {
           {userIsLoggedIn() && <Typography align='center' variant='h2'>Recommended for you</Typography>}
           {recommended}
         </>
-          )}
+          )
+      }
     </>
   )
 }

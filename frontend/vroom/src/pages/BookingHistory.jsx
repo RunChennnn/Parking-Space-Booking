@@ -32,7 +32,6 @@ function BookingHistory () {
         try {
           const booking = await makeRequest('GET', `booking/${id}`);
           const spot = await makeRequest('GET', `spot/${booking.spotID}`);
-          if (!spot.data.owner) { console.log(spot.data.owner, spot); }
           if (spot.data.owner === params.userID) {
             booking.doView = () => navigate(`/booking/view/${id}`);
           } else {
@@ -69,7 +68,6 @@ function BookingHistory () {
       <NavigationBar loading={loading} />
       <div style={spacerStyle} />
       {adminIsLoggedIn() && (<Button id='view-upcoming-button' variant="contained" style={buttonStyle} onClick={pressViewUpcoming}>View Upcoming</Button>)}
-      {/* {!loaded && (<Typography align='center' variant='h6'>Loading bookings...</Typography>)} */}
       {!loading && (bookingArray.length > 0) && (<Typography align='center' variant='h3'>Booking History</Typography>)}
       {!loading && (bookingArray.length === 0) && (<Typography align='center' variant='h6'>No previous bookings to show</Typography>)}
       {bookingArray}

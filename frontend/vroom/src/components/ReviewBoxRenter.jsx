@@ -23,25 +23,25 @@ function ReviewBoxRenter (props) {
   }
 
   return (
-        <>
-            <Box sx={{ ml: 2 }}>{'Leave your review here!'}</Box>
-            <Box sx={{
-              width: 200,
-              display: 'flex',
-              alignItems: 'center'
-            }}>
-                <Rating id='rating-input'
-                    name="spot use rating"
-                    value={props.rating}
-                    onChange={(e, value) => { props.setRating(value) }}
-                    precision={0.5}
-                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit"/>}
-                />
-                <Box sx={{ ml: 2 }}>{rateLabels[props.rating]}</Box>
-            </Box>
-            <TextField fullWidth variant="outlined" style={inputStyle} value={props.review} id='review-input'
-                       placeholder="write your review here" onChange={(e) => { props.setReview(e.target.value) }}/>
-        </>
+    <>
+      <Box sx={{ ml: 2 }}>{'Leave your review here!'}</Box>
+      <Box sx={{
+        width: 200,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <Rating id='rating-input'
+          name="spot use rating"
+          value={props.rating}
+          onChange={(e, value) => { props.setRating(value) }}
+          precision={0.5}
+          emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit"/>}
+        />
+        <Box sx={{ ml: 2 }}>{rateLabels[props.rating]}</Box>
+      </Box>
+      <TextField fullWidth variant="outlined" style={inputStyle} value={props.review} id='review-input'
+                  placeholder="write your review here" onChange={(e) => { props.setReview(e.target.value) }}/>
+    </>
   )
 }
 export default ReviewBoxRenter

@@ -41,7 +41,6 @@ function AllUsers () {
     <>
       <NavigationBar loading={loading} />
       <div style={spacerStyle} />
-      {/* {!loaded && (<Typography align='center' variant='h6'>Loading bookings...</Typography>)} */}
       {!loading && (users.length > 0) && (<Typography align='center' variant='h3'>All System Users</Typography>)}
       {!loading && (users.length === 0) && (<Typography align='center' variant='h6'>No users to show</Typography>)}
       {users}

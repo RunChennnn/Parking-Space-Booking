@@ -14,7 +14,6 @@ function SpotSearch () {
 
   function getParamString () {
     let paramString = '';
-    console.log(`SEARCH: ${search}`)
     if (search !== '' && search !== null) { paramString += `search=${search}&` }
     if (vehicleType !== 'Select') { paramString += `vehicleType=${vehicleType}&` }
     paramString += `evCharging=${ev}&`

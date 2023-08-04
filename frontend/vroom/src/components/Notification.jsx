@@ -38,7 +38,6 @@ function Notification (props) {
   return (
     <Card key={props.id} style={cardStyle}>
       <div>
-        {/* <Typography variant='h6'>Address: (address for ID {props.spotID})</Typography> */}
         <Typography variant='h6'>{props.text}</Typography>
         <Typography>{date}</Typography>
       </div>

@@ -52,8 +52,8 @@ function RentSpot () {
 
   return (
     <>
-        <NavigationBar loading={loading} />
-        <RentCard rentReq={rentCardReq}/>
+      <NavigationBar loading={loading} />
+      <RentCard rentReq={rentCardReq}/>
     </>
   )
 }

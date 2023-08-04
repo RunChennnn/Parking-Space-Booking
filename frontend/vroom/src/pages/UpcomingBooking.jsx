@@ -29,11 +29,9 @@ function UpcomingBooking () {
   // renting price
   const [price, setPrice] = React.useState(0)
 
-  // booking time()
+  // booking time
   const [startTime, setStartTime] = React.useState('')
   const [endTime, setEndTime] = React.useState('')
-
-  // const [refundAvailable, setRefundAvailable] = React.useState(0)
 
   const [popupText, setPopupText] = React.useState('');
 
@@ -70,15 +68,12 @@ function UpcomingBooking () {
 
   async function loadingBookingDetails () {
     const res = await makeRequest('GET', `booking/${params.bookingID}`, {})
-    console.log(res)
     const booking = res
     setSpotID(booking.spotID);
 
     const spotRes = await makeRequest('GET', `spot/${booking.spotID}`, {})
-    console.log(spotRes)
 
     const spot = spotRes.data
-    // console.log(spot)
 
     const address = spot.streetNumber + ' ' + spot.streetName + ' ' + spot.suburb + ' ' + spot.postcode
     setAddress(address)
@@ -89,7 +84,6 @@ function UpcomingBooking () {
     setStartTime(startTime)
     setEndTime(endTime)
     setPrice(booking.price)
-    // setRefundAvailable(booking.refundAvailable)
     setPopupText(makePopupText(booking.price, booking.refundAvailable, spot.owner))
     setLoading(false);
   }
@@ -122,42 +116,41 @@ function UpcomingBooking () {
   }
 
   return (
-        <>
-            <NavigationBar loading={loading} />
-            <Card sx={{ maxWidth: 600 }}>
-                <CardMedia
-                    component="img"
-                    height="255"
-                    src={img}
-                    alt="Book1"
-                />
-                <CardContent>
-                    <Typography paragraph>Address: {address} <Button id='view-spot-button' onClick={clickViewSpot}>View</Button></Typography>
-                    <Typography paragraph>StartFrom: {startTime}</Typography>
-                    <Typography paragraph>EndAt: {endTime}</Typography>
-                    <Typography paragraph>Price: ${price}</Typography>
-                </CardContent>
-            </Card>
-            <Button id='cancel-button' variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">CANCEL</Button>
-            <Dialog
-                open={dialogVisible}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{'Cancel booking confirmation'}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {/* The refund is {refundAvailable * price}, Make sure you wanna to cancel this booking */}
-                        {popupText}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button id='cancel-cancel-button' onClick={handleClose} color="primary">Cancel</Button>
-                    <Button id='confirm-cancel-button' onClick={confirmCancel} color="error" autoFocus>Confirm</Button>
-                </DialogActions>
-            </Dialog>
-        </>
+    <>
+      <NavigationBar loading={loading} />
+      <Card sx={{ maxWidth: 600 }}>
+        <CardMedia
+          component="img"
+          height="255"
+          src={img}
+          alt="Book1"
+        />
+        <CardContent>
+          <Typography paragraph>Address: {address} <Button id='view-spot-button' onClick={clickViewSpot}>View</Button></Typography>
+          <Typography paragraph>StartFrom: {startTime}</Typography>
+          <Typography paragraph>EndAt: {endTime}</Typography>
+          <Typography paragraph>Price: ${price}</Typography>
+        </CardContent>
+      </Card>
+      <Button id='cancel-button' variant="contained" style={buttonStyle} onClick={handleClickOpen} color="error">CANCEL</Button>
+      <Dialog
+        open={dialogVisible}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Cancel booking confirmation'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {popupText}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button id='cancel-cancel-button' onClick={handleClose} color="primary">Cancel</Button>
+          <Button id='confirm-cancel-button' onClick={confirmCancel} color="error" autoFocus>Confirm</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 export default UpcomingBooking

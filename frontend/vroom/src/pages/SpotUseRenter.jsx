@@ -72,7 +72,7 @@ function SpotUseRenter () {
     <>
       <NavigationBar loading={loading} />
       <Card >
-        <CardHeader >
+        <CardHeader>
           <Typography paragraph variant="h5">Booking Details</Typography>
         </CardHeader>
         <CardContent>

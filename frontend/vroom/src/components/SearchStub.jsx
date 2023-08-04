@@ -35,7 +35,6 @@ function SearchStub (props) {
         <Typography>Regular price per hour: {price}</Typography>
       </div>
       <Button id={`view-${props.spotID}-button`} variant='contained' style={buttonStyle} onClick={props.doView}>View</Button>
-
     </Card>
   )
 }
