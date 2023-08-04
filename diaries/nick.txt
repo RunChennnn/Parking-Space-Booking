@@ -1,0 +1,65 @@
+Week1 
++ create Jira accounts, create site and invite members as Scrum master
++ study Agile methodology
++ read project guide and proposal guide
+
+Week2
++ write user stories
++ set up Confluence and invite members
++ study coding/frameworks to prepare for future works
+
+Week3
++ continue to write and update user stories
++ set the stories' points
++ create and set up Sprint 1
++ collaboratively write proposal and review
+
+Week4
++ config firebase Realtime database
++ learn firebase
++ draft data structure and table schema
++ make backend framework
++ implement login and register in backend
+
+Week5
++ bug fixing
++ implent spot and user related parts in backend
++ update database/firebase rules and configiration
++ support and tutor group members about learning React
++ review architecture, and prepare for a migration after sprint1
+  ++ reconstruct the auth service, use appriopriate product instead
+  ++ realtime -> firestore possibly
++ prepare retro meeting as scrum master
+
+Week6 (flexible week)
++ prepare the skills for later stage of the project
++ made a mongoDB version of project
+
+Week7
++ test mongoDB version, but not satisfied, so aborted
++ successfully implement database migration to firestore
++ design and implement recommender system
++ implement booking related functions on backend
++ improve validation rules and behaviours from backend perspective 
+
+Week8
++ bug fixing
++ implement surging price system
++ explore search related functions using third party service, but aborted
++ host the retrospective meeting as scrum master
+
+Week9
++ implement notification system
++ implement admin related functions on backend
++ explore available weather apis and implement the weather forecast on backend
++ support teammate to debug on frontend
++ rewrite the account system, so that it has better performance
+  ++ move some of the request implementation to the frontend
+  ++ use simpler query structure
++ clean the backend codes to achieve better consistency and styles
+
+Week10
++ bug fixing
++ implement more features for user profile and validations
++ improve general performance of the backend
++ prepare for the final demo and support the team
