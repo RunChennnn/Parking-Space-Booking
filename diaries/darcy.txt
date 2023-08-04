@@ -1,0 +1,65 @@
+Week 1
+- Met team
+- Decided on project to do
+- Sorted out Jira etc
+
+Week 2
+- Met 5th team member
+- Wrote background for proposal
+- Made first couple of storyboards
+
+Week 3
+- Did most storyboards
+- Edited English of some parts of the proposal
+- Discussed and decided upon technologies to use in project
+
+Week 4
+- Made basic frontend and pushed to GitHub repository
+- Made basic backend and pushed to GitHub repository
+- Made Login page on frontend
+- Made Registration page on frontend
+- Made dummy login/registration API calls in backend
+- Made dummy files for all pages required for sprint 1, and linked to their URLs appropriately
+
+Week 5
+- Made basic navigation bar and set up navigation within project pages
+- Made a basic account management page
+- Made an account update page
+- Had a meeting/group coding session
+- Did presentation 1
+
+Week 6
+- Group meeting to determine stories for sprint 2 and discuss other business
+- Added component tests to the project using Jest
+- Added UI tests to the project using Cypress
+- Made dummy files for all pages required for sprint 2, and linked to their URLs appropriately 
+
+Week 7
+- Various meetings and coding sessions
+- Updated home page with a search bar and recommendations on frontend
+- Made search page on frontend
+
+Week 8
+- Updated search page
+- Debugged the process of booking a spot
+- Made search functionality on backend using longest common subsequence on the address
+- Added some error messages and data validation when booking a spot
+- Did presentation 2
+- Added linting to project
+- Created new branch for sprint 3 work
+
+Week 9
+- Implemented frontend part of notifications
+- Implemented system administrator functionality
+- Did some debugging of the backend where admin requests were confusing it
+- Implemented search by user (uses the email)
+- Started writing some report stuff, mainly just functionalities and user stories
+
+Week 10
+- Some bug fixes
+- Changed some frontend popup text to be clearer in meaning (surge pricing, cancellation)
+- Prepared team for final presentation, allocated specific things to talk about
+- Put project in a Docker image (didn’t use this in the end)
+- Wrote report sections about functionalities/user stories and implementation challenges
+- Wrote report sections about material UI and Cypress
+- Fixed report references
